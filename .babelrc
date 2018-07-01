@@ -1,0 +1,17 @@
+{
+	"plugins": [
+		"transform-decorators-legacy",
+	],
+	"presets": ["env", "react", "es2015", "stage-0"],
+	"env": {
+		"production": {
+			//"presets":["react-optimize"]
+		},
+		"development": {
+			"plugins": [
+				"transform-decorators-legacy",
+				"react-hot-loader/babel"
+			]
+		}
+	}
+}

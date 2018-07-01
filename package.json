@@ -1,0 +1,61 @@
+{
+  "name": "SucreCloud",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start-client": "NODE_ENV=development BABEL_ENV=development node -r babel-register node_modules/.bin/webpack-dev-server --color --progress --mode=development  --display-modules  --config webpack/webpack.config.client.js",
+    "build-client": "NODE_ENV=production BABEL_ENV=production node -r babel-register node_modules/.bin/webpack --progress --mode=production --color --display-modules --config webpack/webpack.config.client.js",
+    "build-server": "NODE_ENV=production BABEL_ENV=production node -r babel-register node_modules/.bin/webpack --progress --color --config webpack/webpack.config.server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "orchi"
+  ],
+  "author": "David Colmenares",
+  "license": "ISC",
+  "dependencies": {
+    "@material-ui/core": "^1.3.0",
+    "@material-ui/icons": "^1.1.0",
+    "autoprefixer": "^8.4.1",
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "css-loader": "^0.28.11",
+    "draft-js": "^0.10.5",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "immutable": "^3.8.2",
+    "material-ui-breadcrumbs": "^0.1.6",
+    "postcss-loader": "^2.1.5",
+    "precss": "^3.1.2",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-hot-loader": "^4.1.3",
+    "react-loadable": "^5.4.0",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-devtools-extension": "^2.13.5",
+    "redux-dynamic-middlewares": "^0.3.0",
+    "redux-dynamic-reducer": "^2.0.1",
+    "redux-immutable": "^4.0.0",
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.80.0",
+    "style-loader": "^0.21.0",
+    "url-loader": "^1.0.1",
+    "webpack": "^4.8.1",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "devDependencies": {
+    "webpack-cli": "^2.1.3"
+  }
+}

@@ -1,0 +1,1172 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"in",
+				"input\tTag"
+			],
+			[
+				"el",
+				"else"
+			],
+			[
+				"php",
+				"php"
+			],
+			[
+				"regis",
+				"regiseter_log"
+			],
+			[
+				"co",
+				"code\tTag"
+			],
+			[
+				"pass",
+				"passwordStore"
+			],
+			[
+				"david",
+				"david25pcxtreme"
+			],
+			[
+				"pas",
+				"password"
+			],
+			[
+				"nu",
+				"num_rows"
+			],
+			[
+				"conn",
+				"connect"
+			],
+			[
+				"get",
+				"getInstance"
+			],
+			[
+				"try",
+				"tryReconnect"
+			],
+			[
+				"Session",
+				"sessionManager"
+			],
+			[
+				"ses",
+				"sessionmanager"
+			],
+			[
+				"new",
+				"newState"
+			],
+			[
+				"user",
+				"username"
+			],
+			[
+				"log",
+				"login"
+			],
+			[
+				"render",
+				"renderToString"
+			],
+			[
+				"c",
+				"cdm\tReact: componentDidMount: fn() { ... }"
+			],
+			[
+				"st",
+				"style"
+			],
+			[
+				"su",
+				"submit"
+			],
+			[
+				"sess",
+				"SessionManager"
+			],
+			[
+				"re",
+				"resolve"
+			],
+			[
+				"fo",
+				"from"
+			],
+			[
+				"fl",
+				"float"
+			],
+			[
+				"from",
+				"fromJS"
+			],
+			[
+				"for",
+				"fromJS"
+			],
+			[
+				"redu",
+				"reducer"
+			],
+			[
+				"redce",
+				"reducer"
+			],
+			[
+				"stat",
+				"stateItem"
+			],
+			[
+				"ibo",
+				"inboxItems"
+			],
+			[
+				"set",
+				"setIn"
+			],
+			[
+				"sta",
+				"stateItem"
+			],
+			[
+				"state",
+				"stateItemStore"
+			],
+			[
+				"ma",
+				"MACROS"
+			],
+			[
+				"FE",
+				"FETCH_DATA_INBOX_ITEM"
+			],
+			[
+				"P",
+				"PUSH_MESSAGE"
+			],
+			[
+				"ME",
+				"MESSAGE_ITEM"
+			],
+			[
+				"ren",
+				"render"
+			],
+			[
+				"inb",
+				"inboxItem"
+			],
+			[
+				"me",
+				"MESSAGE"
+			],
+			[
+				"m",
+				"MESSAGE"
+			],
+			[
+				"t",
+				"toArray"
+			],
+			[
+				"cos",
+				"constructor"
+			],
+			[
+				"ex",
+				"extends"
+			],
+			[
+				"thre",
+				"three"
+			],
+			[
+				"Tra",
+				"getTrnasparent"
+			],
+			[
+				"curr",
+				"currentFigure"
+			],
+			[
+				"on",
+				"ondragenter"
+			],
+			[
+				"act",
+				"actionMove"
+			],
+			[
+				"class",
+				"className"
+			],
+			[
+				"table",
+				"tableColor"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"roo",
+				"room"
+			],
+			[
+				"room",
+				"rooms"
+			],
+			[
+				"soc",
+				"sockets"
+			],
+			[
+				"cons",
+				"constructor"
+			],
+			[
+				"pude",
+				"puede"
+			],
+			[
+				"cu",
+				"currentFigure"
+			],
+			[
+				"cur",
+				"current"
+			],
+			[
+				"curre",
+				"currentFigure"
+			],
+			[
+				"app",
+				"apply"
+			],
+			[
+				"fig",
+				"figureMove"
+			],
+			[
+				"filter",
+				"filterMoveAfected"
+			],
+			[
+				"ret",
+				"countRetry"
+			],
+			[
+				"dis",
+				"dispatch"
+			],
+			[
+				"rec",
+				"reconnect"
+			],
+			[
+				"con",
+				"connecting"
+			],
+			[
+				"s",
+				"SET_STATE"
+			],
+			[
+				"ty",
+				"TYPES"
+			],
+			[
+				"fro",
+				"fromJS"
+			],
+			[
+				"Connec",
+				"connectedBox"
+			],
+			[
+				"connec",
+				"connected"
+			],
+			[
+				"com",
+				"componentWillMount"
+			],
+			[
+				"lis",
+				"listener"
+			],
+			[
+				"err",
+				"error"
+			],
+			[
+				"Ma",
+				"MANAGER_XMPP"
+			],
+			[
+				"nav",
+				"navState"
+			],
+			[
+				"w",
+				"wraper"
+			],
+			[
+				"App",
+				"AppR"
+			],
+			[
+				"n",
+				"name"
+			],
+			[
+				"my",
+				"myfileO"
+			],
+			[
+				"rende",
+				"renderClient"
+			],
+			[
+				"Edit",
+				"Editor"
+			],
+			[
+				"post",
+				"postid"
+			],
+			[
+				"react",
+				"react-dom"
+			],
+			[
+				"conver",
+				"convertToRaw"
+			],
+			[
+				"str",
+				"stringify"
+			],
+			[
+				"conve",
+				"convertToHTML"
+			],
+			[
+				"_",
+				"_parseStringToContentState"
+			],
+			[
+				"text",
+				"TextContent"
+			],
+			[
+				"tex",
+				"TextContent"
+			],
+			[
+				"emoji",
+				"emojiUnicode"
+			],
+			[
+				"coun",
+				"count2"
+			],
+			[
+				"globa",
+				"globalF"
+			],
+			[
+				"glo",
+				"globalF"
+			],
+			[
+				"edit",
+				"editorStateWithTrim"
+			],
+			[
+				"conten",
+				"contentStateWithTrim"
+			],
+			[
+				"tri",
+				"trimString"
+			],
+			[
+				"edi",
+				"editorState"
+			],
+			[
+				"edito",
+				"editorState"
+			],
+			[
+				"conte",
+				"contentStateRangeRemoveLB"
+			],
+			[
+				"editorStateRa",
+				"editorStateRangeRemoveLB"
+			],
+			[
+				"content",
+				"contentState"
+			],
+			[
+				"sele",
+				"selectionStateFB"
+			],
+			[
+				"sle",
+				"selectionStateFB"
+			],
+			[
+				"inde",
+				"indexLB"
+			],
+			[
+				"see",
+				"selectionStateFB"
+			],
+			[
+				"index",
+				"indexLB"
+			],
+			[
+				"mat",
+				"matchLB"
+			],
+			[
+				"hash",
+				"hashtagStyles"
+			],
+			[
+				"time",
+				"timeUpdate"
+			],
+			[
+				"inbox",
+				"inboxItem"
+			],
+			[
+				"COm",
+				"Component"
+			],
+			[
+				"dy",
+				"displayName"
+			],
+			[
+				"map",
+				"mapStateToProps"
+			],
+			[
+				"Rea",
+				"ReactDom"
+			],
+			[
+				"reac",
+				"react-dom"
+			],
+			[
+				"max",
+				"maxOffset"
+			],
+			[
+				"num",
+				"numeral"
+			],
+			[
+				"show",
+				"showNewComment"
+			],
+			[
+				"sn",
+				"sents"
+			],
+			[
+				"id",
+				"idUser"
+			],
+			[
+				"pa",
+				"params"
+			],
+			[
+				"cont",
+				"count"
+			],
+			[
+				"rea",
+				"reacts"
+			],
+			[
+				"pad",
+				"paddingTop"
+			],
+			[
+				"ti",
+				"title"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "src/App/index.js",
+			"settings":
+			{
+				"buffer_size": 856,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/david/WebAppOrchi/package.json",
+			"settings":
+			{
+				"buffer_size": 2092,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 154.0,
+		"last_filter": "bab",
+		"selected_items":
+		[
+			[
+				"bab",
+				"Set Syntax: JavaScript (Babel)"
+			],
+			[
+				"babe",
+				"Set Syntax: JavaScript (Babel)"
+			],
+			[
+				"babel",
+				"Set Syntax: JavaScript (Babel)"
+			],
+			[
+				"JSON",
+				"Set Syntax: JSON"
+			],
+			[
+				"php",
+				"Set Syntax: PHP"
+			],
+			[
+				"theme",
+				"UI: Select Color Scheme"
+			],
+			[
+				"css",
+				"Set Syntax: CSS"
+			],
+			[
+				"javasc",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"c++",
+				"Build With: C++ Single File - Run"
+			],
+			[
+				"c",
+				"Set Syntax: C"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"babl",
+				"Babel Transform"
+			],
+			[
+				"scala",
+				"Set Syntax: Scala"
+			],
+			[
+				"bab\t",
+				"Set Syntax: JavaScript (Babel)"
+			],
+			[
+				"javas",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"baba",
+				"Preferences: Babel – Default"
+			],
+			[
+				"thema",
+				"Material Theme: Activate theme"
+			],
+			[
+				"thme",
+				"Material Theme: Configuration"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"ba",
+				"Set Syntax: JavaScript (Babel)"
+			],
+			[
+				"them",
+				"Material Theme: Activate theme"
+			],
+			[
+				"jsp",
+				"Set Syntax: Java Server Page (JSP)"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			],
+			[
+				"active",
+				"Material Theme: Activate theme"
+			],
+			[
+				"the",
+				"Material Theme: Advanced configuration"
+			],
+			[
+				"baje",
+				"Snippet: Object Value JS"
+			],
+			[
+				"jaa",
+				"Format: Javascript"
+			],
+			[
+				"reac",
+				"Snippet: React: this.refs."
+			],
+			[
+				"",
+				"Indexing Status"
+			],
+			[
+				"react",
+				"Snippet: React: isMounted()"
+			],
+			[
+				"vue",
+				"Set Syntax: Vue Component"
+			],
+			[
+				"ht",
+				"Set Syntax: HTML"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"bas",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"snit",
+				"Snippet: #!/usr/bin/env"
+			],
+			[
+				"bash",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"sh",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"jso",
+				"Set Syntax: JSON"
+			],
+			[
+				"ac",
+				"Material Theme: Activate theme"
+			],
+			[
+				"acti",
+				"Material Theme: Activate theme"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"intitle",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"snippe",
+				"Snippet: Object key — key: \"value\""
+			],
+			[
+				"snipe",
+				"Snippet: Get Elements"
+			]
+		],
+		"width": 533.0
+	},
+	"console":
+	{
+		"height": 286.0,
+		"history":
+		[
+			"ls",
+			"import urllib.request,os,hashlib; h = 'df21e130d211cfc94d9b0905775a7c0f' + '1e3d39e33b79698005270310898eea76'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/david/WebAppOrchi",
+		"/home/david/WebAppOrchi/src",
+		"/home/david/WebAppOrchi/src/App",
+		"/home/david/WebAppOrchi/src/App/components",
+		"/home/david/WebAppOrchi/webpack"
+	],
+	"file_history":
+	[
+		"/home/david/SucreCloud/src/App/components/Home/index.js",
+		"/home/david/webpack-demo/src/components/media-objects/index.css.json",
+		"/home/david/webpack-demo/src/components/profile/redux/reducers.js",
+		"/home/david/webpack-demo/src/components/profile/redux/ax.js",
+		"/home/david/webpack-demo/src/components/profile/redux/middleware.js",
+		"/home/david/webpack-demo/src/components/profile/index.js",
+		"/home/david/webpack-demo/src/components/user_preview_home/index.css",
+		"/home/david/webpack-demo/src/components/user_preview_home/index.js",
+		"/home/david/webpack-demo/src/components/trending_topic/index.css",
+		"/home/david/webpack-demo/src/components/trending_topic/item.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/components/EmojiSelect/Popover/Entry/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/modifiers/attachImmutableEntitiesToEmojis.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/components/Emoji/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/modifiers/addEmoji.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/emojiSuggestionsEntryStyles.css",
+		"/home/david/webpack-demo/src/components/message/MessageItem/index.css",
+		"/home/david/webpack-demo/src/components/message/MessageItem/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/components/EmojiSelect/Popover/Groups/index.js",
+		"/home/david/webpack-demo/src/components/Login/LoginForm.js",
+		"/home/david/webpack-demo/src/components/Login/index.js",
+		"/home/david/webpack-demo/src/components/SessionManager/index.js",
+		"/home/david/webpack-demo/src/components/message/redux/middleware.js",
+		"/home/david/webpack-demo/src/components/message/Conversation/index.js",
+		"/home/david/webpack-demo/src/components/message/EditorResize/index.css",
+		"/home/david/webpack-demo/src/components/draft-js-hashtag-plugin/src/styles.css",
+		"/home/david/webpack-demo/src/components/draft-js-hashtag-plugin/src/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/sprites/emojione.sprites.css",
+		"/home/david/webpack-demo/src/components/viewport/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-hashtag-plugin/src/Hashtag/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-hashtag-plugin/src/utils/index.js",
+		"/home/david/webpack-demo/src/components/XMPP/redux/reducer.js",
+		"/home/david/webpack-demo/src/components/XMPP/redux/ax.js",
+		"/home/david/webpack-demo/src/components/XMPP/index.js",
+		"/home/david/webpack-demo/src/components/message/EditorResize/index.js",
+		"/home/david/webpack-demo/src/components/message/ConnectedBox/index.less",
+		"/home/david/webpack-demo/src/components/message/ConnectedBox/index.js",
+		"/home/david/webpack-demo/src/components/message/src/less/index.less",
+		"/home/david/webpack-demo/src/components/message/index.js",
+		"/home/david/webpack-demo/src/components/chat/data.js",
+		"/home/david/webpack-demo/src/components/message/src/css/index.css",
+		"/home/david/webpack-demo/src/components/message/redux/ax.js",
+		"/home/david/webpack-demo/src/components/message/redux/reducer.js",
+		"/home/david/webpack-demo/src/components/message/components/ListInboxItems/index.js",
+		"/home/david/webpack-demo/src/components/chat/index.js",
+		"/home/david/webpack-demo/src/components/chat/css/index.css",
+		"/home/david/webpack-demo/src/components/main.js",
+		"/home/david/webpack-demo/src/components/icon/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/components/EmojiSelect/Popover/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/constants/defaultEmojiGroups.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/emojiAsciiStrategy.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/emojiStrategy.js",
+		"/home/david/webpack-demo/src/components/draft-js-linkify-plugin/src/Link/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-linkify-plugin/src/linkStrategy.js",
+		"/home/david/webpack-demo/src/components/draft-js-linkify-plugin/src/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/index.js",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/emojiSelectStyles.css",
+		"/home/david/webpack-demo/src/components/draft-js-emoji-plugin/src/components/EmojiSelect/index.js",
+		"/home/david/webpack-demo/src/components/nav.js",
+		"/home/david/webpack-demo/src/components/app-sms/comps/nav/index.js",
+		"/home/david/webpack-demo/src/components/title/index.js",
+		"/home/david/webpack-demo/src/components/redux/Reducers.js",
+		"/home/david/webpack-demo/src/components/redux/AllReducers.js",
+		"/home/david/webpack-demo/src/components/chat/redux/ax.js",
+		"/home/david/webpack-demo/src/components/chat/redux/reducer.js",
+		"/home/david/webpack-demo/src/components/badged/css/index.css",
+		"/home/david/webpack-demo/src/components/badged/index.js",
+		"/home/david/webpack-demo/src/components/media-objects/index.js",
+		"/home/david/webpack-demo/src/components/card-post/index.css",
+		"/home/david/webpack-demo/src/components/card-post/index.js",
+		"/home/david/webpack-demo/src/components/posts.js",
+		"/home/david/webpack-demo/src/components/bundle.js",
+		"/home/david/webpack-demo/src/components/app.js",
+		"/home/david/webpack-demo/src/components/redux/Store.js",
+		"/home/david/webpack-demo/tarea_programacion/register.php",
+		"/home/david/webpack-demo/tarea_programacion/users.sql",
+		"/home/david/webpack-demo/tarea_programacion/index.php",
+		"/home/david/webpack-demo/tarea_programacion/logout.php",
+		"/home/david/webpack-demo/tarea_programacion/funcionesUtiles.php",
+		"/home/david/webpack-demo/tarea_programacion/login.php",
+		"/home/david/node_cluster_program_package/dist/server.2.js",
+		"/media/david/Respaldo/dev_david_3/pilis/page_pakec_trace/contacto.html",
+		"/media/david/Respaldo/dev_david_3/pilis/page_pakec_trace/info.html",
+		"/media/david/Respaldo/dev_david_3/pilis/index.html",
+		"/media/david/Respaldo/dev_david_3/pilis/page_pakec_trace/index.html",
+		"/media/david/Respaldo/dev_david_3/pilis/page_pakec_trace/index (copia).html",
+		"/media/david/Respaldo/dev_david_3/pilis/index_packet_trace.html",
+		"/home/david/inboxDavid.json",
+		"/home/david/fileUserDavud",
+		"/home/david/webpack-demo/src/components/message/EditorResize/ComponentAnotationMessage.js",
+		"/home/david/webpack-demo/src/lib/three.js/three.js",
+		"/home/david/webpack-demo/src/main_afe.js",
+		"/home/david/webpack-demo/src/lib/JSJaC-master/Makefile",
+		"/home/david/webpack-demo/webResources/vendor2.bundle.js",
+		"/home/david/webpack-demo/resources/vendor2.bundle.js",
+		"/home/david/webpack-demo/resources/index.html",
+		"/home/david/webpack-demo/resources/server.bundle.js",
+		"/home/david/webpack-demo/resources/client.bundle.js",
+		"/home/david/webpack-demo/src/components/trending_topic/index.js",
+		"/home/david/webpack-demo/src/components/home/index.js",
+		"/home/david/webpack-demo/dist/server.bundle.js",
+		"/home/david/webpack-demo/src/components/app2.js",
+		"/home/david/pro.pyc",
+		"/home/david/node_cluster_program_package/ssr.js",
+		"/home/david/node_cluster_program_package/pro.js",
+		"/home/david/node_cluster_program_package/pro_to_java_engne.js",
+		"/home/david/node_cluster_program_package/dist/client.2.js",
+		"/home/david/workspace/orchi.manager/src/main/webapp/dist/client.2.js",
+		"/home/david/node_cluster_program_package/ssrServer.js",
+		"/home/david/node_cluster_program_package/dist/app.2.js",
+		"/home/david/node_cluster_program_package/ssrClient.js",
+		"/home/david/imgCurl",
+		"/home/david/modelo_sentimiento/stages/2_logreg_3da313e220a1/metadata/part-00000",
+		"/home/david/modelo_sentimiento/stages/2_logreg_3da313e220a1/data/part-r-00000-b967586e-fe5c-4dcf-a37d-22ae472c02fa.snappy.parquet",
+		"/home/david/workspace/orchi.manager/src/main/webapp/Posts_dcf0cf1e04a07806802c.js",
+		"/home/david/workspace/orchi.manager/src/main/webapp/vendor2.bundle.js",
+		"/home/david/webpack-demo/src/components/cardPost/index.js",
+		"/home/david/webpack-demo/node_modules/antd/lib/style/index.less.json",
+		"/home/david/webpack-demo/src/components/message/components/EditorResize/index.js",
+		"/home/david/webpack-demo/node_modules/slick-carousel/slick/slick.less",
+		"/home/david/webpack-demo/node_modules/slick-carousel/slick/slick-theme.less",
+		"/home/david/webpack-demo/src/lib/JSJaC-master/src/JSJaCConstants.js",
+		"/home/david/webpack-demo/src/lib/JSJaC-master/src/header.js",
+		"/home/david/webpack-demo/src/lib/JSJaC-master/src/Makefile",
+		"/run/user/1000/gvfs/sftp:host=orchi2,user=david/home/david/cluster_node/file.js",
+		"/home/david/cluster_node/files.js",
+		"/home/david/cluster_node/file.js",
+		"/run/user/1000/gvfs/sftp:host=orchi2,user=david/home/david/file.js",
+		"/home/david/webpack-demo/server.js"
+	],
+	"find":
+	{
+		"height": 21.0
+	},
+	"find_in_files":
+	{
+		"height": 163.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"folders":
+	[
+		{
+			"path": "/home/david/WebAppOrchi"
+		}
+	],
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "src/App/index.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 856,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								747,
+								747
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 156.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/david/WebAppOrchi/package.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2092,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								169,
+								169
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 21.0
+	},
+	"input":
+	{
+		"height": 101.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 158.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 90.0
+	},
+	"pinned_build_system": "Packages/C++/C++ Single File.sublime-build",
+	"project": "",
+	"replace":
+	{
+		"height": 38.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/cpp_v8/main2.cpp"
+			],
+			[
+				"emojine",
+				"dist/css/assets/css/emojione.css"
+			],
+			[
+				"data",
+				"node_modules/caniuse-db/data.json"
+			],
+			[
+				"store",
+				"node_modules/material-ui-icons/Store.js"
+			],
+			[
+				"redu",
+				"~/webpack-demo/src/components/redux/Reducers.js"
+			],
+			[
+				"nav",
+				"~/webpack-demo/src/components/nav.js"
+			],
+			[
+				"re",
+				"~/webpack-demo/src/components/redux/Reducers.js"
+			],
+			[
+				"esto",
+				"~/webpack-demo/src/components/redux/Store.js"
+			],
+			[
+				"editor",
+				"resources/js/Editor.js"
+			],
+			[
+				"index",
+				"~/server/apache-tomcat-9.0.0.M15/webapps/orchi.manager/src/main/webapp/index.jsp"
+			],
+			[
+				"edit",
+				"resources/js/Editor.js"
+			],
+			[
+				"edi",
+				"editor.html"
+			],
+			[
+				"edid",
+				"/media/david/Respaldo/red_social/Editor/Editor_0_0_7/resources/js/Editor.js"
+			],
+			[
+				"banc",
+				"/media/david/Respaldo/red_social/0.0.8/archivos varios/banco alicia.js"
+			],
+			[
+				"sele",
+				"resources/js/HeadingSelection.js"
+			],
+			[
+				"para",
+				"resources/js/Paragraph.js"
+			],
+			[
+				"con",
+				"resources/js/CONSTS.js"
+			],
+			[
+				"ed",
+				"resources/js/Editor.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"/media/david/Respaldo/red_social/Editor/Editor_0_0_9/Editor.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 247.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+		"max_columns": 2
+	}
+}
