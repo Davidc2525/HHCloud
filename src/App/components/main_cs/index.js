@@ -18,6 +18,10 @@ import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router'
+
+import logo from "../../../media/img/logop.png"
+
+
 const drawerWidth = 240;
 
 const styles = theme => ({
@@ -62,7 +66,7 @@ const styles = theme => ({
 
 const ButtonLink = withRouter(({ history }) => (
   <Button 
-   onClick={() => { history.push('/unidad?path?=/') }}
+   onClick={() => { history.push('/unidad?path=/') }}
    variant="extendedFab" color="primary" aria-label="delete" >
     
     <NavigationIcon  />
@@ -85,7 +89,9 @@ class ResponsiveDrawer extends React.Component {
 
     const drawer = (
       <div id="nc">
-        <div className={classes.toolbar} >Logo</div>
+        <div className={classes.toolbar} >
+          <img width="110px" style={{marginLeft:"60px"}} src={logo}/>
+        </div>
         <Divider />
         <ButtonLink/>
         <Divider />

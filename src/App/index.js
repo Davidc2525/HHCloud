@@ -2,7 +2,7 @@ import Auth from "./elements/auth/index.js"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
 import {store} from "./redux/index.js"
-//console.log(store)
+console.log(store)
 //import style from "./css/main.css"
 //import Nav from "./components/Nav/index.js"
 
@@ -60,4 +60,37 @@ class App extends React.Component{
                     <div>login </div>
                   )
                 ) 
-               
+               }
+              } /> 
+              <Route
+                
+                render={props =>
+                  this.props.auth.get("isLogin") ? (
+                    <Main/>
+                  ) : (
+                    <Redirect
+                      to={{
+                        pathname: "/login",
+                        //state: { from: props.location }
+                      }}
+                    />
+                  )
+                }
+              />
+
+              </Switch>
+          </Router>
+
+
+      </div>
+
+      )
+  }
+}
+const AppProvider = ()=>(
+
+  <Provider store={store}><App/></Provider>
+
+  )
+
+export default AppProvider ;

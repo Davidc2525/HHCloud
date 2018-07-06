@@ -37,6 +37,7 @@
     "material-ui-breadcrumbs": "^0.1.6",
     "postcss-loader": "^2.1.5",
     "precss": "^3.1.2",
+    "query-string": "^6.1.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-hot-loader": "^4.1.3",

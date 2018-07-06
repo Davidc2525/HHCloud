@@ -1,6 +1,16 @@
 import { devToolsEnhancer,composeWithDevTools } from 'redux-devtools-extension';
 import { addMiddleware, removeMiddleware, resetMiddlewares } from 'redux-dynamic-middlewares'
 import immutable from "immutable"
+
+
+
+import stateExplorer from "../components/explorer/state.js"
+import reducersExplorer from "../components/explorer/reducers.js"
+import middlewareExplorer from "../components/explorer/middleware.js"
+console.log(stateExplorer)
+
+
+
 import {
 	Map,
 	fromJS
@@ -24,7 +34,8 @@ const initialState = fromJS({
 	},
 	auth:{
 		isLogin:true
-	}
+	},
+	explorer:stateExplorer
 });
 const reducers = combineReducers({
 	app: (state = new Map(), action) => {
@@ -36,13 +47,14 @@ const reducers = combineReducers({
 			return state.set("isLogin",action.isLogin)
 		}
 		return state
-	}
+	},
+	explorer:reducersExplorer
 })
 const composeEnhancers = composeWithDevTools({
   // Specify custom devTools options
 });
 const store = createStore(reducers, initialState, composeEnhancers(
-  applyMiddleware(dynamicMiddlewares),
+  applyMiddleware(dynamicMiddlewares,middlewareExplorer),
   // other store enhancers if any
 ));
 
