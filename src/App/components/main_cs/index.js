@@ -20,7 +20,7 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router'
 
 import logo from "../../../media/img/logop.png"
-
+import Nuevo from "../nuevo_cs/index.js"
 
 const drawerWidth = 240;
 
@@ -159,6 +159,10 @@ class ResponsiveDrawer extends React.Component {
 
               <Route path="/unidad" component={Exprorer}/>
               <Route exact path="/" render={()=><div>Inicio</div>}/>
+              {/*esta rruta es para ese componente
+                  en components/nuevo_cs
+              */}
+              <Route exact path="/nuevo" component={Nuevo}/>
 
             </Switch>
 
