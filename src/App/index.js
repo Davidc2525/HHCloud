@@ -93,10 +93,5 @@ const AppProvider = ()=>(
 
   )
 
-<<<<<<< HEAD
-export default AppProvider ;
-=======
-export default AppProvider ;
 
-
->>>>>>> 24cd3505ce91d63013c54b571facdfd7daaa3535
+export default AppProvider ;

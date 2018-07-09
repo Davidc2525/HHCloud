@@ -8,8 +8,8 @@ export default (state = new Map(), action) => {
 		case "FETCHTED_PATH":
 			var newState = state.setIn(["paths", action.path], fromJS({
 				status: "empty",
-				path: action.path,
-				data: {}
+				loadindToDownload:true,
+				...action.data
 			}))
 
 			return newState
