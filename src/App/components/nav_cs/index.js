@@ -69,7 +69,7 @@ class ResponsiveDrawer extends React.Component {
     return (
      
        <div>
-          <AppBar className={classes.appBar}>
+          <AppBar  className={classes.appBar}>
 
           <Toolbar>
             <IconButton

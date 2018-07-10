@@ -1,4 +1,5 @@
 import Auth from "./elements/auth/index.js"
+import DownloadManager from "./elements/download_manager/index.js"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
 import {store} from "./redux/index.js"

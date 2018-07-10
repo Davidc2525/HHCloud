@@ -11,6 +11,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
+import SideVarContent from './titleData.js';
  import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
  import Exprorer from "../explorer/index.js"
 import Chip from '@material-ui/core/Chip';
@@ -21,6 +22,7 @@ import { withRouter } from 'react-router'
 
 import logo from "../../../media/img/logop.png"
 import Nuevo from "../nuevo_cs/index.js"
+import PahtSee from "../path_see/index.js"
 
 const drawerWidth = 240;
 
@@ -58,15 +60,30 @@ const styles = theme => ({
     },
   },
   content: {
+    width:"98%",
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 1.5,
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit * 0,
+    },
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing.unit * 2,
+    },
+
+   
   },
 });
 
+const getBeforePath = (path,index)=>{
+  const preRuta = path.split("=")[1].split("\/")
+  console.warn(path,index,preRuta)
+  return preRuta.slice(0,index+1)
+}
+
+
 const ButtonLink = withRouter(({ history }) => (
   <Button 
-   onClick={() => { history.push('/unidad?path=/') }}
+   onClick={() => { history.push('/unidad#/') }}
    variant="extendedFab" color="primary" aria-label="delete" >
     
     <NavigationIcon  />
@@ -93,9 +110,11 @@ class ResponsiveDrawer extends React.Component {
           <img width="110px" style={{marginLeft:"60px"}} src={logo}/>
         </div>
         <Divider />
+        
         <ButtonLink/>
+        
         <Divider />
-        <List>{mailFolderListItems}</List>
+        <List><SideVarContent/></List>
         <Divider />
         <List>{otherMailFolderListItems}</List>
       </div>
@@ -135,39 +154,22 @@ class ResponsiveDrawer extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
              
-             <Route path="/unidad" render={({location})=>{
-              return (<div>.
-                  
-                   {
-
-              location.search.split("=")[1].split("\/").slice(1).map((x,i)=>
-                <span>
-                  /                 
-                  <Chip key={i} label={x}  />
-                </span>)
-            }
-
-              </div>)
-             }}/>
+             <Route path="/unidad" component={PahtSee}/>
            
             
             <Switch>
 
-             
-
-              
-
-              <Route path="/unidad" component={Exprorer}/>
-              <Route exact path="/" render={()=><div>Inicio</div>}/>
-              {/*esta rruta es para ese componente
-                  en components/nuevo_cs
-              */}
-              <Route exact path="/nuevo" component={Nuevo}/>
+                <Route path="/unidad" component={Exprorer}/>
+                <Route exact path="/" render={()=><div>Inicio</div>}/>
+                {/*esta rruta es para ese componente
+                    en components/nuevo_cs
+                */}
+                <Route exact path="/nuevo" component={Nuevo}/>
+                <Route exact path="/downloads" render={()=>
+                  <div>Descargas </div>
+                }/>
 
             </Switch>
-
-          
-
         </main>
       </div>
     );

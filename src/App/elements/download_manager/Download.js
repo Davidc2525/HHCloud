@@ -1,6 +1,3 @@
-import {
-	fromJS
-} from "immutable"
 import download from "downloadjs"
 import filesize from "filesize"
 
@@ -39,7 +36,7 @@ const ls = (p) => {
 	})
 }
 
-const dl = (p)=>{
+const dl = (p,callback)=>{
     get(p, "getstatus").then(x=>{
         var url = `http://orchi:8080/api/`
         var args = {
@@ -64,6 +61,7 @@ const dl = (p)=>{
             if (this.status == 200) {
                 var blob = this.response;
                 console.log(x, this)
+                callback(x)
                 if (x.file) {
                     download(blob, x.data.name, x.mime)
                 } else {
@@ -84,7 +82,7 @@ function urlencodeFormData(fd) {
 	var s = '';
 
 	function encode(s) {
-		return (s);
+		return encodeURI(s);
 	}
 	for (var pair of fd.entries()) {
 		if (typeof pair[1] == 'string') {
@@ -94,34 +92,22 @@ function urlencodeFormData(fd) {
 	return s;
 }
 
-export {dl}
-export default store => next => action => {
 
 
-	if (action.middle == "EXPLORER") {
-		if (action.type == "FETCHING_PATH") {
-			setTimeout(() => {
-				get(action.path, "list").then(x => {
-					//x.data.forEach(x=>x.loadindToDownload=false)
-					store.dispatch({
-						path: action.path,
-						type: "FETCHTED_PATH",
-						middle: "EXPLORER",
-						data: x
-					})
-				})
-			}, 0)
+class Download {
 
 
-		}
-
-
-
-		
-
-
+	constructor(path,endDownload){
+		this.path = path;
+		dl(this.path,this.endDownload.bind(this,endDownload))
+	}
+	endDownload(edl){
+		//alert("termino")
+		edl(this)
 	}
 
-
-next(action)
+	
 }
+
+
+export {Download}

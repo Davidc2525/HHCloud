@@ -7,9 +7,12 @@ import immutable from "immutable"
 import stateExplorer from "../components/explorer/state.js"
 import reducersExplorer from "../components/explorer/reducers.js"
 import middlewareExplorer from "../components/explorer/middleware.js"
-console.log(stateExplorer)
 
 
+import stateDownloadManager from "../elements/download_manager/state.js"
+import reducersDownloadManager from "../elements/download_manager/reducers.js"
+import middlewareDownloadManager from "../elements/download_manager/middleware.js"
+console.info(stateDownloadManager,reducersDownloadManager)
 
 import {
 	Map,
@@ -35,7 +38,8 @@ const initialState = fromJS({
 	auth:{
 		isLogin:true
 	},
-	explorer:stateExplorer
+	explorer:stateExplorer,
+	downloads:stateDownloadManager
 });
 const reducers = combineReducers({
 	app: (state = new Map(), action) => {
@@ -48,7 +52,8 @@ const reducers = combineReducers({
 		}
 		return state
 	},
-	explorer:reducersExplorer
+	explorer:reducersExplorer,
+	downloads:reducersDownloadManager
 })
 const composeEnhancers = composeWithDevTools({
   // Specify custom devTools options
