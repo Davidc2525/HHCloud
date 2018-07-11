@@ -29,7 +29,7 @@ class SideVarContent extends React.Component{
 
         {/*descargas*/}
         <ListItem button onClick={()=>{
-            history.push("/downloads")
+            history.push("/download")
           }}>
         <ListItemIcon>
             <ArchiveIcon />

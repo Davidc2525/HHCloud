@@ -3,7 +3,7 @@ import {
 } from "immutable"
 
 
-const state = new Map({downloads:new List()})
+const state = new Map({downloads:new Map()})
 
 
 export default (state)

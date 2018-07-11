@@ -3,7 +3,7 @@ import {
 } from "immutable"
 
 const state = {
-	namecomponent:"explorer",
+	namecomponent: "explorer",
 	paths: {}
 
 }

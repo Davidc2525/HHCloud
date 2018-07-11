@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactResizeDetector from 'react-resize-detector';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -13,16 +14,32 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
  import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
- import Exprorer from "../explorer/index.js"
+ //import Exprorer from "../explorer/index.js"
 import Chip from '@material-ui/core/Chip';
 import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router'
-
+import _ from "lodash"
 import logo from "../../../media/img/logop.png"
 import Nuevo from "../nuevo_cs/index.js"
+import DownloadViewer from "../download_viewer/index.js"
 import PahtSee from "../path_see/index.js"
+
+ 
+import Loadable from 'react-loadable';
+function Loading(props) {
+  if (props.error) {
+    return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
+  } else {
+    return <div>Cargando componente...</div>;
+  }
+} 
+const  Exprorer = Loadable({
+    loader: () =>
+      import ('../explorer/index.js'),
+    loading: Loading
+  });
 
 const drawerWidth = 240;
 
@@ -60,14 +77,17 @@ const styles = theme => ({
     },
   },
   content: {
-    width:"98%",
+    boxSizing: "border-box",
+   
+    height: "100%",
+    width:"100%",
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     [theme.breakpoints.up('sm')]: {
       padding: theme.spacing.unit * 0,
     },
     [theme.breakpoints.up('md')]: {
-      padding: theme.spacing.unit * 2,
+      padding: theme.spacing.unit * 0,
     },
 
    
@@ -92,14 +112,18 @@ const ButtonLink = withRouter(({ history }) => (
  
 ));
 
+
 class ResponsiveDrawer extends React.Component {
   state = {
+    width:0,height:0,
     mobileOpen: false,
   };
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
+
+  debounced = _.debounce((width,height)=>{ this.setState(s=>({width,height:(height-64)})) }, 800, { 'maxWait': 1000 });
 
   render() {
     const { classes, theme } = this.props;
@@ -151,23 +175,25 @@ class ResponsiveDrawer extends React.Component {
           </Drawer>
         </Hidden>
 
-        <main className={classes.content}>
+        <main id="Content" className={classes.content}>
           <div className={classes.toolbar} />
+        <ReactResizeDetector  handleHeight  onResize={this.debounced.bind(this)}>
+         
+        </ReactResizeDetector>
+
+        
              
-             <Route path="/unidad" component={PahtSee}/>
            
             
             <Switch>
 
-                <Route path="/unidad" component={Exprorer}/>
+                <Route path="/unidad" component={(props)=><Exprorer w={this.state.width} h={this.state.height} {...props}/>}/>
                 <Route exact path="/" render={()=><div>Inicio</div>}/>
                 {/*esta rruta es para ese componente
                     en components/nuevo_cs
                 */}
                 <Route exact path="/nuevo" component={Nuevo}/>
-                <Route exact path="/downloads" render={()=>
-                  <div>Descargas </div>
-                }/>
+                <Route exact path="/download" component={(props)=><DownloadViewer w={this.state.width} h={this.state.height} {...props}/>}/>
 
             </Switch>
         </main>

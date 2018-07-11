@@ -3,19 +3,23 @@ import DownloadManager from "./elements/download_manager/index.js"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
 import {store} from "./redux/index.js"
-console.log(store)
+//console.log(store)
 //import style from "./css/main.css"
 //import Nav from "./components/Nav/index.js"
 
-import Home from "./components/main_cs/index.js"
+//import Home from "./components/main_cs/index.js"
+
 
  //import('semantic-ui-css/semantic.min.css');
 //import { Button ,Menu} from 'semantic-ui-react'
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import Loadable from 'react-loadable';
 
-import Button from '@material-ui/core/Button';
- 
+// import Button from '@material-ui/core/Button';
+ const Home = Loadable({
+  loader: () => import('./components/main_cs/index.js'),
+ loading: Loading
+});
     
 function Loading(props) {
   if (props.error) {
@@ -25,10 +29,7 @@ function Loading(props) {
   }
 } 
 
-//const Home = Loadable({
- // loader: () => import('./components/main_cs/index.js'),
-  //loading: Loading
-//});
+
 const Main =()=>(
 
      <Route component={Home}/>

@@ -1,4 +1,5 @@
 import React from "react"
+
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -13,7 +14,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import {dl} from "./middleware.js"
+import {deletingPath}from "./actions.js"
+import {dl,get} from "./middleware.js"
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -32,16 +34,53 @@ import FolderIcon from '@material-ui/icons/Folder';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import FileDownload from '@material-ui/icons/FileDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
-import {fetchingData,MIDDLEWARE,FETCHING_PATH} from  "./actions.js"
+import {fetchingPath,MIDDLEWARE,FETCHING_PATH} from  "./actions.js"
 
 
 import withWidth from '@material-ui/core/withWidth';
-
+import PahtSee from "../path_see/index.js"
 
 import {DownloadManagerInstance} from "../../elements/download_manager/index.js"
+import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller'
+import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
+import  VList from 'react-virtualized/dist/commonjs/List'
+
+const list = [
+		  'Brian Vaughn',
+		  // And so on...
+		];
+		for(var x =0;x<1000000;x++){
+			list.push(x)
+		}
+function rowRenderer ({
+  key,         // Unique key within array of rows
+  index,       // Index of row within collection
+  isScrolling, // The List is currently being scrolled
+  isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+  style        // Style object to be applied to row (to position it)
+}) {
+  return (
+    <div
+      key={key}
+      style={style}
+    >
+      {list[index]}
+    </div>
+  )
+}
 
 const styles = theme => ({
+  content:{
+
+  },
   root: {
+  	 overflowY: "scroll",
+  	 boxSizing: "border-box",
+  	[theme.breakpoints.up('sm')]: {
+      paddingTop: theme.spacing.unit * 2,
+    },
+  	
+  	height:"100%",
     flexGrow: 1,
     
   },
@@ -74,15 +113,15 @@ const styles = theme => ({
 });
 
 @connect((state,props)=>{
-	console.warn(store)
+	
 	var currentPath = props.location.hash.split("#")[1];parse(props.location.search).path
 	let explorer = state.get("explorer");
 	let paths = explorer.get("paths");
 	//let path = paths.get(props.location.search)
 
 	if (!paths.has(currentPath)) {
-		console.log("get path "+currentPath)
-		store.dispatch(fetchingData(currentPath))
+		//console.log("get path "+currentPath)
+		store.dispatch(fetchingPath(currentPath))
 		
 		return {
 			paths: paths.toArray(),
@@ -114,11 +153,15 @@ class Explorer extends React.Component {
 	}
 
 	render(){
-		console.error(this.props)
+		//console.error(this.props)
 		const {classes,width}=this.props
+
 		return (
 
-			<div >
+			<div id="Explorer">
+				<Route path="/unidad" className={classes.toolbar} component={PahtSee}/>
+           
+			
 			
 			
 	          	{/*this.props.paths.map(x=>
@@ -129,7 +172,21 @@ class Explorer extends React.Component {
 				
 				 {this.props.path != null ? 
 
-				 	<div className={classes.root}>
+				 	<div style={{height:this.props.h-(32)}}   className={classes.root}>
+				 	
+				 	{this.props.path.get("status")=="loading"?
+			 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
+			 	 			<Grid item>
+			 	 			 	<Typography color="textSecondary" variant="subheading" >
+				           			{this.props.path.get("path")}
+				         		</Typography>
+				          	</Grid>
+				          	<br/>
+			 	 			<Grid item><CircularProgress /></Grid>
+			 	 		</Grid>
+			 			:
+			 			""
+			 		}
 						 		
 					 	
 					 	{this.props.path.getIn(["data"]) != null ?
@@ -166,16 +223,22 @@ class Explorer extends React.Component {
 				          		
 					 			:
 
-					 			<div>none</div>
+					 			<div>
+					 				<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
+				            			{this.props.path.get("error")}
+				          			</Typography>
+				          		</div>
 					 	}
 
 				 	</div>
 
-				 	 :<div>
+				 	:
+				 	<div>
 				 	 	<Grid style={{ height: "100%"}} justify="center" alignItems="center" container>
-				 	 		<Grid item><CircularProgress /></Grid>
+				 	 		<Grid item>none</Grid>
 				 	 	</Grid>
-				 	 </div>}
+				 	</div>
+				 }
 
 				 
 				  
@@ -293,13 +356,13 @@ const FolderSmall = ({classes,data,history})=>{
 	return (
 			<div>
 			 <List dense={true}>
-			 	<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   className={classes.title} >
+			 	<Typography variant="headline" component="h2" style={{marginLeft:"10px",cursor:"pointer"}}   className={classes.title} >
 		            Carpetas {folders.count()}
 		        </Typography>
 			 	<Divider />
-			 	{folders.map(item=>{
+			 	{folders.map((item,i)=>{
 			 		return (
-                  <ListItem button onClick={()=>{
+                  <ListItem key={i} button onDoubleClick={()=>{
 		          	history.push("/unidad#"+item.get("path"))
 		          }} >
                     <ListItemAvatar>
@@ -313,7 +376,7 @@ const FolderSmall = ({classes,data,history})=>{
                       secondaryTypographyProps={{noWrap:true, variant:"body2"}}
                       primaryTypographyProps={{color:"primary",noWrap:true, variant:"title"}}
                       primary={item.get("name")}
-                      //secondary={filesize(item.get("size"))}
+                      secondary={(item.get("size"))+" elementos"}
                     />
 
                     <ListItemSecondaryAction>
@@ -323,7 +386,11 @@ const FolderSmall = ({classes,data,history})=>{
 			          }}>
                         <FileDownload />
                       </IconButton>
-                       <IconButton  aria-label="Delete">
+                       <IconButton  aria-label="Delete" onClick={()=>{
+			           	
+			          	//get(item.get("path"),"delete")
+			          	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+			          }}>
                         <DeleteIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -333,13 +400,13 @@ const FolderSmall = ({classes,data,history})=>{
 			 	})}
 
 
-			 	<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   className={classes.title} >
+			 	<Typography variant="headline" component="h2" style={{marginLeft:"10px",cursor:"pointer"}}   className={classes.title} >
 		            Archivos {files.count()}
 		        </Typography>
 			 	<Divider />
-			 	{files.map(item=>{
+			 	{files.map((item,i)=>{
 			 		return (
-                  <ListItem button onClick={()=>{
+                  <ListItem key={i} button onDoubleClick={()=>{
 		          	history.push("/unidad#"+item.get("path"))
 		          }} >
                     <ListItemAvatar>
@@ -357,13 +424,16 @@ const FolderSmall = ({classes,data,history})=>{
                     />
 
                     <ListItemSecondaryAction>
-                      <IconButton  aria-label="Descargar"onClick={()=>{
+                      <IconButton  aria-label="Descargar" onClick={()=>{
 			           	
 			          	DownloadManagerInstance.instance.addDownload(item.get("path"))
 			          }}>
                         <FileDownload />
                       </IconButton>
-                       <IconButton  aria-label="Delete">
+                       <IconButton  aria-label="Delete"  onClick={()=>{
+			           	
+			          	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+			          }}>
                         <DeleteIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -376,4 +446,52 @@ const FolderSmall = ({classes,data,history})=>{
 			</div>
 		)
 }
+
+
+function itemRender ({
+  key,         // Unique key within array of rows
+  index,       // Index of row within collection
+  isScrolling, // The List is currently being scrolled
+  isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+  style        // Style object to be applied to row (to position it)
+}) {
+  return (
+  	<div style={{listStyle:"none"}} key={key}
+       button onClick={()=>{
+		          	history.push("/unidad#"+item.get("path"))
+		          }} >
+                   {key}
+                  </div>
+   
+  )
+}
+const FolderSmallV = ({classes,data,history})=>{
+	
+	var load = false;
+
+	const folders = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==false);
+	const files = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==true);
+	return (
+			
+			<AutoSizer>
+				{({ width,height })=>(
+				 
+			          <VList
+				 		//autoHeight
+				 		//scrollTop={scrollTop}
+				  		//isScrolling={isScrolling}
+						width={width}
+						height={height}
+						rowCount={folders.count()+files.count()}
+						rowHeight={74}
+						rowRenderer={itemRender}
+				/>
+			       
+				)}
+			</AutoSizer>
+			
+			
+		)
+}
+
 export default withWidth()(withStyles(styles)(withRouter(Explorer)));
