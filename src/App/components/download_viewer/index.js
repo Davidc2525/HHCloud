@@ -24,6 +24,12 @@ import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
  
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+
+
+
+
  const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -94,6 +100,8 @@ const view=({data,history})=>{
 		          </IconButton>
 		        </ListItemSecondaryAction>
 	      	</ListItem>
+	      	{data.getIn(["progress"])<=99?<LinearProgress value={Math.ceil(data.getIn(["progress"]))} variant={"determinate"}/>:""}
+	      	
 		</Paper>)
 		
 	
@@ -112,7 +120,7 @@ class DownloadViewer extends React.Component{
 	render(){
 		const {downloads,classes,count,history} = this.props;
 		return (
-		<div style={{height:this.props.h,overflow:"auto"}} className={classes.root}>
+		<div /*style={{height:this.props.h,overflow:"auto"}}*/ className={classes.root}>
 			 <Grid item xs={12} md={12}>
 	            <Typography variant="title" className={classes.title}>
 	              Descargas {count}

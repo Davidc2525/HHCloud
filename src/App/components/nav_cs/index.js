@@ -11,11 +11,19 @@ import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import {connect} from "react-redux"
+
+
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 //import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
  
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = theme => (window.theme=theme,{
   root: {
     flexGrow: 1,
     
@@ -26,7 +34,8 @@ const styles = theme => ({
     width: '100%',
   },
   appBar: {
-    position: 'absolute',
+    backgroundColor:theme.palette.primary[theme.palette.type],
+    position: 'fixed',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -36,6 +45,9 @@ const styles = theme => ({
     [theme.breakpoints.up('md')]: {
       display: 'none',
     },
+  },
+  flex: {
+    flex: 1,
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
@@ -56,20 +68,37 @@ const styles = theme => ({
 class ResponsiveDrawer extends React.Component {
   state = {
     mobileOpen: false,
+     auth: true,
+    anchorEl: null,
   };
 
   handleDrawerToggle = () => {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+ 
+
+  handleChange = (event, checked) => {
+    this.setState({ auth: checked });
+  };
+
+  handleMenu = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   render() {
     const { classes, theme } = this.props;
-    
+    const { auth, anchorEl } = this.state;
+    const open = Boolean(anchorEl);
    
     return (
      
        <div>
-          <AppBar  className={classes.appBar}>
+          <AppBar color="primary" className={classes.appBar}>
 
           <Toolbar>
             <IconButton
@@ -81,10 +110,43 @@ class ResponsiveDrawer extends React.Component {
               <MenuIcon />
             </IconButton>
 
-            <Typography variant="title" color="inherit" noWrap>
-              {this.props.app.get("name")}
-            </Typography>
+            <div className={classes.flex}>
+              <Typography variant="title" color="inherit"  noWrap>
+                {this.props.app.get("name")}
+              </Typography>
+            </div>
 
+            <div>
+
+              
+               <IconButton
+                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={this.handleClose}
+                >
+                  <MenuItem onClick={this.handleClose}>Inicio</MenuItem>
+                  <MenuItem onClick={this.handleClose}>Mi unidad</MenuItem>
+                </Menu>
+              
+
+            </div>
             
 
           </Toolbar>

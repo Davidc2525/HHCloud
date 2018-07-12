@@ -17,9 +17,9 @@ const get = (p, op) => {
 		mode: 'cors',
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/x-www-form-urlencoded'
+			//'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
 		},
-		body: urlencodeFormData(fd)
+		body: (fd)
 	}
 	return fetch(`http://orchi:8080/api/`, options).then(x => (console.log(x),
 		x.json())).then(x => x)
@@ -49,10 +49,14 @@ const dl = (p,downloadBind)=>{
         }
         var fd = new FormData()
         fd.append("args", JSON.stringify(args))
+
+        var argsSend = `args=${JSON.stringify(args)}`
+
+
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
         xhr.responseType = 'blob';
-        xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded")
+       //xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
         xhr.onprogress = function(pe) {
         	downloadBind.debounceProgress(pe,x)
             //console.log('progress '+filesize(pe.loaded));
@@ -77,7 +81,7 @@ const dl = (p,downloadBind)=>{
         }
         ;
 
-        xhr.send(urlencodeFormData(fd));
+        xhr.send((fd));
     }
     );
 
@@ -117,6 +121,7 @@ class Download {
 	}, 800, {
 		'maxWait': 800
 	})
+	
 	toObject(){
 		return JSON.parse(JSON.stringify(this))
 	}

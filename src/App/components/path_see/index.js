@@ -1,36 +1,66 @@
 import React,{Component} from "react"
-
+import { withStyles } from '@material-ui/core/styles';
 import {Route} from "react-router-dom";
 import Chip from '@material-ui/core/Chip';
-const styles = {
-	chip_content:{
-		border:"3px"
+import Tooltip from '@material-ui/core/Tooltip';
+const styles = theme => ({
+	content: {
+		//position: "fixed",
+		//: "10px"
+	},
+	chip_content: {
+
+		marginRight: "3px"
 	}
-}
+})
 
 class PathSee extends Component{
-	getBeforePath(path, index) {
-		const preRuta = path.split("#")[1].split("\/")		
-		return preRuta.slice(0, index + 1)
+	
+	getHiddens(paths){
+		return "/"+paths.slice(0,(paths.length/2)).map(x=>x.title).join("/")
 	}
+
 	render(){
-		const {location,history} = this.props;
+		const {location,history,classes} = this.props;
+		const {hash} = location;
+		
+		
+		var paths = location.hash.split("#")[1].split("\/").slice(1).filter(x=>x!="").map((x,i,p)=>{
+		
+			return {path:"/"+p.slice(0,i+1).join("/"),title:x}
+
+		})
+
+		var split = paths.length>2
+
+		var  pathsSee = []
+		if(split){
+			pathsSee=paths.slice((paths.length/2),paths.length)
+		}else{
+			pathsSee=paths
+		}
+		const hiddensPath = this.getHiddens(paths);
 		return (
-                <div>
-	                <span style={styles.chip_content}>
-	                	<Chip onClick={()=>{history.push("/unidad#/")}}  label={"home"}  /></span>                  
+                <div className={classes.content}>
+	                <span >
+	                	<Chip className={classes.chip_content}  onClick={()=>{history.push("/unidad#/")}}  label={"Mi Unidad"}  />
+	                	{split?
+							<Tooltip id="tooltip-fab" title={this.getHiddens(paths)}>
+								<Chip 
+									className={classes.chip_content} 
+									onClick={()=>{history.push("/unidad#"+hiddensPath)}}  
+									label={"..."+hiddensPath.substring(hiddensPath.length-10,hiddensPath.length)} 
+								/>
+							</Tooltip>
+	                		:null}
+
+	                	</span>                  
 	                  	{
 
-	                    		location.hash.split("#")[1].split("\/").slice(1).filter(x=>x!="").map((x,i)=>
-	                      			<span style={styles.chip_content}>
-										/
-										
-											
-										<Chip onClick={()=>{history.push("/unidad#"+this.getBeforePath(location.hash,i).join("/")+"/"+x)}} key={i} label={x}  />
-											
-										
-				                    </span>
-								)
+	                		pathsSee.map((x,i)=>
+	                  				<Chip className={classes.chip_content} onClick={()=>{history.push("/unidad#"+x.path)}} key={x.title} label={x.title}  />
+								
+							)
 	                  }
 
                 </div>
@@ -39,4 +69,4 @@ class PathSee extends Component{
 	}
 }
 
-export default PathSee;
+export default withStyles(styles,{whithTheme:true})(PathSee);

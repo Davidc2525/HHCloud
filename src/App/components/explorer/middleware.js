@@ -19,14 +19,18 @@ const get = (p, op) => {
 	}
 	var fd = new FormData()
 	fd.append("args", JSON.stringify(args))
+	fd.append("path", p)
+	fd.append("op", op)
+	var argsSend = `args=${JSON.stringify(args)}`
+
 	var options = {
 		method: 'POST',
 		mode: 'cors',
 		headers: {
 			'Accept': 'application/json',
-			'Content-Type': 'application/x-www-form-urlencoded'
+			//'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
 		},
-		body: urlencodeFormData(fd)
+		body: fd
 	}
 	return fetch(`http://orchi:8080/api/`, options).then(x => (console.log(x),
 		x.json())).then(x => x)
@@ -58,7 +62,7 @@ const dl = (p) => {
 		var xhr = new XMLHttpRequest();
 		xhr.open('POST', url, true);
 		xhr.responseType = 'blob';
-		xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded")
+		//xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
 		xhr.onprogress = function(pe) {
 			console.log('progress ' + filesize(pe.loaded));
 			if (pe.lengthComputable) {
@@ -79,7 +83,7 @@ const dl = (p) => {
 			}
 		};
 
-		xhr.send(urlencodeFormData(fd));
+		xhr.send((fd));
 	});
 
 }
@@ -104,6 +108,9 @@ export {
 }
 export default store => next => action => {
 	if (action.middle == "EXPLORER") {
+
+
+
 		if (action.type == "FETCHING_PATH") {
 			setTimeout(() => {
 				get(action.path, "list").then(x => {
@@ -141,6 +148,49 @@ export default store => next => action => {
 			}
 
 			return;
+		}
+
+
+		if (action.type == "RENAMING_PATH") {
+			console.warn("cambiando ", action.payload)
+			//next(action)
+
+			if(!false){//sin error al cambiar el nombre
+				setTimeout(() => {
+				store.dispatch({
+					type: "RENAMED_PATH",
+					middle: "EXPLORER",
+					payload: action.payload
+				})
+
+				store.dispatch({
+					type: "CLOSE_RENAME_DIALOG",
+					middle: "EXPLORER",
+					payload: action.payload
+				})
+			}, 2000)
+			}else{//con error al tratar de camiar el nombre
+				setTimeout(() => {
+				store.dispatch({
+					type: "STATUS_RENAME_DIALOG",
+					middle: "EXPLORER",
+					status: "error"
+				})
+				store.dispatch({
+					type: "CANT_EDIT_RENAME_DIALOG",
+					middle: "EXPLORER",
+					cantEdit: true
+				})
+
+				
+			}, 2000)
+			}
+
+			
+
+			next(action)
+			return
+
 		}
 	}
 

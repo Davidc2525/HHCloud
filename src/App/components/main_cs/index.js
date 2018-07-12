@@ -14,7 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
  import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
- //import Exprorer from "../explorer/index.js"
+ import Exprorer from "../explorer/index.js"
 import Chip from '@material-ui/core/Chip';
 import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
@@ -35,7 +35,7 @@ function Loading(props) {
     return <div>Cargando componente...</div>;
   }
 } 
-const  Exprorer = Loadable({
+const  Exprorer2 = Loadable({
     loader: () =>
       import ('../explorer/index.js'),
     loading: Loading
@@ -73,21 +73,24 @@ const styles = theme => ({
   	//backgroundColor:"grey",
     width: drawerWidth,
     [theme.breakpoints.up('md')]: {
-      position: 'relative',
+      position: 'fixed',
     },
   },
   content: {
     boxSizing: "border-box",
    
-    height: "100%",
+    //height: "100%",
     width:"100%",
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
+
     [theme.breakpoints.up('sm')]: {
       padding: theme.spacing.unit * 0,
+      
     },
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing.unit * 0,
+      marginLeft:drawerWidth+"px"
     },
 
    
@@ -135,7 +138,7 @@ class ResponsiveDrawer extends React.Component {
         </div>
         <Divider />
         
-        <ButtonLink/>
+       
         
         <Divider />
         <List><SideVarContent/></List>
@@ -149,6 +152,7 @@ class ResponsiveDrawer extends React.Component {
       	<Nav handleDrawerToggle={this.handleDrawerToggle.bind(this)}/>
         <Hidden mdUp>
           <Drawer
+
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={this.state.mobileOpen}
@@ -163,8 +167,11 @@ class ResponsiveDrawer extends React.Component {
             {drawer}
           </Drawer>
         </Hidden>
+
         <Hidden smDown implementation="css">
           <Drawer
+
+            id={"drawer"}
             variant="permanent"
             open
             classes={{
@@ -177,10 +184,10 @@ class ResponsiveDrawer extends React.Component {
 
         <main id="Content" className={classes.content}>
           <div className={classes.toolbar} />
-        <ReactResizeDetector  handleHeight  onResize={this.debounced.bind(this)}>
-         
-        </ReactResizeDetector>
-
+       {/* <ReactResizeDetector  handleHeight  onResize={this.debounced.bind(this)}>
+                
+               </ReactResizeDetector>
+       */}
         
              
            
