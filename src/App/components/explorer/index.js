@@ -79,6 +79,7 @@ function rowRenderer ({
 
 const styles = theme => ({
   headerHelper:{
+  	width: "-moz-available",
   	width:"-webkit-fill-available",
   	position:"fixed",
   	zIndex:1,
@@ -238,7 +239,7 @@ class Explorer extends React.Component {
 										<Grid item xs={12}>
 											<Paper className={classes.paper} >
 											file 
-											<FileViewer/>
+											{/**<FileViewer/>**/}
 											<br/>
 
 											<div>{fileExtension(this.props.path.get("path"))}</div>
@@ -262,11 +263,12 @@ class Explorer extends React.Component {
 				          		
 					 			:
 
+					 			(this.props.path.get("status")=="error" && 
 					 			<div>
 					 				<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
-				            			{this.props.path.get("error")}
+				            			error name: {this.props.path.get("error")}, mensaje: {this.props.path.get("errorMsg")}
 				          			</Typography>
-				          		</div>
+				          		</div>)
 					 	}
 
 				 	</div>

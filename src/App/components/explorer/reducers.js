@@ -77,6 +77,7 @@ export default (state = new Map(), action) => {
 
 		case "STATUS_RENAME_DIALOG":
 			var newState = state.setIn(["renameDialog","status"], action.status)
+				newState = newState.setIn(["renameDialog","errorMsg"], action.errorMsg)
 			return newState
 
 

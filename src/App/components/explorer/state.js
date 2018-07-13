@@ -6,6 +6,7 @@ const state = {
 	namecomponent: "explorer",
 	renameDialog: {
 		status:"ready", //ready,changing, error
+		errorMsg:"",
 		cantEdit:false,
 		open: false,
 		name: "",

@@ -22,6 +22,7 @@ function Transition(props) {
   return {
     open: state.getIn(["explorer", "renameDialog","open"]),
     status: state.getIn(["explorer","renameDialog","status"]),
+    errorMsg: state.getIn(["explorer","renameDialog","errorMsg"]),
     nameFile: state.getIn(["explorer","renameDialog","name"]),
     cantEdit: state.getIn(["explorer","renameDialog","cantEdit"]),
     path: state.getIn(["explorer","renameDialog","path"])
@@ -67,7 +68,7 @@ function Transition(props) {
   };
 
   handleChange = event => {
-    let newValue = event.target.value.replace(/([\/#\?%\\$`])/ig,"")
+    let newValue = event.target.value.replace(/([\:\/#\?%\\$`])/ig,"")
     this.setState({ value: newValue});
   }
 
@@ -87,6 +88,7 @@ function Transition(props) {
       type: "RENAMING_PATH",
       middle: "EXPLORER",
       payload: {
+        parentPath: this.getParent(this.props.path),
         oldName: this.props.nameFile,
         newName: this.state.value,
         oldPath: this.props.path,
@@ -115,7 +117,7 @@ function Transition(props) {
             <DialogContentText>
              Cambiar de nombre '{this.props.path}'
              <br/>
-             {this.props.status == "error"&&(<strong>a ocurrido un error, intente de nuevo!</strong>)}
+             {this.props.status == "error"&&(<strong>A ocurrido un error ({this.props.errorMsg}), intente de nuevo!</strong>)}
             </DialogContentText>
             {this.props.status == "ready" || this.props.status == "error" ? (
                 <TextField

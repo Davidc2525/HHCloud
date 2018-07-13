@@ -3,7 +3,9 @@ import filesize from "filesize"
 import uniqid from "uniqid"
 import _ from "lodash"
 import {DownloadManagerInstance as dlm} from "./index.js"
+import ApiInstance from "../API/v1/Api.js"
 
+/**Eliminar todo esto
 const get = (p, op) => {
 
 	var args = {
@@ -101,60 +103,90 @@ function urlencodeFormData(fd) {
 	return s;
 }
 
-
+*/
 
 
 class Download {
 
 
-	constructor(path,downloadManager){
+	constructor(path) {
 		this.id = uniqid();
 		this.error = false;
 		this.path = path;
 		this.progress = 0;
-		this.payload = {size:0,loaded:0}
+		this.payload = {
+			size: 0,
+			loaded: 0
+		}
 		//this.downloadManager = downloadManager;
-		dl(this.path,this)
+		ApiInstance.instance.callOperation("download", {
+			path: path,
+			preStart: payload => {
+				this.payload = { ...this.payload,
+					...payload.data
+				}
+			},
+			onProgress: this.debounceProgress,
+			onError: (event,payload)=>{
+				this.onErrorDownload(event,payload)
+			},
+			onLoad: (event, x) => {
+				console.error("onload download", this, event, x)
+				if (event.status == 200) {
+					var blob = event.response;
+					console.log(x, event)
+					this.onEndDonwload(event, x)
+					if (x.file) {
+						download(blob, x.data.name, x.mime)
+					} else {
+						download(blob, ""+x.data.name + ".zip","application/zip")
+					}
+
+				}
+			}
+		})
+		//dl(this.path,this)
 	}
+
 	debounceProgress = _.debounce((event, data) => {
 		this.onprogress(event, data)
 	}, 800, {
 		'maxWait': 800
 	})
-	
-	toObject(){
+
+	toObject() {
 		return JSON.parse(JSON.stringify(this))
 	}
 
-	bind(payload){
+	bind(payload) {
 		this.payload = payload.data
 	}
 
-	onEndDonwload(event,data){	
-		console.warn("onEndDonwload",event,data)
-		dlm.instance.endDownload(this,event)
+	onEndDonwload(event, data) {
+		console.warn("onEndDonwload", event, data)
+		dlm.instance.endDownload(this, event)
 	}
 
-	onErrorDownload(event,data){
+	onErrorDownload(event, data) {
 		//console.error(event)
-		this.error=true;
-		dlm.instance.onError(this,event)
+		this.error = true;
+		dlm.instance.onError(this, event)
 	}
 
-	onprogress(event,data){
-		if(data.file){
+	onprogress(event, data) {
+		if (data.file) {
 			this.payload.loaded = event.loaded
 			//console.warn("onprogress progress "+this.id,(event.loaded / data.data.size) * 100)
 			this.progress = (event.loaded / data.data.size) * 100
-		}else{			
+		} else {
 			this.payload.loaded = event.loaded
 			//console.warn("onprogress "+this.id,event,data)
 			this.progress = (event.loaded / data.data.size) * 100
 		}
-		dlm.instance.onProgress(this,event)
-	}	
+		dlm.instance.onProgress(this, event)
+	}
 
-	
+
 }
 
 

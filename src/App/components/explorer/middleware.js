@@ -1,3 +1,5 @@
+import ApiInstance from "../../elements/API/v1/Api.js"
+
 import {
 	fromJS
 } from "immutable"
@@ -113,39 +115,61 @@ export default store => next => action => {
 
 		if (action.type == "FETCHING_PATH") {
 			setTimeout(() => {
-				get(action.path, "list").then(x => {
+				
+				ApiInstance.instance.callOperation("list",{
+					path:action.path,
+					thenCB:(payload)=>{
+						store.dispatch(fetchtedPath(action.path, payload,"loaded"))
+					},
+					catchCB:(payload)=>{
+						store.dispatch(fetchtedPath(action.path, payload,"error"))
+					}
+				})
+				/*get(action.path, "list").then(x => {
 					if(x.hasOwnProperty("error")){
 						store.dispatch(fetchtedPath(action.path, x,"error"))
 						return
 					}
 					//x.data.forEach(x=>x.loadindToDownload=false)
 					store.dispatch(fetchtedPath(action.path, x,"loaded"))
-				})
+				})*/
 			}, 10)
 			next(action)
 			return;
 		}
 
 		if (action.type == "DELETED_PATH") {
-			get(action.pathParent, "list").then(x => {
-				//x.data.forEach(x=>x.loadindToDownload=false)
-				store.dispatch(fetchtedPath(action.pathParent, x,"loaded"))
+			ApiInstance.instance.callOperation("list", {
+				path: action.pathParent,
+				thenCB: (payload) => {
+					store.dispatch(fetchtedPath(action.pathParent, payload, "loaded"))
+				}
 			})
+
 			//next(action)
 		}
 
-		if (action.type == "DELETING_PATH") {
-			if (confirm("Eliminar '" + action.name + "' ?")) {
-				setTimeout(() => {
+		if (action.type == "DELETING_PATH") {			
+
+				ApiInstance.instance.callOperation("delete",{
+					path:action.path,
+					thenCB:(payload)=>{
+						setTimeout(_=>{
+							store.dispatch(deletedPath(action.path,payload.parent))
+						},10)
+						next(action)
+					},
+					confirmFun:(path)=>confirm("Eliminar '" + path + "' ?")
+				})
+
+				/*setTimeout(() => {
 					get(action.path, "delete").then(itemDelete => {
 
 						store.dispatch(deletedPath(action.path,itemDelete.parent))
 					})
-				}, 0)
-				next(action)
-			} else {
-
-			}
+				}, 0)*/
+				
+			
 
 			return;
 		}
@@ -155,7 +179,53 @@ export default store => next => action => {
 			console.warn("cambiando ", action.payload)
 			//next(action)
 
-			if(!false){//sin error al cambiar el nombre
+
+			ApiInstance.instance.callOperation("rename", {
+				path: action.payload.oldPath,
+				dstPath: action.payload.newPath,
+				thenCB: (payload) => {
+
+					ApiInstance.instance.callOperation("list", {
+						path: action.payload.parentPath,
+						thenCB: (payloadList) => {
+							store.dispatch(fetchtedPath(action.payload.parentPath, payloadList, "loaded"))
+
+						}
+					})
+
+
+					store.dispatch({
+						type: "RENAMED_PATH",
+						middle: "EXPLORER",
+						payload: action.payload
+					})
+
+					store.dispatch({
+						type: "CLOSE_RENAME_DIALOG",
+						middle: "EXPLORER",
+						payload: action.payload
+					})
+
+
+					//store.dispatch(fetchtedPath(action.payload.parentPath, payload, "loaded"))
+					//store.dispatch(fetchtedPath(action.path, payload,"loaded"))
+				},
+				catchCB: (payload) => {
+					store.dispatch({
+						type: "STATUS_RENAME_DIALOG",
+						middle: "EXPLORER",
+						status: "error",
+						errorMsg: payload.errorMsg
+					})
+					store.dispatch({
+						type: "CANT_EDIT_RENAME_DIALOG",
+						middle: "EXPLORER",
+						cantEdit: true
+					})
+				}
+			})
+
+			/*if(!false){//sin error al cambiar el nombre
 				setTimeout(() => {
 				store.dispatch({
 					type: "RENAMED_PATH",
@@ -184,9 +254,9 @@ export default store => next => action => {
 
 				
 			}, 2000)
-			}
+			}*/
 
-			
+
 
 			next(action)
 			return
