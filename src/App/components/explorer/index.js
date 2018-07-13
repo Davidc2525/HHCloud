@@ -387,7 +387,7 @@ const DynamicMenu = (props) => {
     const handleItemClick = trigger ? trigger.onItemClick : null;
 
     return (
-        <ContextMenu id={id}>
+        <ContextMenu  style={{zIndex:"100"}} id={id}>
             <div style={{backgroundColor:"grey",color:"white",zIndex:"100"}}>
             	
             	{trigger && 
@@ -411,6 +411,13 @@ const DynamicMenu = (props) => {
             			<MenuItemCM onClick={handleItemClick} data={{ action: 'move' }}>
             			<MenuItem  aria-label="Move" >
             				Mover
+	                    </MenuItem>
+            			</MenuItemCM>
+
+
+            			<MenuItemCM onClick={handleItemClick} data={{ action: 'delete' }}>
+            			<MenuItem  aria-label="delete" >
+            				Eliminar
 	                    </MenuItem>
             			</MenuItemCM>
 
@@ -460,6 +467,10 @@ class FolderSmall extends React.Component{
 			this.props.history.push("/unidad#"+data.item.get("path"))
 			console.error(data)
 			return
+		}
+
+		if(data.action==="delete"){
+			store.dispatch(deletingPath(data.item.get("path"),data.item.get("name")))
 		}
 
 		if (data.action === 'rename' ) {

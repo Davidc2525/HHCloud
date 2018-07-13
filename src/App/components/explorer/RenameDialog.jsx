@@ -67,7 +67,8 @@ function Transition(props) {
   };
 
   handleChange = event => {
-    this.setState({ value: event.target.value });
+    let newValue = event.target.value.replace(/([\/#\?%\\$`])/ig,"")
+    this.setState({ value: newValue});
   }
 
   handleRename() {
@@ -113,9 +114,6 @@ function Transition(props) {
           <DialogContent>
             <DialogContentText>
              Cambiar de nombre '{this.props.path}'
-             
-             <br/>
-             recuerde q no debe llevar los siguients caracteres "/#"
              <br/>
              {this.props.status == "error"&&(<strong>a ocurrido un error, intente de nuevo!</strong>)}
             </DialogContentText>
