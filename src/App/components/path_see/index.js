@@ -14,6 +14,7 @@ const styles = theme => ({
 	}
 })
 
+@withStyles(styles,{whithTheme:true})
 class PathSee extends Component{
 	
 	getHiddens(paths){
@@ -69,4 +70,4 @@ class PathSee extends Component{
 	}
 }
 
-export default withStyles(styles,{whithTheme:true})(PathSee);
+export default PathSee;

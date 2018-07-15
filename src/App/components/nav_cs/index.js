@@ -64,7 +64,9 @@ const styles = theme => (window.theme=theme,{
   },
 });
 
+//withStyles(styles, { withTheme: true })(ResponsiveDrawer);
 @connect((store,props)=>({app:store.get("app")}))
+@withStyles(styles,{withTheme:true})
 class ResponsiveDrawer extends React.Component {
   state = {
     mobileOpen: false,
@@ -163,4 +165,4 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default ResponsiveDrawer

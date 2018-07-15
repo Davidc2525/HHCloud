@@ -131,6 +131,9 @@ const styles = theme => ({
   toolbar: theme.mixins.toolbar,
 });
 
+
+//withWidth()(withStyles(styles)(withRouter(Explorer)));
+
 @connect((state,props)=>{
 	
 	var currentPath = props.location.hash.split("#")[1];parse(props.location.search).path
@@ -161,6 +164,9 @@ const styles = theme => ({
 }, dispatch => ({
   onClick: event => dispatch(honk()) // <-- empty payload
 }))
+@withRouter
+@withStyles(styles)
+@withWidth()
 class Explorer extends React.Component {
 
 
@@ -171,10 +177,6 @@ class Explorer extends React.Component {
  
 
 	}
-	componentWillReceiveProps(nextProps) {
-		return nextProps != this.props
-	}
-
 	handleCloseDialog(){
 		store.dispatch({type:"CLOSE_RENAME_DIALOG"})
 		//this.setState(s=>({renamedialog:false}))
@@ -667,4 +669,4 @@ const FolderSmallV = ({classes,data,history})=>{
 		)
 }
 
-export default withWidth()(withStyles(styles)(withRouter(Explorer)));
+export default Explorer
