@@ -48,9 +48,10 @@ const styles = theme => ({
     flexGrow: 1,
     
     zIndex: 1,
-    overflow: 'hidden',
+   
     position: 'relative',
     display: 'flex',
+    height:"auto",
     width: '100%',
   },
    button: {
@@ -106,7 +107,7 @@ const getBeforePath = (path,index)=>{
 
 const ButtonLink = withRouter(({ history }) => (
   <Button 
-   onClick={() => { history.push('/unidad#/') }}
+   onClick={() => { history.push('/SC/unidad#/') }}
    variant="extendedFab" color="primary" aria-label="delete" >
     
     <NavigationIcon  />
@@ -115,7 +116,7 @@ const ButtonLink = withRouter(({ history }) => (
  
 ));
 
-
+@withStyles(styles, { withTheme: true })
 class ResponsiveDrawer extends React.Component {
   state = {
     width:0,height:0,
@@ -194,13 +195,13 @@ class ResponsiveDrawer extends React.Component {
             
             <Switch>
 
-                <Route path="/unidad" component={(props)=><Exprorer w={this.state.width} h={this.state.height} {...props}/>}/>
+                <Route path="/SC/unidad" component={(props)=><Exprorer w={this.state.width} h={this.state.height} {...props}/>}/>
                 <Route exact path="/" render={()=><div>Inicio</div>}/>
                 {/*esta rruta es para ese componente
                     en components/nuevo_cs
                 */}
-                <Route exact path="/nuevo" component={Nuevo}/>
-                <Route exact path="/download" component={(props)=><DownloadViewer w={this.state.width} h={this.state.height} {...props}/>}/>
+                <Route exact path="/SC/nuevo" component={Nuevo}/>
+                <Route exact path="/SC/download" component={(props)=><DownloadViewer w={this.state.width} h={this.state.height} {...props}/>}/>
 
             </Switch>
         </main>
@@ -214,4 +215,4 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ResponsiveDrawer);
+export default ResponsiveDrawer

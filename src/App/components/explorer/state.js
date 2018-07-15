@@ -11,9 +11,13 @@ const state = {
 		open: false,
 		name: "",
 	},
-	moveDialog:{
+	moveOrCopyDialog:{
+		op:"copy",//move or copy
 		open:false,
-		path:""
+		path:"",
+		name:"",
+		stauts:"ok",
+		errorMsg:""
 	},
 	copyDialog:{
 		open:false,

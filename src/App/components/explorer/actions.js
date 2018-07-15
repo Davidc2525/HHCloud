@@ -27,6 +27,22 @@ const fetchtedPath = (path, data,status="loading") => {
 }
 
 
+
+/**/
+
+const markDownload=(path,status="none"/*none,downloading,downloaded,error*/)=>{
+	console.warn("markDownload",path,status)
+	return ({
+		type:"MARK_DOWNLOAD",
+		middle: MIDDLEWARE,
+		payload:{
+			path:path,
+			status:status
+		}
+	})
+}
+
+/***/
 const deletingPath = (path, name) => {
 	return ({
 		type: DELETEING_PATH,
@@ -49,6 +65,7 @@ const deletedPath = (path,pathParent) => {
 }
 
 export {
+	markDownload,
 	deletedPath,
 	fetchtedPath,
 	deletingPath,

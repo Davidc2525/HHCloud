@@ -34,7 +34,7 @@ import { withStyles } from '@material-ui/core/styles';
 const ButtonLink = withRouter(({ history ,...rest}) => (
   <Button 
   {...rest}
-   onClick={() => { history.push('/unidad#/') }}
+   onClick={() => { history.push('/SC/unidad#/') }}
    variant="extendedFab" color="primary" aria-label="delete" >   
     Mi Unidad
   </Button>
@@ -55,7 +55,7 @@ class SideVarContent extends React.Component{
       <div>
         {/*descargas*/}
         <ListItem  onClick={()=>{
-            history.push("/unidad#/")
+            history.push("/SC/unidad#/")
           }}>
         
 
@@ -65,7 +65,7 @@ class SideVarContent extends React.Component{
 
         {/*descargas*/}
         <ListItem button onClick={()=>{
-            history.push("/download")
+            history.push("/SC/download")
           }}>
         <ListItemIcon>
             <ArchiveIcon />

@@ -14,6 +14,7 @@ const styles = theme => ({
 	}
 })
 
+
 @withStyles(styles,{whithTheme:true})
 class PathSee extends Component{
 	
@@ -44,12 +45,12 @@ class PathSee extends Component{
 		return (
                 <div className={classes.content}>
 	                <span >
-	                	<Chip className={classes.chip_content}  onClick={()=>{history.push("/unidad#/")}}  label={"Mi Unidad"}  />
+	                	<Chip className={classes.chip_content}  onClick={()=>{history.push("/SC/unidad#/")}}  label={"Mi Unidad"}  />
 	                	{split?
 							<Tooltip id="tooltip-fab" title={this.getHiddens(paths)}>
 								<Chip 
 									className={classes.chip_content} 
-									onClick={()=>{history.push("/unidad#"+hiddensPath)}}  
+									onClick={()=>{history.push("/SC/unidad#"+hiddensPath)}}  
 									label={"..."+hiddensPath.substring(hiddensPath.length-10,hiddensPath.length)} 
 								/>
 							</Tooltip>
@@ -59,7 +60,7 @@ class PathSee extends Component{
 	                  	{
 
 	                		pathsSee.map((x,i)=>
-	                  				<Chip className={classes.chip_content} onClick={()=>{history.push("/unidad#"+x.path)}} key={x.title} label={x.title}  />
+	                  				<Chip className={classes.chip_content} onClick={()=>{history.push("/SC/unidad#"+x.path)}} key={x.title} label={x.title}  />
 								
 							)
 	                  }

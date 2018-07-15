@@ -6,7 +6,7 @@ cd SucreCloud
 
 npm install
 
-npm run build-client && npm run start-client
+npm run start-client
 
 http://localhost:9090
 

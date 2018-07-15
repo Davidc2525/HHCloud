@@ -10,8 +10,15 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import {store} from "../../redux/index.js"
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import Slide from '@material-ui/core/Slide';
+import { withStyles } from '@material-ui/core/styles';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+
+import {
+    getParent,
+    mergePath
+  } from "./Util.js"
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
@@ -45,6 +52,7 @@ function Transition(props) {
      this.setState({value:nextProps.nameFile}) 
   }
   getParent(path = "/") {
+    return getParent(path)
     let p = path.split("/").filter(x => x != "")
 
     let parentPath = p.slice(0, p.length - 1).join("/")
@@ -58,7 +66,8 @@ function Transition(props) {
   }
 
   newPath(){
-    return (this.getParent(this.props.path)+"/"+this.state.value).replace(/\/\/*/,"/")
+    return mergePath(this.getParent(this.props.path),this.state.value)
+    //return (this.getParent(this.props.path)+"/"+this.state.value).replace(/\/\/*/,"/")
   }
 
   handleClickOpen = () => {
@@ -110,6 +119,9 @@ function Transition(props) {
       <div>
         
         <Dialog
+          disableBackdropClick={!this.props.cantEdit}
+          disableEscapeKeyDown={!this.props.cantEdit}
+          
           TransitionComponent={Transition}
           fullScreen={fullScreen}
           open={this.props.open}
@@ -140,13 +152,14 @@ function Transition(props) {
           }
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
+            <Button disabled={!this.props.cantEdit} onClick={this.handleClose} color="primary">
               Cancel
             </Button>
             <Button
+              variant="contained" size="small" color="primary"
               disabled={this.state.value.length==0||!this.props.cantEdit} 
               onClick={this.handleRename.bind(this)} 
-              color="primary">
+              >
               Cambiar
             </Button>
           </DialogActions>
@@ -157,4 +170,4 @@ function Transition(props) {
 }
 
 
-export default withMobileDialog()(RenameDialog)
+export default withMobileDialog()(withStyles(theme=>({}),{withTheme:true})(RenameDialog))

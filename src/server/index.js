@@ -23,8 +23,12 @@ var path = require("path");
 
 var app = express();
 app.use(express.static(path.join(__dirname,"../../dist")));
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../dist', 'index.html'));
+});
+
+app.get('/SC/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../../dist/SC', 'index.html'));
 });
 app.listen(7777,function(){
     console.log("Started listening on port", 7777);

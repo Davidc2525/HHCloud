@@ -2,7 +2,7 @@ import React from "react"
 import {
   push
 } from "react-router-redux";
-
+import {List as ListI} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -26,6 +26,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -43,6 +44,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
 import RenameDialog from "./RenameDialog.jsx"
+import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx"
 
 import withWidth from '@material-ui/core/withWidth';
 import PahtSee from "../path_see/index.js"
@@ -132,8 +134,9 @@ const styles = theme => ({
 });
 
 
-//withWidth()(withStyles(styles)(withRouter(Explorer)));
-
+@withRouter
+@withStyles(styles,{withTheme:true})
+@withWidth()
 @connect((state,props)=>{
 	
 	var currentPath = props.location.hash.split("#")[1];parse(props.location.search).path
@@ -164,9 +167,6 @@ const styles = theme => ({
 }, dispatch => ({
   onClick: event => dispatch(honk()) // <-- empty payload
 }))
-@withRouter
-@withStyles(styles)
-@withWidth()
 class Explorer extends React.Component {
 
 
@@ -192,11 +192,15 @@ class Explorer extends React.Component {
 				
 				{/**Dialogo de cambio de nombre*/}
 				<RenameDialog />
+
+
+				{/**Dialogo de mover o copiar ruta <MoveOrCopyDialog />*/}
+				<MoveOrCopyDialog />
 				
 
 				<div className={classes.headerHelper}>
 					
-					<Route path="/unidad" style={{position:"fixed"}} className={classes.toolbar} component={PahtSee}/>
+					<Route path="/SC/unidad" style={{position:"fixed"}} className={classes.toolbar} component={PahtSee}/>
 					
 				</div>
 				<div className={classes.toolbar} />
@@ -206,7 +210,7 @@ class Explorer extends React.Component {
 			
 	          	{/*this.props.paths.map(x=>
 	          		<div>
-	          	 		{<Link to={`//unidad#${x.get("path")}`} >{x.get("path")}</Link>} 
+	          	 		{<Link to={`/SC/unidad#${x.get("path")}`} >{x.get("path")}</Link>} 
 	          	 	</div>
 	          	 )*/}
 				
@@ -301,7 +305,7 @@ class Explorer extends React.Component {
 const FolderBig = ({classes,data,history})=>{
 	/*
 	<Paper  className={classes.paper}>
-		<Link to={`//unidad#${x.get("path")}`} >{x.get("path")}</Link> {filesize(x.get("size"))}
+		<Link to={`/SC/unidad#${x.get("path")}`} >{x.get("path")}</Link> {filesize(x.get("size"))}
 	</Paper>*/
 	
 	const folders = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==false);
@@ -315,7 +319,7 @@ const FolderBig = ({classes,data,history})=>{
 				        <CardContent>
 				         
 				          <Typography variant="headline" component="h2" style={{cursor:"pointer"}}  onClick={()=>{
-				          	history.push("/unidad#"+folder.get("path"))
+				          	history.push("/SC/unidad#"+folder.get("path"))
 				          }} noWrap={true} className={classes.title} >
 				            {folder.get("name")}
 				          </Typography>
@@ -333,7 +337,7 @@ const FolderBig = ({classes,data,history})=>{
 				        </CardContent>
 				        <CardActions>
 				          <Button onClick={()=>{
-				          	history.push("/unidad#"+folder.get("path"))
+				          	history.push("/SC/unidad#"+folder.get("path"))
 				          }} size="small">Abrir</Button>
 				           <Button onClick={()=>{
 				           	load = true
@@ -353,7 +357,7 @@ const FolderBig = ({classes,data,history})=>{
 				        <CardContent>
 				         
 				          <Typography variant="headline" component="h2" style={{cursor:"pointer"}}  onClick={()=>{
-				          	history.push("/unidad#"+file.get("path"))
+				          	history.push("/SC/unidad#"+file.get("path"))
 				          }} noWrap={true} className={classes.title} >
 				            {file.get("name")}
 				          </Typography>
@@ -371,7 +375,7 @@ const FolderBig = ({classes,data,history})=>{
 				        </CardContent>
 				        <CardActions>
 				          <Button onClick={()=>{
-				          	history.push("/unidad#"+file.get("path"))
+				          	history.push("/SC/unidad#"+file.get("path"))
 				          }} size="small">Abrir</Button>
 				           <Button onClick={()=>{
 				           	load = true
@@ -400,7 +404,7 @@ const DynamicMenu = (props) => {
         <ContextMenu  style={{zIndex:"100"}} id={id}>
             <div style={{backgroundColor:"grey",color:"white",zIndex:"100"}}>
             	
-            	{trigger && 
+            	{trigger && !trigger.disabled &&
             		<div>
             			
             			<MenuItemCM onClick={handleItemClick} data={{ action: 'open' }}><MenuItem>{`Abrir`}</MenuItem></MenuItemCM>
@@ -414,13 +418,13 @@ const DynamicMenu = (props) => {
 
             			<MenuItemCM onClick={handleItemClick} data={{ action: 'copy' }}>
             			<MenuItem  aria-label="Copiar" >
-	                        Copiar
+	                        Copiar en
 	                    </MenuItem>
             			</MenuItemCM>
 
             			<MenuItemCM onClick={handleItemClick} data={{ action: 'move' }}>
             			<MenuItem  aria-label="Move" >
-            				Mover
+            				Mover a
 	                    </MenuItem>
             			</MenuItemCM>
 
@@ -432,9 +436,9 @@ const DynamicMenu = (props) => {
             			</MenuItemCM>
 
             			<MenuItemCM onClick={handleItemClick} data={{ action: 'download' }}>
-            			<MenuItem  aria-label="Descargar" >
-	                        Descargar
-	                    </MenuItem>
+	            			<MenuItem  aria-label="Descargar" >
+		                        Descargar
+		                    </MenuItem>
             			</MenuItemCM>
 
             			
@@ -461,7 +465,13 @@ class FolderSmall extends React.Component{
 	
 	constructor(props){
 		super(props)
-		this.state={renamedialog:false}
+		this.state = {
+			renamedialog: false,
+			
+			sortBy: "name",
+			order:true //true = asc, false = desc
+		}
+		window.fs = this
 	}
 
 	handleClickItemMenuContext = (e, data, target) => {
@@ -475,7 +485,7 @@ class FolderSmall extends React.Component{
 
 		if (data.action === 'open' ) {
 
-			this.props.history.push("/unidad#"+data.item.get("path"))
+			this.props.history.push("/SC/unidad#"+data.item.get("path"))
 			console.error(this.props.history,this.props.history.push,push)
 			return
 		}
@@ -484,6 +494,27 @@ class FolderSmall extends React.Component{
 			store.dispatch(deletingPath(data.item.get("path"),data.item.get("name")))
 		}
 
+		if(data.action==="copy"){
+			store.dispatch({
+				type:"OPEN_MOVE_OR_COPY_DIALOG",
+				payload:{
+					op:"copy",
+					path:data.item.get("path"),
+					name:data.item.get("name")
+				}
+			})
+		}
+
+		if(data.action==="move"){
+			store.dispatch({
+				type:"OPEN_MOVE_OR_COPY_DIALOG",
+				payload:{
+					op:"move",
+					path:data.item.get("path"),
+					name:data.item.get("name")
+				}
+			})
+		}
 		if (data.action === 'rename' ) {
 			store.dispatch({
 				type: "OPEN_RENAME_DIALOG",
@@ -495,128 +526,201 @@ class FolderSmall extends React.Component{
 		}
 	}
 	
+	stateDownloadString(item) {
+		var state = "";
+		if (item.get("download") != undefined) {
+			if (item.get("download") != "none") {
+				state = item.get("download")
+			}
+		}
+
+		return state!="" ? `, (${state})`:state;
+	}
+
+	sortBy(order, valueA, valueB) {
+
+		var sort = 0;
+
+		if (valueA < valueB) {
+			sort = order ? -1 : 1
+		}
+
+		if (valueA > valueB) {
+			sort = order ? 1 : -1
+		}
+
+		return sort;
+	}
+
+	setSortBy(sortBy,order=true){this.setState({sortBy,order})}
 
 	render(){
 		
 		const {classes,data,history} = this.props;
-		const folders = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==false);
-		const files = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==true);
+		const groups = data.get("data").groupBy(x=>x.get("file")?"file":"folder")
+			console.warn("groups",groups)
+		var folders = groups.get("folder");
+
+		if(folders!=null){
+			folders=folders.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b))
+		}else{
+			folders = new ListI()
+		}
+		//.filter(x=>x.get("file")==false);
+
+		var files = groups.get("file");
+		if(files!=null){
+			files = files.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b))
+		}else{
+			files = new ListI();
+		}
+		//.filter(x=>x.get("file")==true);
 		return (
-				<div>
-				
-				 <List dense={true}>
-				 	<Typography variant="headline" component="h2" style={{marginLeft:"10px",cursor:"pointer"}}   className={classes.title} >
-			            Carpetas {folders.count()}
-			        </Typography>
-				 	<Divider />
+				<div style={{overflowX:"hidden"}}>
+				{(folders.count() == 0 && files.count() == 0)&&
+					<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
+		 	 			<Grid item>
+		 	 			 	<Typography>Carpeta Vacia</Typography>
+			          	</Grid>
+		 	 		</Grid>
+					
+				}
+				{(folders.count() > 0 || files.count() > 0 )&&<List dense={true}>
+				 	{folders.count()>0&&
+
+				 		<ListItem divider >		                    
+			
+			                    <ListItemText
+			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
+			                      primary={"Carpetas"}
+			                      secondary={folders.count()}
+			                    />
+			            </ListItem>
+				 	}
+				 	
 				 	{folders.map((item,i)=>{
 				 		return (
-				 	<ContextMenuTrigger 
-				 		onItemClick={this.handleClickItemMenuContext}
-				 		item={item}
-					 	name={item.get("name")}
-	                    holdToDisplay={1000}
-	                    collect={collect} 
-	                    
-					 	id={"itemList"}>
-	
-	                  <ListItem key={i.toString()} button 
-	                 
-	                  onClick={()=>{
-			          	history.push("/unidad#"+item.get("path"))
-			          }} 
-			         >
-	                    <ListItemAvatar>
-	                      <Avatar>
-	                       	{item.get("file")?<ArchiveIcon/>:<FolderIcon />}
-	                        
-	                      </Avatar>
-	                    </ListItemAvatar>
-	
-	                    <ListItemText
-	                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-	                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-	                      primary={item.get("name")}
-	                      secondary={(item.get("elements"))+" elementos"}
-	                    />
-	
-	                    {/*<ListItemSecondaryAction>
-	                      <IconButton  aria-label="Descargar" onClick={()=>{
-				           	
-				          	DownloadManagerInstance.instance.addDownload(item.get("path"))
-				          }}>
-	                        <FileDownload />
-	                      </IconButton>
-	                       <IconButton  aria-label="Delete" color="secondary" onClick={()=>{
-				           	
-				          	//get(item.get("path"),"delete")
-				          	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-				          }}>
-	                        <DeleteIcon />
-	                      </IconButton>
-	                    </ListItemSecondaryAction>*/}
-	                    <div>
-	
-	                    
-	
-					    </div>
-	                  </ListItem>
-					</ContextMenuTrigger>
+						 	<ContextMenuTrigger 
+						 		disabled={false}
+						 		onItemClick={this.handleClickItemMenuContext}
+						 		item={item}
+							 	name={item.get("name")}
+			                    holdToDisplay={1000}
+			                    collect={collect} 
+			                    
+							 	id={"itemList"}>
+			
+			                  <ListItem  key={i.toString()} button 
+			                 
+			                  onClick={()=>{
+					          	history.push("/SC/unidad#"+item.get("path"))
+					          }} 
+					         >
+			                    <ListItemAvatar>
+			                      <Avatar>
+			                       	{item.get("file")?<ArchiveIcon/>:<FolderIcon />}
+			                        
+			                      </Avatar>
+			                    </ListItemAvatar>
+			
+			                    <ListItemText
+			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
+			                      primary={item.get("name")}
+			                      secondary={`${item.get("elements")} elementos ${this.stateDownloadString(item)}`}
+			                    />
+			
+			                   {<ListItemSecondaryAction>
+
+			                      {item.get("download") != undefined && item.get("download") == "downloading" && 
+			                      	<IconButton  aria-label="Descargar" onClick={()=>{
+			                      				           	
+			  				          	//DownloadManagerInstance.instance.addDownload(item.get("path"))
+			  				        }}>
+			                        <FileDownload />
+			                      </IconButton>}
+
+								{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+								   	
+								  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+								  }}>
+								    <DeleteIcon />
+								  </IconButton>*/}
+			                    </ListItemSecondaryAction>}
+			                    <div>
+			
+			                    
+			
+							    </div>
+			                  </ListItem>
+							</ContextMenuTrigger>
 				 			)
 				 	})}
 	
 	
-				 	<Typography variant="headline" component="h2" style={{marginLeft:"10px",cursor:"pointer"}}   className={classes.title} >
-			            Archivos {files.count()}
-			        </Typography>
-				 	<Divider />
+				 	{files.count()>0&&
+				 	<ListItem divider >
+			                    
+			
+			                    <ListItemText
+			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
+			                      primary={"Archivos"}
+			                      secondary={files.count()}
+			                    />
+			        </ListItem>}
+				 	
 				 	{files.map((item,i)=>{
 				 		return (
-				 	<ContextMenuTrigger 
-				 		onItemClick={this.handleClickItemMenuContext}
-				 		item={item}
-					 	name={item.get("name")}
-	                    holdToDisplay={1000}
-	                    collect={collect} 
-	                    
-					 	id={"itemList"}>
-	                  <ListItem key={i} button onClick={()=>{
-			          	history.push("/unidad#"+item.get("path"))
-			          }} >
-	                    <ListItemAvatar>
-	                      <Avatar>
-	                       	{item.get("file")?<ArchiveIcon/>:<FolderIcon />}
-	                        
-	                      </Avatar>
-	                    </ListItemAvatar>
-	
-	                    <ListItemText
-	                      secondaryTypographyProps={{noWrap:false, variant:"body2"}}
-	                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-	                      primary={item.get("name")}
-	                      secondary={filesize(item.get("size"))}
-	                    />
-	
-	                    {/*<ListItemSecondaryAction>
-	                      <IconButton  aria-label="Descargar" onClick={()=>{
-				           	
-				          	DownloadManagerInstance.instance.addDownload(item.get("path"))
-				          }}>
-	                        <FileDownload />
-	                      </IconButton>
-	                       <IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
-				           	
-				          	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-				          }}>
-	                        <DeleteIcon />
-	                      </IconButton>
-	                    </ListItemSecondaryAction>*/}
-	                  </ListItem>
-					</ContextMenuTrigger>
+						 	<ContextMenuTrigger 
+						 		onItemClick={this.handleClickItemMenuContext}
+						 		item={item}
+							 	name={item.get("name")}
+			                    holdToDisplay={1000}
+			                    collect={collect} 
+			                    
+							 	id={"itemList"}>
+			                  <ListItem key={i} button onClick={()=>{
+					          	history.push("/SC/unidad#"+item.get("path"))
+					          }} >
+			                    <ListItemAvatar>
+			                      <Avatar>
+			                       	{item.get("file")?<ArchiveIcon/>:<FolderIcon />}
+			                        
+			                      </Avatar>
+			                    </ListItemAvatar>
+			
+			                    <ListItemText
+			                      secondaryTypographyProps={{noWrap:false, variant:"body2"}}
+			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
+			                      primary={item.get("name")}
+			                      secondary={`${filesize(item.get("size"))} ${this.stateDownloadString(item)}`}
+			                    />
+			
+			                    {<ListItemSecondaryAction>
+
+			                      {item.get("download") != undefined && item.get("download") == "downloading" && 
+			                      	<IconButton  aria-label="Descargar" onClick={()=>{
+			                      				           	
+			  				          	//DownloadManagerInstance.instance.addDownload(item.get("path"))
+			  				        }}>
+			                        <FileDownload />
+			                      </IconButton>}
+
+								{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+								   	
+								  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+								  }}>
+								    <DeleteIcon />
+								  </IconButton>*/}
+			                    </ListItemSecondaryAction>}
+			                  </ListItem>
+							</ContextMenuTrigger>
 				 			)
 				 	})}
 	                
-	              </List>
+	              </List>}
 	              <ConnectedMenu />
 				</div>
 			)}
@@ -633,7 +737,7 @@ function itemRender ({
   return (
   	<div style={{listStyle:"none"}} key={key}
        button onClick={()=>{
-		          	history.push("/unidad#"+item.get("path"))
+		          	history.push("/SC/unidad#"+item.get("path"))
 		          }} >
                    {key}
                   </div>

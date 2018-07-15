@@ -90,7 +90,7 @@ const composeEnhancers = composeWithDevTools({
 
 /**Crear store*/
 const store = createStore(reducers, initialState, composeEnhancers(
-	applyMiddleware(dynamicMiddlewares, middlewareExplorer,mrm),
+	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,mrm),
 ));
 
 

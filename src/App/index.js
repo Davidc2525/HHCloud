@@ -76,10 +76,6 @@ class App extends React.Component{
 
   render(){
         return   (
-
-      
-          
-         
             <Switch>
               <Route exact path="/login" render={()=>
                {
@@ -113,11 +109,7 @@ class App extends React.Component{
                 }
               />
 
-              </Switch>
-          
-
-  
-
+            </Switch>
       )
   }
 }

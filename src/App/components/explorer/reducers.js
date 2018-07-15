@@ -7,6 +7,8 @@ import {
 	DOWNLOAD_STATE
 } from "./actions.js"
 
+import {getParent,getName} from "./Util.js"
+
 export default (state = new Map(), action) => {
 
 	switch (action.type) {
@@ -46,11 +48,59 @@ export default (state = new Map(), action) => {
 
 
 
+		/*markado de descarga*/
+		case "MARK_DOWNLOAD":
+			//action.payload.{path,status}
+			var newState = state;
+			var parentPath = getParent(action.payload.path)
+			var targetName = getName(action.payload.path)
+				//newState = newState.get(action.payload.parentPath)
+			
+			/**actualizar padre en donde se encuentra esa rruta hijo*/
+				/**hijos de la rruta padre*/
+			var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+			
+			if (childrensByParent!=null) {
+				let index  = null; 
+				console.warn(" childrensByParent ", childrensByParent.toJS())
+				var targetPath = childrensByParent.find((x,i) => (index=i,x.get("name") == targetName))
+				if (targetPath != null) {
+					console.warn("targetPath ", targetPath.toJS(),index)
+					var oldPathUpdate = targetPath.set("download",action.payload.status)
+					//oldPathUpdate = oldPathUpdate.set("path",action.payload.newPath)
+					console.warn("oldPathUpdate ", oldPathUpdate.toJS())
+
+					if(index!= null){
+						childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
+						newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+					}
+
+				}
+			}
+
+		return newState 
 
 
+		/**dialogo de mover o copiar*/
+		case "OPEN_MOVE_OR_COPY_DIALOG":
+			var newState = state.setIn(["moveOrCopyDialog","open"], true)
+				newState = newState.setIn(["moveOrCopyDialog","op"], action.payload.op)
+				newState = newState.setIn(["moveOrCopyDialog","cantEdit"], true)
+				newState = newState.setIn(["moveOrCopyDialog","status"], "ready")
+				newState = newState.setIn(["moveOrCopyDialog","name"], action.payload.name)
+				newState = newState.setIn(["moveOrCopyDialog","path"], action.payload.path)
 
+			return newState
+			
+		case "CLOSE_MOVE_OR_COPY_DIALOG":
+			var newState = state.setIn(["moveOrCopyDialog","open"], false)
+					newState = newState.setIn(["moveOrCopyDialog","op"], null)
+					newState = newState.setIn(["moveOrCopyDialog","cantEdit"], false)
+					newState = newState.setIn(["moveOrCopyDialog","status"], "ready")
+					newState = newState.setIn(["moveOrCopyDialog","name"], "")
+					newState = newState.setIn(["moveOrCopyDialog","path"], "")
 
-
+		return newState;
 
 			/**rename dialog*/
 		case "OPEN_RENAME_DIALOG":
