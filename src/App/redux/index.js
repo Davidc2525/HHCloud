@@ -25,6 +25,21 @@ import {
 } from 'redux-dynamic-reducer'
 import dynamicMiddlewares from 'redux-dynamic-middlewares'
 
+import createHistory from "history/createBrowserHistory";
+import {
+  ConnectedRouter,
+  routerReducer,
+  routerMiddleware,
+  syncHistoryWithStore,
+  push
+} from "react-router-redux";
+
+
+const history = (createHistory());
+window.h = history
+window.p=push
+const middleware = routerMiddleware(history);
+const mrm = s=>n=>ax=>(console.log(ax),middleware(ax)(n)(ax))
 
 /**explorer*/
 import stateExplorer from "../components/explorer/state.js"
@@ -53,6 +68,7 @@ const initialState = fromJS({
 
 /**Reducers para cada estado*/
 const reducers = combineReducers({
+	router: routerReducer,
 	app: (state = new Map(), action) => {
 
 		return state
@@ -74,8 +90,7 @@ const composeEnhancers = composeWithDevTools({
 
 /**Crear store*/
 const store = createStore(reducers, initialState, composeEnhancers(
-	applyMiddleware(dynamicMiddlewares, middlewareExplorer),
-	// other store enhancers if any
+	applyMiddleware(dynamicMiddlewares, middlewareExplorer,mrm),
 ));
 
 
@@ -109,5 +124,6 @@ const myMiddleware = store => next => action => {
 
 export {
 	injectAsyncReducer,
-	store
+	store,
+	history
 }

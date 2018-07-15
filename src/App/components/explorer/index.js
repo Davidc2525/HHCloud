@@ -1,4 +1,7 @@
 import React from "react"
+import {
+  push
+} from "react-router-redux";
 
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
@@ -168,6 +171,9 @@ class Explorer extends React.Component {
  
 
 	}
+	componentWillReceiveProps(nextProps) {
+		return nextProps != this.props
+	}
 
 	handleCloseDialog(){
 		store.dispatch({type:"CLOSE_RENAME_DIALOG"})
@@ -206,7 +212,7 @@ class Explorer extends React.Component {
 
 				 	<div /*style={{height:this.props.h-(32)}}*/   className={classes.root}>
 				 	
-				 	{this.props.path.get("status")=="loading"?
+				 	{this.props.path.get("status")=="loading" &&
 			 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
 			 	 			<Grid item>
 
@@ -217,8 +223,8 @@ class Explorer extends React.Component {
 				          	<br/>
 			 	 			<Grid item><CircularProgress /></Grid>
 			 	 		</Grid>
-			 			:
-			 			""
+			 			
+			 			
 			 		}
 						 		
 					 	
@@ -461,13 +467,14 @@ class FolderSmall extends React.Component{
 
 		if (data.action === 'download') {
 			DownloadManagerInstance.instance.addDownload(data.item.get("path"))
-			console.error(data)
+			//console.error(data)
 			return;	
 		}
 
 		if (data.action === 'open' ) {
+
 			this.props.history.push("/unidad#"+data.item.get("path"))
-			console.error(data)
+			console.error(this.props.history,this.props.history.push,push)
 			return
 		}
 

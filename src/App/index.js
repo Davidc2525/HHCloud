@@ -2,9 +2,18 @@ import Auth from "./elements/auth/index.js"
 import DownloadManager from "./elements/download_manager/index.js"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
-import {store} from "./redux/index.js"
+import {store,history} from "./redux/index.js"
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 //console.log(store)
+
+import { withRouter } from 'react-router-dom'
+
+import {
+  ConnectedRouter,
+  routerReducer,
+  routerMiddleware,
+  push
+} from "react-router-redux";
 //import style from "./css/main.css"
 //import Nav from "./components/Nav/index.js"
 
@@ -13,6 +22,7 @@ import Home from "./components/main_cs/index.js"
 
  //import('semantic-ui-css/semantic.min.css');
 //import { Button ,Menu} from 'semantic-ui-react'
+import {  browserHistory } from 'react-router';
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import Loadable from 'react-loadable';
 import red from '@material-ui/core/colors/red';
@@ -60,16 +70,16 @@ const Main =()=>(
   )
 
 
-
+@withRouter
 @connect((state,props)=>({auth:state.get("auth")}))
 class App extends React.Component{
 
   render(){
         return   (
 
-      <div>
+      
           
-          <Router>
+         
             <Switch>
               <Route exact path="/login" render={()=>
                {
@@ -104,17 +114,20 @@ class App extends React.Component{
               />
 
               </Switch>
-          </Router>
+          
 
-
-      </div>
+  
 
       )
   }
 }
 const AppProvider = ()=>(
 
-  <Provider store={store}><App/></Provider>
+  <Provider store={store}>
+    <ConnectedRouter history={ history}>
+      <App/>
+    </ConnectedRouter>
+  </Provider>
 
   )
 

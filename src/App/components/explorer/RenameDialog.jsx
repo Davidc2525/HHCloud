@@ -46,15 +46,19 @@ function Transition(props) {
   }
   getParent(path = "/") {
     let p = path.split("/").filter(x => x != "")
-    let start = "/"
-    if (path[0] != "/") {
-      start = "/"
+
+    let parentPath = p.slice(0, p.length - 1).join("/")
+    var start = "/"
+    if (parentPath[0] == "/") {
+      start = ""
+    }else if(parentPath != ""){
+      start = ""
     }
-    return start + p.slice(0, p.length - 1).join("/")
+    return "/" + parentPath
   }
 
   newPath(){
-    return this.getParent(this.props.path)+"/"+this.state.value
+    return (this.getParent(this.props.path)+"/"+this.state.value).replace(/\/\/*/,"/")
   }
 
   handleClickOpen = () => {

@@ -109,7 +109,7 @@ export {
 	get
 }
 export default store => next => action => {
-	if (action.middle == "EXPLORER") {
+	if (action.middle&&action.middle == "EXPLORER") {
 
 
 
@@ -133,20 +133,9 @@ export default store => next => action => {
 					//x.data.forEach(x=>x.loadindToDownload=false)
 					store.dispatch(fetchtedPath(action.path, x,"loaded"))
 				})*/
-			}, 10)
+			}, 0)
 			next(action)
 			return;
-		}
-
-		if (action.type == "DELETED_PATH") {
-			ApiInstance.instance.callOperation("list", {
-				path: action.pathParent,
-				thenCB: (payload) => {
-					store.dispatch(fetchtedPath(action.pathParent, payload, "loaded"))
-				}
-			})
-
-			//next(action)
 		}
 
 		if (action.type == "DELETING_PATH") {			
@@ -174,6 +163,19 @@ export default store => next => action => {
 			return;
 		}
 
+		if (action.type == "DELETED_PATH") {
+			ApiInstance.instance.callOperation("list", {
+				path: action.pathParent,
+				thenCB: (payload) => {
+					store.dispatch(fetchtedPath(action.pathParent, payload, "loaded"))
+				}
+			})
+
+			//next(action)
+		}
+
+		
+		/**Renamin middles*/
 
 		if (action.type == "RENAMING_PATH") {
 			console.warn("cambiando ", action.payload)
@@ -185,13 +187,14 @@ export default store => next => action => {
 				dstPath: action.payload.newPath,
 				thenCB: (payload) => {
 
-					ApiInstance.instance.callOperation("list", {
-						path: action.payload.parentPath,
+					/*ApiInstance.instance.callOperation("list", {
+						path: action.payload.newPath,
 						thenCB: (payloadList) => {
-							store.dispatch(fetchtedPath(action.payload.parentPath, payloadList, "loaded"))
+							console.log(action)
+							store.dispatch(fetchtedPath(payloadList.path, payloadList, "loaded"))
 
 						}
-					})
+					})*/
 
 
 					store.dispatch({

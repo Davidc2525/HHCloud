@@ -121,10 +121,13 @@ class DownloadViewer extends React.Component{
 		const {downloads,classes,count,history} = this.props;
 		return (
 		<div /*style={{height:this.props.h,overflow:"auto"}}*/ className={classes.root}>
-			 <Grid item xs={12} md={12}>
 	            <Typography variant="title" className={classes.title}>
-	              Descargas {count}
+	              Descarga 
 	            </Typography>
+	             {(count > 0) &&<Typography className={classes.title} variant="body2" gutterBottom>
+			         <span>Descargas en proceso <strong>{count}.</strong></span>
+			      </Typography>}
+			 <Grid item xs={12} md={12}>
 	            <div className={classes.demo}>
 	              <List dense={false}>
 	                {downloads.map(x=>view({data:x,history}))}
