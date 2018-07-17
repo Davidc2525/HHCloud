@@ -29,10 +29,15 @@
   const isRoot = (path)=>{
   	return path == "/"
   }
+
+  const parsePath = (hashPath)=>{
+  	return hashPath.split("#")[1]
+  }
   window.gp = getParent
   window.mp = mergePath
   window.gn = getName
   export {
+  	parsePath,
   	getName,
   	getParent,
   	mergePath

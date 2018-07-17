@@ -237,14 +237,14 @@ class ViewExplorer extends React.Component {
 					          		<Grid spacing={24} justify="flex-start" direction="row" container >
 										<Grid item xs={12}>
 											<Paper className={classes.paper} >
-											file 
-											{/**<FileViewer/>**/}
+											{<FileViewer item={this.props.path} />}
 											{store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	}
-											<br/>
+											
 
 											<div>{fileExtension(this.props.path.get("path"))}</div>
 											<div>{mime.contentType(this.props.path.getIn(["data","name"]))}</div>
 											<strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["data","size"]))}
+											{/**/}
 											</Paper>
 										</Grid>
 									</Grid> 	

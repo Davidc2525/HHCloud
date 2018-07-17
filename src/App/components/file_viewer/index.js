@@ -1,6 +1,15 @@
 
 import React,{Component} from "react"
+/**/
+import RenderPrism from "./RenderPrism.js"
+import RenderPlaint from "./RenderPlaint.js"
+/**/
+
+
+import {exts} from "./maps.js"
 import fileextension from "file-extension"
+//import { Document } from 'react-pdf/dist/entry.webpack';
+//import {  Page } from 'react-pdf'
 //var Prism = require('prismjs');
 var Prism = require('./prism.js');
 
@@ -14,127 +23,102 @@ var code = `
 
 package orchi.SucreCloud.operations;
 
-import java.awt.List;
-import java.io.IOException;
-import java.util.ArrayList;
 
-import javax.servlet.AsyncContext;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.*;
-
-import orchi.SucreCloud.hdfs.HdfsManager;
-import orchi.SucreCloud.hdfs.ZipFiles;
-
-public class DownloadOperation implements IOperation {
-	private static Logger log = LoggerFactory.getLogger(DownloadOperation.class);
-	private static FileSystem fs = HdfsManager.getInstance().fs;
-
-	public DownloadOperation() {
-	}
-
-	public DownloadOperation(AsyncContext ctx, JSONObject arg) {
-		log.info("Nueva operacion de descarga.");
-		//fs = HdfsManager.getInstance().fs;
-		String root = arg.getString("root");
-		String path = arg.getString("path");
-		Path opath = new Path(HdfsManager.newPath(root, path).toString());
-		HttpServletResponse r = ((HttpServletResponse) ctx.getResponse());
-
-		try {
-			if (!fs.exists(opath)) {
-				log.info("{} no existe",opath.toString());
-				ctx.getResponse().getWriter().println("no exists" + opath.toString());
-				log.info("Operacion de descarga terminada {}",opath.toString());
-				ctx.complete();
-			}
-			if (fs.isFile(opath)) {
-				log.info("Descargar archivo {}",opath.toString());
-				FileStatus fileStatus = fs.getFileLinkStatus(opath);
-				System.out.println("		" + fileStatus.getPath().getName());
-				r.addHeader("Content-Disposition", " attachment; filename=\"" + fileStatus.getPath().getName() + "\"");
-
-				HdfsManager.getInstance().readFile(opath, ctx.getResponse().getOutputStream());
-				// ctx.getResponse().getWriter().println( opath.toString() );
-				log.info("Operacion de descarga terminada {}",opath.toString());
-				ctx.complete();
-			}
-
-			if (fs.isDirectory(opath)) {
-				log.info("Descargar directorio {}",opath.toString());
-
-				//r.addHeader("Transfer-Encoding","gzip");
-				r.addHeader("Content-Disposition", " attachment; filename=\"" + opath.getName() + ".zip\"");
-
-				Tree tree = new Tree(opath);
-				ZipFiles zip = new ZipFiles(tree, ctx.getResponse().getOutputStream());
-				zip = null;
-				tree = null;
-
-				log.info("Operacion de descarga terminada {}",opath.toString());
-				// ctx.getResponse().getWriter().println("descargar carpeta");
-				ctx.complete();
-			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public JSONObject call() {
-
-		return null;
-	}
-
-	public static class Tree {
-
-		public ArrayList<String> dirs = new ArrayList<String>();;
-		public Long totalSize = 0L;
-		public Tree(Path path) {
-			log.info("new  tree");
-			get(path);
-
-		}
-
-		public void get(Path path) {
-			log.info("get path {}",path.toString());
-			try {
-				for (FileStatus item : fs.listStatus(path)) {
-					if (item.isFile()) {
-						dirs.add(item.getPath().toString());
-						totalSize+=item.getLen();
-						log.info("\tadd to tree {}",item.getPath().toString());
-					}
-					if (item.isDirectory()) {
-						get(item.getPath());
-					}
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
-}
 
 `;
 
 // Returns a highlighted HTML string
-var html = Prism.highlight(code, Prism.languages["java"]);
+
 class FileViewer extends Component{
-	constructor(props){super(props)}
+	constructor(props){
+		super(props)
+
+		this.renderes = {
+			prism:RenderPrism,
+			plaint:RenderPlaint
+		}
+
+	}
+
+	getContent(ex,base64Content){
+		var contentValue = "";
+		if(exts.hasOwnProperty(ex)){
+			var data = exts[ex];
+			
+			if(typeof data == "string" && viewTextFiles(ex)){
+				contentValue = atob(base64Content)
+			}else{
+				//var content = atob(base64Content)
+				//console.warn(content)
+				var render = new this.renderes[data[0]]()
+					render.setLan(data[1])
+					contentValue = render.render((base64Content))
+			}
+
+		}else{
+			throw `${ex} dont found`
+		}
+
+		return contentValue;
+	}	
+
+	viewTextFiles(ex){
+		var can = false;
+
+		if(ex == "js") can = true; 
+		if(ex == "php") can = true; 
+		if(ex == "javascript") can = true; 
+		if(ex == "html") can = true; 
+		if(ex == "java") can = true; 
+		if(ex == "c") can = true; 
+		if(ex == "cpp") can = true; 
+		if(ex == "css") can = true; 
+		if(ex == "py") can = true; 
+		return can 
+	}
 
 
 	render(){
-		return <pre><code><div dangerouslySetInnerHTML={{__html:html}}/></code></pre>
+
+		const item = this.props.item
+		const path = item.get("path")
+		const fe = fileextension(path)
+
+		var cantView = true;
+		//debugger
+		try{
+
+			var contentValue = this.getContent(fe,item.get("data").get("fileBase64Content") );
+			//var contentValue = Prism.highlight(atob(item.get("data").get("fileBase64Content")), Prism.languages[lagn]);
+			
+		}catch(e){
+			console.warn(e)
+			cantView = false
+		}
+
+		return (<div>
+				{
+					cantView&&
+					<pre>
+					<code><div dangerouslySetInnerHTML={{__html:contentValue}}/></code>
+					</pre>
+				}
+
+				{
+					fe=="pdf"&&
+					<div>
+						 <div>
+					        {/*<Document
+					          file={"data:application/pdf;base64,"+item.get("data").get("fileBase64Content")}
+					          //onLoadSuccess={this.onDocumentLoad}
+					        >
+					        </Document>
+					         */}
+					       
+					      </div>
+					</div>
+				}
+			</div>)
 		//return <div><PrismCode> var a = 1 </PrismCode></div>
 	}
 }

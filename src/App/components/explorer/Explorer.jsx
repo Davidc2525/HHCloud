@@ -4,9 +4,23 @@ import {
 } from "react-router-redux";
 
 /**/
+import Fade from '@material-ui/core/Fade';
+
+import DeleteForever from '@material-ui/icons/DeleteForever';
+import CloudDownload from '@material-ui/icons/CloudDownload';
+import Refresh from '@material-ui/icons/Refresh';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import SelectAll from '@material-ui/icons/SelectAll';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import TextField from '@material-ui/core/TextField';
 import _ from "lodash"
+import SearchBar from 'material-ui-search-bar'
+import Hidden from '@material-ui/core/Hidden';
+import FilterNone from '@material-ui/icons/FilterNone';
+import FlipToFront from '@material-ui/icons/FlipToFront';
+import Chip from '@material-ui/core/Chip';
+import Zoom from '@material-ui/core/Zoom';
+import {getParent,parsePath} from"./Util.js"
 //import IconButton from '@material-ui/core/IconButton';
 /**/
 import {List as ListI} from "immutable"
@@ -26,7 +40,6 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import {deletingPath}from "./actions.js"
 import {dl,get} from "./middleware.js"
-import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -74,14 +87,25 @@ import ViewExplorer from "./ViewExplorer.js"
 
 const styles = theme => ({
   headerHelper:{
+  	display:"flex",
+  	flexDirection:"column",
   	height:"100px",
-  	width: "-moz-available",
-  	width:"-webkit-fill-available",
+  	//width: "-moz-available",
+  	//width:"-webkit-fill-available",
   	position:"fixed",
   	zIndex:1,
   	padding:"0px",
   	backgroundColor:theme.palette.background.paper,
   	boxSizing: "border-box",
+  	[theme.breakpoints.up('xs')]: {
+      width: `100%`,
+    },
+  	[theme.breakpoints.up('md')]: {
+      width: `calc(100% - 240px)`,
+    },
+  },
+  seccions:{
+  	height:"50px"
   },
   root: {
   	// overflowY: "scroll",
@@ -135,10 +159,13 @@ class Explorer extends React.Component{
 		return (
 			<div id="Explorer" >
 
-				<div id="toolbar" className={classes.headerHelper}>
-					<Route path="/SC/unidad" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee2}/>
-					
-					<ToolBar/>
+				<div id="headerHelper" className={classes.headerHelper}>
+					<div className={classes.seccions}>
+						<Route path="/SC/unidad" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee2}/>
+					</div>
+					<div className={classes.seccions}>
+						<ToolBar/>
+					</div>
 					
 				</div>
 				<div style={{height:"100px"}} className={classes.toolbar} />
@@ -152,37 +179,52 @@ export default Explorer
 
 
 
-@connect(state=>{
+const stylesToolBar = theme => ({
+	root:{
+		alignItems:"center",
+		display:"flex",
+		flexGrow:1,
+	},
+	selection:{
+
+	},
+	actionIcos:{flexGrow:0},
+	info:{flexGrow:1}
+})
+
+
+
+@connect(state=>{ 
+	var router = state.getIn(["router"]);
 	var currentType = state.getIn(["explorer","currentType"]);
 	var toolBar = state.getIn(["explorer","toolBar"]);
 	var selection = state.getIn(["explorer","selection"]);
 	var selecteds = state.getIn(["explorer","selection","selecteds"]);
-	return {filter:toolBar.get("filter"),currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
+	return {filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
 })
+@withStyles(stylesToolBar,{withTheme:true})
+//@withRouter
 class ToolBar extends React.Component {
-	constructor(props){super(props); window.tb=this}
+	constructor(props) {
+		super(props);
+
+		window.tb = this
+	}
 	
 
 	onFilterChange(e){
 		//ViewExplorer.nc()
-		var target = e.target;
-		this.onFilterChangeDebounce(target)
+		//var target = e.target.value;
+		var value = e;
+		this.onFilterChangeDebounce(value)
 		//store.dispatch({type:"FILTER_TOOLBAR",payload:{filter:e}})
 	}
 
 
 
-	componentDidCatch(error, info) {
-		window.tb = this
-    // Display fallback UI
-	    this.setState({ hasError: true,error,info });
-	    // You can also log the error to an error reporting service
-	    console.warn(error, info);
-	  }
-
-	onFilterChangeDebounce=_.debounce((target)=>{
+	onFilterChangeDebounce=_.debounce((value)=>{
 		//console.log(target)
-		store.dispatch({type:"FILTER_TOOLBAR",payload:{filter:target.value}})
+		store.dispatch({type:"FILTER_TOOLBAR",payload:{filter:value}})
 	},500)
 
 	onChangeSelectMode(){
@@ -191,32 +233,119 @@ class ToolBar extends React.Component {
 
 	}
 
+	handleAction(event,data){
+		if(data.action == "goparen"){
+			store.dispatch(push("/SC/unidad#"+getParent( parsePath(this.props.router.location.hash)  )))
+		}	
+		if(data.action == "refresh"){
+				store.dispatch(fetchingPath(parsePath(this.props.router.location.hash)))
+		}
+		if(data.action == "selectemode"){
+			this.onChangeSelectMode()
+		}
+		if(data.action == "delete"){
+
+		}
+		if(data.action == "download"){
+
+		}
+		if(data.action == "copy"){
+
+		}
+		if(data.action == "move"){
+
+		}
+
+	}
+
 	render(){
 		const isSelecteMode = this.props.isSelecteMode
 		const selecteds = this.props.selecteds
 		const currentType = this.props.currentType
+		const classes = this.props.classes;
+
+		const anySelecte = selecteds.count()>0
 		//console.warn("isSelecteMode",isSelecteMode,this.props.isSelecteMode)
 		return (
-			 <div>
+			 <div className={classes.root}>
+			 	{!isSelecteMode&&
+			 	<Fade in={!isSelecteMode}>
+				 	<div>
+				 		<IconButton onClick={(e)=>this.handleAction(e,{action:"goparen"})} color="primary" component="span">
+				          <ArrowUpward />
+				        </IconButton>
+
+				         <IconButton onClick={(e)=>this.handleAction(e,{action:"refresh"})} color="primary" component="span">
+				          <Refresh />
+				        </IconButton>
+
+				        {currentType=="folder"&&
+				        <IconButton onClick={(e)=>this.handleAction(e,{action:"selectemode"})} color="primary" component="span">
+				          <SelectAll />
+				        </IconButton>
+				    	}
+				 	</div>
+				 </Fade>
+				}
+
 		        {currentType=="folder"&&
-		        <div id="folder">
-			        <IconButton onClick={this.onChangeSelectMode.bind(this)} color="primary" component="span">
-			          <SelectAll />
-			        </IconButton>
-			        {isSelecteMode&& <span><strong>{selecteds.count()}</strong></span>}
+		        <div className={classes.root} id="folder">
+			        {isSelecteMode&&
+			        <div id="selection" className={ classes.root +" "+classes.selection }>
+				        <Fade in={isSelecteMode}>
+					        <div className={classes.root}>
+					        		
+					        	<div className={classes.root + " " + classes.actionIcos}>
+							        
+						        	
+						            <IconButton onClick={(e)=>this.handleAction(e,{action:"selectemode"})}  color="primary" component="span">
+							          <ArrowBack />
+							        </IconButton>	
+
+							 		<IconButton onClick={(e)=>this.handleAction(e,{action:"delete"})} disabled={!anySelecte} color="primary" component="span">
+							          <DeleteForever />
+							        </IconButton>
+							        
+							        <IconButton onClick={(e)=>this.handleAction(e,{action:"download"})} disabled={!anySelecte} color="primary" component="span">
+							          <CloudDownload />
+							        </IconButton>
+							        
+							        <IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
+							          <FilterNone />
+							        </IconButton>
+
+							        <IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
+							          <FlipToFront />
+							        </IconButton>
+							 	</div>
+						 		<div className={classes.info}>
+						 			
+						 			  {<Zoom in={anySelecte} ><Chip label={selecteds.count()}  /></Zoom>}
+						 			{/*<Typography variant="body2">Selecionados: {selecteds.count()}</Typography>*/}
+
+						 		</div>
+
+					        </div>
+					 	</Fade>
+			        </div>}
+
+
 					
 					{!isSelecteMode&&
-					<span>
-						<TextField
-				          id="search"
-				          
-				          placeholder={"Filtrar"}
-				          type="search"
-				          onChange={this.onFilterChange.bind(this)}
-				        
-				          margin="normal"
-			        	/>
-			        </span>}
+					<Hidden xsDown>
+						<span>
+						 <SearchBar
+						 	style={{height:"35px"}}
+						 	searchIcon={<span></span>}
+						 	closeIcon={<span></span>}
+						    //value={this.state.value}
+							placeholder={"Filtrar"}
+						   	onChange={(newValue) => this.onFilterChange(newValue)}
+						    //onRequestSearch={() => doSomethingWith(this.state.value)}
+						  />
+				        </span>
+			        </Hidden>
+			    	}
 					
 				</div>}
 				{currentType=="file"&&

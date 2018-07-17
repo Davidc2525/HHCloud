@@ -8,7 +8,14 @@ const exts = {
 	mp4: "video",
 
 
-	"htaccess": "text",
+	"cfg": ["plaint","txt"],
+	"log": ["plaint","txt"],
+	"txt": ["plaint","txt"],
+	"bat": ["prism", "bat"],
+	"sh": ["prism", "shell"],
+	"xml": ["prism", "xml"],
+	"py": ["prism", "python"],
+	"htaccess": ["plaint","txt"],
 	"java": ["prism", "java"],
 	"sql": ["prism", "sql"],
 	"php": ["prism", "php"],
@@ -16,7 +23,9 @@ const exts = {
 	"html": ["prism", "html"],
 	"css": ["prism", "css"],
 	"json": ["prism", "json"],
-	"js": ["prism", "javascrip"]
+	"js": ["prism", "jsx"],
+	"jsx": ["prism", "jsx"],
+	"c": ["prism", "c"],
 
 
 	docx: "document",
@@ -39,7 +48,9 @@ const mimes = {
 	"text/html": ["prism", "html"],
 	"text/html": ["prism", "html"],
 	"text/css": ["prism", "css"],
-	"application/json": ["prism", "javascript"]
-	"application/x-httpd-php": ["prism", "php"]
-	"application/javascrip": ["prism", "javascrip"]
+	"application/json": ["prism", "javascript"],
+	"application/x-httpd-php": ["prism", "php"],
+	"application/javascrip": ["prism", "javascrip"],
 }
+
+export {exts}

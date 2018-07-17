@@ -117,7 +117,7 @@ export default store => next => action => {
 			setTimeout(() => {
 				
 				ApiInstance.instance.callOperation("list",{
-					path:action.path,
+					path:action.path,withContent:true,
 					thenCB:(payload)=>{
 						store.dispatch(fetchtedPath(action.path, payload,"loaded"))
 						//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:payload.get("file")?"file":"folder"}})

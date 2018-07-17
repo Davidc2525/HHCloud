@@ -17,7 +17,9 @@ class ListOperation {
 				apiArg: {
 					path: this.path,
 					onlyDirs:onlyDirs,
-					op: "list"
+					withContent:true,
+					op: "list",
+
 				}
 			})
 			.then(x => {

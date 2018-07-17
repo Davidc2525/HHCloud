@@ -2,6 +2,8 @@ import React from "react"
 import {
   push
 } from "react-router-redux";
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+
 import {List as ListI} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
@@ -228,6 +230,7 @@ const ConnectedMenu = connectMenu("itemList")(withStyles(styles,{theme:true})(Dy
 	var selection = state.getIn(["explorer","selection"]);
 	return {filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
 })
+@withMobileDialog()
 class DirectoryList extends React.Component{
 	
 	constructor(props){
@@ -350,7 +353,7 @@ class DirectoryList extends React.Component{
 
 	render(){
 		
-		const {classes,data,history} = this.props;
+		const {classes,data,history,fullScreen} = this.props;
 		const {filter}=this.props
 		var dataList = data.get("data");
 		if(filter!=""){
@@ -384,6 +387,7 @@ class DirectoryList extends React.Component{
 		const {isSelecteMode} = this.props; 
 		return (
 				<div id="DirectoryList" style={{overflowX:"hidden"}}>
+
 				{(folders.count() == 0 && files.count() == 0 && filter == "")&&
 					<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
 		 	 			<Grid item>
@@ -401,7 +405,7 @@ class DirectoryList extends React.Component{
 		 	 		</Grid>
 					
 				}
-				{(folders.count() > 0 || files.count() > 0 )&&<List dense={true}>
+				{(folders.count() > 0 || files.count() > 0 )&&<List dense={!fullScreen}>
 				 	{folders.count()>0&&
 
 				 		<ListItem divider >		                    

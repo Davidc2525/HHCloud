@@ -32,6 +32,7 @@ const styles2 = theme => ({
   tabsIndicator: {
     backgroundColor: '#1890ff',
   },
+
   tabRoot: {
     textTransform: 'initial',
     minWidth: 50,
@@ -65,6 +66,7 @@ const styles2 = theme => ({
   typography: {
     padding: theme.spacing.unit * 3,
   },
+  tabRoot2:{maxWidth:"none",textTransform:"none"},
   tabHome:{ minWidth:"70px"}
 });
 const styles = theme => ({
@@ -170,7 +172,7 @@ class PathSee extends React.Component {
           {this.state.paths.map(x=><Tab  disabled={isSelecteMode}
           	disableRipple
           	//classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-          	className={classes.tabHome} label={x.title} />)}
+          	className={classes.tabRoot2} label={x.title} />)}
             
             
           </Tabs>

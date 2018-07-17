@@ -177,7 +177,7 @@ class MoveOrCopyDialog extends React.Component {
        
         <Dialog
           fullScreen={fullScreen}
-          style={{minWidth:"500px"}}
+          //style={{minWidth:"500px"}}
           open={this.props.open}
           onEnter={this.onEnter.bind(this)}
           TransitionComponent={Transition}
