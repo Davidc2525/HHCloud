@@ -120,6 +120,8 @@ export default store => next => action => {
 					path:action.path,
 					thenCB:(payload)=>{
 						store.dispatch(fetchtedPath(action.path, payload,"loaded"))
+						//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:payload.get("file")?"file":"folder"}})
+						
 					},
 					catchCB:(payload)=>{
 						store.dispatch(fetchtedPath(action.path, payload,"error"))
@@ -174,7 +176,47 @@ export default store => next => action => {
 			//next(action)
 		}
 
+
+
+		/**dialogo de copiar o mover*/
 		
+
+		if (action.type == "OPEN_MOVE_OR_COPY_DIALOG") {
+			store.dispatch({type:"SET_FETCH_MOVE_OR_COPY_DIALOG",payload:{fetching:true}})
+
+			ApiInstance.instance.callOperation("list", {
+				path: "/",
+				thenCB: (payload) => {
+					
+					store.dispatch({type:"SET_STATUS_MOVE_OR_COPY_DIALOG",payload:{status:"ok"}})
+					store.dispatch({type:"SET_FETCH_MOVE_OR_COPY_DIALOG",payload:{fetching:false}})
+					store.dispatch({type:"SET_PATHS_MOVE_OR_COPY_DIALOG",payload:{paths:fromJS(payload),path:"/"}})
+
+					/*paths = this.state.paths
+					paths = paths.set(path, fromJS(payload))
+
+					this.setState({
+						paths: paths,
+						status: "ok"
+					})
+					this.setState({
+						fetchingPath: false
+					})*/
+					console.warn(payload)
+				},
+				catchCB: (payload) => {
+					store.dispatch({type:"SET_STATUS_MOVE_OR_COPY_DIALOG",payload:{status:"error"}})
+					store.dispatch({type:"SET_ERROR_MOVE_OR_COPY_DIALOG",payload:{error:payload.error,errorMsg:payload.error}})
+					store.dispatch({type:"SET_FETCH_MOVE_OR_COPY_DIALOG",payload:{fetching:false}})
+					
+				}
+			})
+			next(action);
+		}
+
+
+		/**dialogo de copiar o mover*/
+
 		/**Renamin middles*/
 
 		if (action.type == "RENAMING_PATH") {
@@ -267,6 +309,16 @@ export default store => next => action => {
 		}
 	}
 
+	if(action.type == "@@router/LOCATION_CHANGE"){
+		if(store.getState().getIn(["explorer","selection","isSelecteMode"])){
+
+			store.dispatch({type:"SELECTED_MODE_TOOLBAR",payload:{selecteMode:false}})
+			
+		}
+		if(   store.getState().getIn(["explorer","toolBar","filter"])!=""   ){
+			store.dispatch({type:"FILTER_TOOLBAR",payload:{filter:""}})
+		}
+	}
 	next(action)
 
 

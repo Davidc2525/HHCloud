@@ -14,7 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
  import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
- import Exprorer from "../explorer/index.js"
+ import Exprorer from "../explorer/Explorer.jsx"
 import Chip from '@material-ui/core/Chip';
 import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
@@ -37,7 +37,7 @@ function Loading(props) {
 } 
 const  Exprorer2 = Loadable({
     loader: () =>
-      import ('../explorer/index.js'),
+      import ('../explorer/Explorer.jsx'),
     loading: Loading
   });
 
@@ -195,8 +195,8 @@ class ResponsiveDrawer extends React.Component {
             
             <Switch>
 
-                <Route path="/SC/unidad" component={(props)=><Exprorer w={this.state.width} h={this.state.height} {...props}/>}/>
-                <Route exact path="/" render={()=><div>Inicio</div>}/>
+                <Route path="/SC/unidad" component={Exprorer}/>
+                <Route exact path="/SC" render={()=><div>Inicio</div>}/>
                 {/*esta rruta es para ese componente
                     en components/nuevo_cs
                 */}

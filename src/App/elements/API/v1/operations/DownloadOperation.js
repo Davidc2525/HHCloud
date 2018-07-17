@@ -1,8 +1,9 @@
 import ApiInstance from "../Api.js"
-
+import * as immutable from "immutable"
+window.imm = immutable
 class DownloadOperation {
 	constructor({
-		path = "/",
+		path = "/",// string or Immutable.List
 		thenCB = _ => {},
 		catchCB = _ => {},
 		/*funciones de eventos de XMLHttpRequest*/
@@ -13,40 +14,45 @@ class DownloadOperation {
 
 	}) {
 		
+		if(immutable.List.isList(path)){
 
-		ApiInstance.instance.callOperation("status", {
-				path: path,
-				thenCB: (payload) => {
-					preStart(payload);
+		}else{
 
-					var args = {
-						path: path,
-						op: "download"
+			ApiInstance.instance.callOperation("status", {
+					path: path,
+					thenCB: (payload) => {
+						preStart(payload);
+
+						var args = {
+							path: path,
+							op: "download"
+						}
+						
+						var fd = new FormData()
+						fd.append("args", JSON.stringify(args))
+
+						var xhr = new XMLHttpRequest();
+						xhr.open('POST', ApiInstance.instance.urlService, true);
+						xhr.responseType = 'blob';
+						xhr.send((fd));
+
+						xhr.onprogress = (event) => {
+							onProgress(event,payload)
+						};
+						
+						xhr.onerror = (event) => {
+							onError(event, payload)
+						}
+						xhr.onload = event => {
+							onLoad(xhr, payload)
+						};
+
+						xhr.send((fd));
 					}
-					
-					var fd = new FormData()
-					fd.append("args", JSON.stringify(args))
 
-					var xhr = new XMLHttpRequest();
-					xhr.open('POST', ApiInstance.instance.urlService, true);
-					xhr.responseType = 'blob';
-					xhr.send((fd));
-
-					xhr.onprogress = (event) => {
-						onProgress(event,payload)
-					};
-					
-					xhr.onerror = (event) => {
-						onError(event, payload)
-					}
-					xhr.onload = event => {
-						onLoad(xhr, payload)
-					};
-
-					xhr.send((fd));
-				}
-
-			})
+				});
+		}
+		
 	}
 
 }

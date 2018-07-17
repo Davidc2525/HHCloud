@@ -2,7 +2,7 @@ import React from "react"
 import {
   push
 } from "react-router-redux";
-import {List as ListI} from "immutable"
+import {Map,List as ListI} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -22,7 +22,7 @@ import {dl,get} from "./middleware.js"
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress'
 import LinearProgress from '@material-ui/core/LinearProgress';
-
+import Checkbox from '@material-ui/core/Checkbox';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -34,6 +34,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import FormGroup from '@material-ui/core/FormGroup';
+import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
+
 import FolderIcon from '@material-ui/icons/Folder';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import FileDownload from '@material-ui/icons/FileDownload';
@@ -47,51 +49,30 @@ import RenameDialog from "./RenameDialog.jsx"
 import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx"
 
 import withWidth from '@material-ui/core/withWidth';
-import PahtSee from "../path_see/index.js"
+import PahtSee1 from "../path_see/index.js"
+import PahtSee2 from "../path_see/index2.jsx"
 
 import {DownloadManagerInstance} from "../../elements/download_manager/index.js"
 import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller'
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
 import  VList from 'react-virtualized/dist/commonjs/List'
 
+import DirectoryList from "./DirectoryList.jsx"
 import fileExtension from "file-extension"
 
 import FileViewer from "../file_viewer"
 import mime from "mime-types"
-const list = [
-		  'Brian Vaughn',
-		  // And so on...
-		];
-		for(var x =0;x<1000000;x++){
-			list.push(x)
-		}
-function rowRenderer ({
-  key,         // Unique key within array of rows
-  index,       // Index of row within collection
-  isScrolling, // The List is currently being scrolled
-  isVisible,   // This row is visible within the List (eg it is not an overscanned row)
-  style        // Style object to be applied to row (to position it)
-}) {
-  return (
-    <div
-      key={key}
-      style={style}
-    >
-      {list[index]}
-    </div>
-  )
-}
 
 const styles = theme => ({
   headerHelper:{
+  	height:"100px",
   	width: "-moz-available",
   	width:"-webkit-fill-available",
   	position:"fixed",
   	zIndex:1,
-  	padding:"10px",
+  	padding:"0px",
   	backgroundColor:theme.palette.background.paper,
   	boxSizing: "border-box",
-  	...theme.mixins.toolbar,
   },
   root: {
   	// overflowY: "scroll",
@@ -151,32 +132,36 @@ const styles = theme => ({
 		
 		return {
 			paths: paths.toArray(),
-			path: null,
+			path: new Map({status:"loading",path:currentPath}),
 			explorer: state.get("explorer")
 		}
 
 
 	}
-
+	var path = paths.get(currentPath);
+	//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:path.get("file")?"file":"folder"}})
 	return {
 		paths: paths.toArray(),  
-		path: paths.get(currentPath),
+		path: path,
 		explorer: state.get("explorer")
 	}
 
-}, dispatch => ({
-  onClick: event => dispatch(honk()) // <-- empty payload
-}))
-class Explorer extends React.Component {
+})
+class ViewExplorer extends React.Component {
 
 
  
 	constructor(props) {
 
 		super(props)
- 
+ 	
 
 	}
+
+	
+
+	
+
 	handleCloseDialog(){
 		store.dispatch({type:"CLOSE_RENAME_DIALOG"})
 		//this.setState(s=>({renamedialog:false}))
@@ -188,7 +173,7 @@ class Explorer extends React.Component {
 
 		return (
 
-			<div id="Explorer">
+			<div id="ViewExplorer">
 				
 				{/**Dialogo de cambio de nombre*/}
 				<RenameDialog />
@@ -198,12 +183,13 @@ class Explorer extends React.Component {
 				<MoveOrCopyDialog />
 				
 
-				<div className={classes.headerHelper}>
-					
-					<Route path="/SC/unidad" style={{position:"fixed"}} className={classes.toolbar} component={PahtSee}/>
+				{/*<div className={classes.headerHelper}>
+					<Route path="/SC/unidad" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee1}/>
+					cosas
 					
 				</div>
-				<div className={classes.toolbar} />
+				<div style={{height:"100px"}} className={classes.toolbar} />
+				*/}
            
 			
 			
@@ -246,12 +232,14 @@ class Explorer extends React.Component {
 					          	this.props.path.get("file")?
 
 					          		//"file"
+
 					          		
 					          		<Grid spacing={24} justify="flex-start" direction="row" container >
 										<Grid item xs={12}>
 											<Paper className={classes.paper} >
 											file 
 											{/**<FileViewer/>**/}
+											{store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	}
 											<br/>
 
 											<div>{fileExtension(this.props.path.get("path"))}</div>
@@ -263,11 +251,11 @@ class Explorer extends React.Component {
 
 					          		:
 					          		//folder
-					          		(width=="sm"||width=="xs"||width=="md") ? 
-					          				<FolderSmall data={this.props.path} history={this.props.history} classes={classes}  />     
-					          			:
+					          		//(width=="sm"||width=="xs"||width=="md") ? 
+					          				<DirectoryList data={this.props.path} history={this.props.history} classes={classes}  />     
+					          			//:
 					          				
-					          				<FolderBig data={this.props.path} history={this.props.history} classes={classes}  />     
+					          			//	<FolderBig data={this.props.path} history={this.props.history} classes={classes}  />     
 					          				
 
 				          		
@@ -497,6 +485,7 @@ class FolderSmall extends React.Component{
 		if(data.action==="copy"){
 			store.dispatch({
 				type:"OPEN_MOVE_OR_COPY_DIALOG",
+				//middle:"EXPLORER",
 				payload:{
 					op:"copy",
 					path:data.item.get("path"),
@@ -508,6 +497,7 @@ class FolderSmall extends React.Component{
 		if(data.action==="move"){
 			store.dispatch({
 				type:"OPEN_MOVE_OR_COPY_DIALOG",
+				//middle:"EXPLORER",
 				payload:{
 					op:"move",
 					path:data.item.get("path"),
@@ -616,13 +606,16 @@ class FolderSmall extends React.Component{
 			                  onClick={()=>{
 					          	history.push("/SC/unidad#"+item.get("path"))
 					          }} 
-					         >
-			                    <ListItemAvatar>
+					         >	
+					         {!true&&<Checkbox/>}
+			                  {
+			                  	!false&&<ListItemAvatar>
 			                      <Avatar>
-			                       	{item.get("file")?<ArchiveIcon/>:<FolderIcon />}
+			                       	{item.get("file")?<InsertDriveFile/>:<FolderIcon />}
 			                        
 			                      </Avatar>
 			                    </ListItemAvatar>
+			                  }
 			
 			                    <ListItemText
 			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
@@ -686,7 +679,7 @@ class FolderSmall extends React.Component{
 					          }} >
 			                    <ListItemAvatar>
 			                      <Avatar>
-			                       	{item.get("file")?<ArchiveIcon/>:<FolderIcon />}
+			                       	{item.get("file")?<InsertDriveFile/>:<FolderIcon />}
 			                        
 			                      </Avatar>
 			                    </ListItemAvatar>
@@ -727,50 +720,6 @@ class FolderSmall extends React.Component{
 }
 
 
-function itemRender ({
-  key,         // Unique key within array of rows
-  index,       // Index of row within collection
-  isScrolling, // The List is currently being scrolled
-  isVisible,   // This row is visible within the List (eg it is not an overscanned row)
-  style        // Style object to be applied to row (to position it)
-}) {
-  return (
-  	<div style={{listStyle:"none"}} key={key}
-       button onClick={()=>{
-		          	history.push("/SC/unidad#"+item.get("path"))
-		          }} >
-                   {key}
-                  </div>
-   
-  )
-}
-const FolderSmallV = ({classes,data,history})=>{
-	
-	var load = false;
 
-	const folders = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==false);
-	const files = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==true);
-	return (
-			
-			<AutoSizer>
-				{({ width,height })=>(
-				 
-			          <VList
-				 		//autoHeight
-				 		//scrollTop={scrollTop}
-				  		//isScrolling={isScrolling}
-						width={width}
-						height={height}
-						rowCount={folders.count()+files.count()}
-						rowHeight={74}
-						rowRenderer={itemRender}
-				/>
-			       
-				)}
-			</AutoSizer>
-			
-			
-		)
-}
 
-export default Explorer
+export default ViewExplorer

@@ -15,7 +15,8 @@ import {Link} from "react-router-dom"
 import {withRouter} from "react-router"
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
- 
+import CloudDownload from '@material-ui/icons/CloudDownload';
+
 
  const style = {
    button: {
@@ -68,7 +69,7 @@ class SideVarContent extends React.Component{
             history.push("/SC/download")
           }}>
         <ListItemIcon>
-            <ArchiveIcon />
+            <CloudDownload />
           </ListItemIcon>
 
          { count>0?

@@ -40,7 +40,7 @@ function Loading(props) {
     return <div>Loading...</div>;
   }
 } 
-const theme = createMuiTheme({
+const dark = createMuiTheme({
   palette: {
     primary: {
       light: '#03A9F4',
@@ -62,8 +62,20 @@ const theme = createMuiTheme({
  
 });
 
+const light = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#40c4ff',
+    },
+    secondary: {
+      main: '#009688',
+    },
+    type: 'light',
+  },
+});
+
 const Main =()=>(
-    <MuiThemeProvider theme={theme}>
+    <MuiThemeProvider theme={!true?light:dark}>
      <Route component={Home}/>
     </MuiThemeProvider>
 

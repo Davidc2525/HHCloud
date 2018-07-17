@@ -20,6 +20,7 @@ export default (state = new Map(), action) => {
 				
 			}))
 
+
 			return newState
 
 		case FETCHTED_PATH:
@@ -28,6 +29,8 @@ export default (state = new Map(), action) => {
 				status: action.status,
 				...action.payload.data
 			}))
+
+			//newState.setIn(["currentType"],action.payload.data.file?"file":"folder")
 
 			return newState
 
@@ -82,6 +85,7 @@ export default (state = new Map(), action) => {
 
 
 		/**dialogo de mover o copiar*/
+		
 		case "OPEN_MOVE_OR_COPY_DIALOG":
 			var newState = state.setIn(["moveOrCopyDialog","open"], true)
 				newState = newState.setIn(["moveOrCopyDialog","op"], action.payload.op)
@@ -101,6 +105,30 @@ export default (state = new Map(), action) => {
 					newState = newState.setIn(["moveOrCopyDialog","path"], "")
 
 		return newState;
+
+		case "SET_STATUS_MOVE_OR_COPY_DIALOG":
+			var newState = state;
+				newState = newState.setIn(["moveOrCopyDialog","status"], action.payload.status)
+
+			return newState
+
+		case "SET_FETCH_MOVE_OR_COPY_DIALOG":
+			var newState = state;
+				newState = newState.setIn(["moveOrCopyDialog","fetchingPath"], action.payload.fetching)
+
+			return newState
+
+			case "SET_PATHS_MOVE_OR_COPY_DIALOG":
+			var newState = state;
+			var paths = newState.getIn(["moveOrCopyDialog","paths"])
+				paths = paths.set(action.payload.path, fromJS(action.payload.paths))					
+				newState = newState.setIn(["moveOrCopyDialog","paths"], paths)
+
+			return newState
+
+
+
+		/**dialogo de mover o copiar*/
 
 			/**rename dialog*/
 		case "OPEN_RENAME_DIALOG":
@@ -162,7 +190,14 @@ export default (state = new Map(), action) => {
 			if (OldpathAbs != null) {
 				var pathsToDelete = paths.filter(itemPath => itemPath.get("path").startsWith(action.payload.oldPath))
 
-				pathsToDelete.forEach( (deletePath) => paths = paths.delete( deletePath.get("path") ) )
+				
+				paths = paths.asMutable();
+
+				pathsToDelete.forEach( (deletePath) => paths.delete( deletePath.get("path") ) )
+
+				paths = paths.asImmutable();
+
+				//pathsToDelete.forEach( (deletePath) => paths = paths.delete( deletePath.get("path") ) )
 
 				newState = newState.set("paths", paths)
 			}
@@ -170,6 +205,58 @@ export default (state = new Map(), action) => {
 			return newState
 
 
+		case "FILTER_TOOLBAR":
+			var newState = state;
+
+			var toolbar = newState.get("toolBar")
+				toolbar = toolbar.set("filter",action.payload.filter)
+				newState = newState.set("toolBar",toolbar)
+			return newState
+		
+		case "SELECTED_MODE_TOOLBAR":
+			var newState = state;
+			var selection = newState.get("selection")
+				selection = selection.set("selecteds",new Map())
+				newState = newState.set("selection",selection);
+			var newStateSelection = action.payload.selecteMode;
+
+
+				selection = selection.set("isSelecteMode",newStateSelection);
+				newState = newState.set("selection",selection)
+			return newState
+
+		case "ADD_ITEM_SELECTION":
+			var newState = state;
+			var selection = newState.get("selection")
+			var selecteds = selection.get("selecteds")
+			var item = action.payload.item
+			var path =  item.get("path")
+				selecteds = selecteds.set(path,item)
+				selection = selection.set("selecteds",selecteds);
+
+				newState = newState.set("selection",selection);
+			return newState;
+
+		case "REMOVE_ITEM_SELECTION":
+			var newState = state;
+			var selection = newState.get("selection")
+			var selecteds = selection.get("selecteds")
+			var item = action.payload.item
+			var path =  item.get("path")
+
+				selecteds = selecteds.delete(path)
+				selection = selection.set("selecteds",selecteds);
+
+				newState = newState.set("selection",selection);
+			return newState;
+
+
+
+		case "CURRENT_TYPE_EXPLORER":
+
+			var newState = state;
+				newState = newState.setIn(["currentType"],action.payload.type)
+		return newState;
 
 		default:
 			return state

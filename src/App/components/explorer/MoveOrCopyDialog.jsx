@@ -43,7 +43,12 @@ function Transition(props) {
     errorMsg: state.getIn(["explorer","moveOrCopyDialog","errorMsg"]),
     nameFile: state.getIn(["explorer","moveOrCopyDialog","name"]),
     cantEdit: state.getIn(["explorer","moveOrCopyDialog","cantEdit"]),
-    path: state.getIn(["explorer","moveOrCopyDialog","path"])
+    path: state.getIn(["explorer","moveOrCopyDialog","path"]),
+   
+    paths: state.getIn(["explorer","moveOrCopyDialog","path"]),
+    fetchingPath: state.getIn(["explorer","moveOrCopyDialog","fetchingPath"]),
+    currentPath: state.getIn(["explorer","moveOrCopyDialog","currentPath"]),
+    pathSelectedToMoveOrCopy: state.getIn(["explorer","moveOrCopyDialog","pathSelectedToMoveOrCopy"]),
   }
 })
 class MoveOrCopyDialog extends React.Component {
@@ -54,18 +59,13 @@ class MoveOrCopyDialog extends React.Component {
     pathSelectedToMoveOrCopy:null,
     fetchingPath:false,
     history:[],
-    status:"ok"
+    status:"ok",
+    cantEdit:true,
+
+    inProgress:false,
+    progress:0,
   };
 
-  handleClickOpen = () => {
-    
-   
-  };
-   
-  handleClose = () => {
-    
-
-  };
 
   onEnter(){
     this.loadPaths("/")
@@ -91,35 +91,38 @@ class MoveOrCopyDialog extends React.Component {
         catchCB:(payload)=>{
           this.setState({status:"error",errorMsg:payload.errorMsg})
         }
-      })
+      });
     }
   }
 
   setCurretPath(path="/",push=true){
     this.setState({currentPath:path})
     this.loadPaths(path)
-    push &&  this.historyPush(path)
+    //push &&  this.historyPush(path)
   }
 
 
-  historyBack(cPath="/"){
+  historyBack(cPath = "/") {
 
-   this.setCurretPath(getParent(cPath),false)
-   this.pathSelect(getParent(cPath))
-    return 
+    this.setCurretPath(getParent(cPath), false)
+    this.pathSelect(getParent(cPath))
+    return
     var ch = this.state.history
-    ch.splice(ch.indexOf(cPath),ch.length)
+    ch.splice(ch.indexOf(cPath), ch.length)
 
-    this.setState({history:ch})
-    if(ch.length>0){
-    this.setCurretPath(ch[ch.length]-1,false)
+    this.setState({
+      history: ch
+    })
+    if (ch.length > 0) {
+      this.setCurretPath(ch[ch.length] - 1, false)
 
-    }else{
-      
-    this.setCurretPath("/",false)
+    } else {
+
+      this.setCurretPath("/", false)
     }
 
   }
+
   historyPush(path){
 
     this.setState(s=>{
@@ -134,10 +137,10 @@ class MoveOrCopyDialog extends React.Component {
   pathSelect(path=null){
       if(path==null){
 
-      this.setState({pathSelectedToMoveOrCopy:null})
+        this.setState({pathSelectedToMoveOrCopy:null})
       }else{
 
-      this.setState({pathSelectedToMoveOrCopy:mergePath(path,this.props.nameFile)})
+        this.setState({pathSelectedToMoveOrCopy:mergePath(path,this.props.nameFile)})
       }
   
   }
@@ -146,6 +149,27 @@ class MoveOrCopyDialog extends React.Component {
     store.dispatch({type:"CLOSE_MOVE_OR_COPY_DIALOG"})
     this.setState(({paths:new Map(),currentPath:"/",pathSelectedToMoveOrCopy:null}))
   }
+
+  onOperation(){
+
+    this.setState({inProgress:true,cantEdit:false})
+    ApiInstance.instance.callOperation(this.props.op,{
+        path:this.props.path,
+        dstPath:this.state.pathSelectedToMoveOrCopy,
+        onProgress:(_,progress)=>{this.setState({progress})},
+        //onReady
+        thenCB:(payload)=>{
+            
+          console.warn(payload)
+          store.dispatch({type:"CLOSE_MOVE_OR_COPY_DIALOG"})
+          this.setState(({inProgress:false,cantEdit:true,paths:new Map(),currentPath:"/",pathSelectedToMoveOrCopy:null}))
+        },
+        catchCB:(payload)=>{
+          this.setState({inProgress:false,cantEdit:true,status:"error",errorMsg:payload.errorMsg})
+        }
+      })
+  }
+
   render() {
     const {fullScreen} = this.props;
     return (
@@ -178,7 +202,7 @@ class MoveOrCopyDialog extends React.Component {
           </div>
 
           <Grid  container justify="center" alignItems="center">
-            {(!this.state.fetchingPath && this.state.status=="ok")&&
+            {(!this.state.inProgress  && !this.state.fetchingPath && this.state.status=="ok")&&
               <Grid item xs><ListPath 
                 loadPaths={this.loadPaths.bind(this)}
                 currentPath={this.state.currentPath}
@@ -191,6 +215,15 @@ class MoveOrCopyDialog extends React.Component {
               {
                 (this.state.fetchingPath && this.state.status=="ok")&&
                 <Grid item lg={24}> <CircularProgress  size={50} /> </Grid>
+              }
+
+               {
+                (this.state.inProgress )&&
+                <Grid item lg={24}> 
+                  <Typography variant="display3" >{this.props.op=="move"?"Moviendo":"Copiando"}</Typography>
+                  <Typography variant="title">{Math.ceil(this.state.progress)}%</Typography>
+                  <CircularProgress variant="static" value={this.state.progress} /> 
+                </Grid>
               }
 
                {
@@ -215,10 +248,10 @@ class MoveOrCopyDialog extends React.Component {
                   {this.state.pathSelectedToMoveOrCopy}
                 </Typography>      
               </div>}
-            <Button onClick={this.onClose.bind(this)} color="primary">
-              Disagree
+            <Button onClick={this.onClose.bind(this)} disabled={!this.state.cantEdit} color="primary">
+              Cancelar
             </Button>
-            <Button disabled={this.state.pathSelectedToMoveOrCopy==null}  variant="contained" size="small" color="primary"  onClick={this.handleClose} >
+            <Button onClick={this.onOperation.bind(this)} disabled={(!this.state.cantEdit||this.state.pathSelectedToMoveOrCopy==null)}  variant="contained" size="small" color="primary"   >
                {this.props.op=="move"?"Mover":"Copiar"}
             </Button>
           </DialogActions>

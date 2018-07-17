@@ -4,9 +4,16 @@ import {Route} from "react-router-dom";
 import Chip from '@material-ui/core/Chip';
 import Tooltip from '@material-ui/core/Tooltip';
 const styles = theme => ({
+	root:{
+		height:"35px",
+		overflow:"hidden"
+	},
 	content: {
 		//position: "fixed",
 		//: "10px"
+		height:"55px",
+		overflowX:"auto",
+		display:"flex"
 	},
 	chip_content: {
 
@@ -33,7 +40,7 @@ class PathSee extends Component{
 
 		})
 
-		var split = paths.length>2
+		var split = paths.length>20
 
 		var  pathsSee = []
 		if(split){
@@ -43,10 +50,11 @@ class PathSee extends Component{
 		}
 		const hiddensPath = this.getHiddens(paths);
 		return (
+                <div className={classes.root}>
                 <div className={classes.content}>
-	                <span >
+	                
 	                	<Chip className={classes.chip_content}  onClick={()=>{history.push("/SC/unidad#/")}}  label={"Mi Unidad"}  />
-	                	{split?
+	                	{split&&
 							<Tooltip id="tooltip-fab" title={this.getHiddens(paths)}>
 								<Chip 
 									className={classes.chip_content} 
@@ -54,9 +62,9 @@ class PathSee extends Component{
 									label={"..."+hiddensPath.substring(hiddensPath.length-10,hiddensPath.length)} 
 								/>
 							</Tooltip>
-	                		:null}
+	                	}
 
-	                	</span>                  
+	                	                
 	                  	{
 
 	                		pathsSee.map((x,i)=>
@@ -65,6 +73,7 @@ class PathSee extends Component{
 							)
 	                  }
 
+                </div>
                 </div>
 
         )
