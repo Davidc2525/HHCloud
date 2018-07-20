@@ -1,6 +1,6 @@
 import {store} from "../../redux/index.js"
 import {Download} from "./Download.js"
-
+import {Map,List} from "immutable";
 class DownloadManager {
 	downloads = {}
 	constructor(){
@@ -8,8 +8,36 @@ class DownloadManager {
 	}
 
 
-	addDownload(path){		
-		var download = new Download(path,this);
+	cancelDownload(id){
+		const download = this.downloads[id];
+		if(download == null){
+			throw "Esa descarga no existe";
+		}
+		download.cancelDownload();
+		store.dispatch({
+			type: "REMOVE_DOWNLOAD",
+			middle:"DOWNLOAD_MANAGER",
+			
+			path: download.path,
+			dl: download
+		})
+	}
+
+	addDownload(item=null){
+		var path = null;
+		var multiple = false;
+		if(item==null){
+			throw new Error("error al descargar, null no es permitido como parametro");
+		}
+		if(Map.isMap(item)){
+			path = item.get("path");
+		}else if(List.isList(item)){
+			multiple = true;
+		}else if(typeof item == "string"){
+			path = item;
+		}
+
+		var download = new Download(item,this);
 
 		this.downloads[download.id]=download;
 		store.dispatch({
@@ -27,9 +55,9 @@ class DownloadManager {
 		store.dispatch({
 			type: "REMOVE_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",
-			dlId: dl.id,
+			
 			path: dl.path,
-			//dl: dl
+			dl: dl
 		})
 	}
 
@@ -39,7 +67,7 @@ class DownloadManager {
 		store.dispatch({
 			type: "ERROR_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",
-			dlId: dl.id,
+			//dlId: dl.id,
 			path: dl.path,
 			dl: dl
 		})
@@ -49,7 +77,7 @@ class DownloadManager {
 		store.dispatch({
 			type: "PROGRESS_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",
-			dlId: dl.id,
+			//dlId: dl.id,
 			path: dl.path,
 			dl: dl
 		})

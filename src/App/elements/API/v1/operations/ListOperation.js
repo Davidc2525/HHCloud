@@ -5,7 +5,8 @@ class ListOperation {
 		path = "/",
 		onlyDirs = false,
 		thenCB = () => {},
-		catchCB = () => {}
+		catchCB = () => {},
+		...rest
 	}) {
 		let timestart = new Date().getTime()
 
@@ -17,12 +18,13 @@ class ListOperation {
 				apiArg: {
 					path: this.path,
 					onlyDirs:onlyDirs,
-					withContent:true,
 					op: "list",
+					...rest
 
 				}
 			})
 			.then(x => {
+			    
 				let timeend = new Date().getTime()
 				if (x.status == "ok") {
 					this.thenCB({...x,time:timeend-timestart})
@@ -31,11 +33,10 @@ class ListOperation {
 				}
 			})
 			.catch(x => {
-
+ 
 				catchCB({
 					status: "error",
-					error: "connection_error",
-					errorMsg: "error de coneccion"
+					...x
 				})
 
 			})

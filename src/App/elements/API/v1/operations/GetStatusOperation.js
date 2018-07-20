@@ -4,7 +4,8 @@ class GetStatusOperation {
 		path = "/",
 		withContent = false,
 		thenCB = () => {},
-		catchCB = () => {}
+		catchCB = () => {},
+		...rest
 	}) {
 
 		let timestart = new Date().getTime()
@@ -17,7 +18,8 @@ class GetStatusOperation {
 				apiArg: {
 					path: this.path,
 					withContent: withContent,
-					op: "getstatus"
+					op: "getstatus",
+					...rest
 				}
 			})
 			.then(x => {
@@ -36,8 +38,7 @@ class GetStatusOperation {
 
 				this.catchCB({
 					status: "error",
-					error: "connection_error",
-					errorMsg: "error de coneccion"
+					...x
 				})
 
 			})

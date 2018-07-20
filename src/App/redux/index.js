@@ -1,3 +1,4 @@
+import initStateTest from "./initStoreTest.js";
 import {
 	devToolsEnhancer,
 	composeWithDevTools
@@ -55,8 +56,9 @@ import middlewareDownloadManager from "../elements/download_manager/middleware.j
 
 
 /**Estado incial de app*/
-const initialState = fromJS({
+const initialState = /*fromJS(initStateTest);*/fromJS({
 	app: {
+		online:true,
 		name: "SucreCloud"
 	},
 	auth: {
@@ -70,8 +72,13 @@ const initialState = fromJS({
 const reducers = combineReducers({
 	router: routerReducer,
 	app: (state = new Map(), action) => {
+		if(action.type=="APP_CONNECTION"){
+			var newState = state;
+				newState = state.setIn(["online"],action.payload.online);
 
-		return state
+			return newState;
+		}
+		return state;
 	},
 	auth: (state = new Map(), action) => {
 		if (action.type == "setIsLogin") {
@@ -93,7 +100,15 @@ const store = createStore(reducers, initialState, composeEnhancers(
 	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,mrm),
 ));
 
+ononline=_=>{
+	store.dispatch({type:"APP_CONNECTION",payload:{online:true}})
+	console.warn("conectado")
+}
 
+onoffline=_=>{
+	store.dispatch({type:"APP_CONNECTION",payload:{online:false}})
+	console.warn("deconectado")
+}
 
 store.asyncReducers = {}
 

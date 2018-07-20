@@ -77,6 +77,8 @@
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
+    "offline-plugin": "^5.0.5",
+    "serviceworker-webpack-plugin": "^0.2.3",
     "webpack-cli": "^2.1.3"
   }
 }

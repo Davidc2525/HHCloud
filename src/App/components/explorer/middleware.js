@@ -117,7 +117,8 @@ export default store => next => action => {
 			setTimeout(() => {
 				
 				ApiInstance.instance.callOperation("list",{
-					path:action.path,withContent:true,
+					path:action.path,
+					withContent:action.payload.withContent,//parametro para operacion "status", en caso de transferir operacion
 					thenCB:(payload)=>{
 						store.dispatch(fetchtedPath(action.path, payload,"loaded"))
 						//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:payload.get("file")?"file":"folder"}})
@@ -163,6 +164,23 @@ export default store => next => action => {
 			
 
 			return;
+		}
+
+		if(action.type == "DELETING_PATHS"){
+			console.warn("DELETING_PATHS",action)
+			ApiInstance.instance.callOperation("delete",{
+					paths:action.payload.listPath,
+
+					thenCB:(payload)=>{
+						
+						setTimeout(_=>{
+							store.dispatch(deletedPath(action.payload.path,payload.parent))
+						},10)
+						store.dispatch({type:"SELECTED_MODE_TOOLBAR",payload:{selecteMode:false}})
+						next(action)
+					},
+					confirmFun:(path)=>confirm("Quiere Eliminar '" + action.payload.listPath.count() + "' elementos seleccionados?")
+				})
 		}
 
 		if (action.type == "DELETED_PATH") {

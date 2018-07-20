@@ -9,6 +9,9 @@ class RenderPlaint {
 	setLan(newLan) {
 		this.lan = newLan;
 	}
+	renderAsPromise(c){
+		return Promise.resolve(atob(c))
+	}
 	render(c) {
 		var content = "";
 

@@ -14,7 +14,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
  import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
- import Exprorer from "../explorer/Explorer.jsx"
 import Chip from '@material-ui/core/Chip';
 import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
@@ -25,6 +24,9 @@ import logo from "../../../media/img/logop.png"
 import Nuevo from "../nuevo_cs/index.js"
 import DownloadViewer from "../download_viewer/index.js"
 import PahtSee from "../path_see/index.js"
+/**/
+
+import Exprorer from "../explorer/Explorer.jsx"
 
  
 import Loadable from 'react-loadable';
@@ -32,7 +34,7 @@ function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
   } else {
-    return <div>Cargando componente...</div>;
+    return <div><img src={logo}/></div>;
   }
 } 
 const  Exprorer2 = Loadable({
@@ -201,9 +203,11 @@ class ResponsiveDrawer extends React.Component {
                     en components/nuevo_cs
                 */}
                 <Route exact path="/SC/nuevo" component={Nuevo}/>
-                <Route exact path="/SC/download" component={(props)=><DownloadViewer w={this.state.width} h={this.state.height} {...props}/>}/>
+                <Route exact path="/SC/download" component={DownloadViewer}/>
 
+                <Route  component={()=><div>Andas perdido?</div>}/>
             </Switch>
+            
         </main>
       </div>
     );

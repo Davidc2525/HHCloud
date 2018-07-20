@@ -1,4 +1,6 @@
 var Prism = require('./prism.js');
+import worker from "worker-loader!./WorkerToGenerateBlobFile.js"
+
 
 class RenderPrism {
 
@@ -11,6 +13,17 @@ class RenderPrism {
 
 	setLan(newLan) {
 		this.lan = newLan;
+	}
+	renderAsPromise(c){
+
+		//return Promise.resolve(this.render(c))
+		return new Promise((r,x)=>{
+			const w = new worker(); 
+			w.onmessage = (e)=>{
+				r(e.data)
+			}
+			w.postMessage({action:"prism",content:atob(c),lan:this.lan})
+		})
 	}
 	render(c) {
 		var content = "";

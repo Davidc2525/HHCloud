@@ -1,11 +1,16 @@
 import React from "react"
+
+
+window.r = React
 import {
   push
 } from "react-router-redux";
 
 /**/
 import Fade from '@material-ui/core/Fade';
-
+import Tooltip from '@material-ui/core/Tooltip';
+//import Button from '@material-ui/core/Button';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import Refresh from '@material-ui/icons/Refresh';
@@ -22,6 +27,7 @@ import Chip from '@material-ui/core/Chip';
 import Zoom from '@material-ui/core/Zoom';
 import {getParent,parsePath} from"./Util.js"
 //import IconButton from '@material-ui/core/IconButton';
+import { withTheme } from '@material-ui/core/styles';
 /**/
 import {List as ListI} from "immutable"
 import {connect} from "react-redux"
@@ -36,7 +42,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+
 import Typography from '@material-ui/core/Typography';
 import {deletingPath}from "./actions.js"
 import {dl,get} from "./middleware.js"
@@ -79,14 +85,27 @@ import  VList from 'react-virtualized/dist/commonjs/List'
 
 import fileExtension from "file-extension"
 
-import FileViewer from "../file_viewer"
+//import FileViewer from "../file_viewer"
 import mime from "mime-types"
 
-import ViewExplorer from "./ViewExplorer.js"
-
+//import ViewExplorer from "./ViewExplorer.js"
+import Loadable from 'react-loadable';
+function Loading(props) {
+  if (props.error) {
+    return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
+  } else {
+    return <div>Espere</div>;
+  }
+} 
+const  ViewExplorer = Loadable({
+    loader: () =>
+      import ('./ViewExplorer.js'),
+    loading: Loading
+  });
 
 const styles = theme => ({
   headerHelper:{
+  	boxShadow:theme.shadows[4],
   	display:"flex",
   	flexDirection:"column",
   	height:"100px",
@@ -149,16 +168,20 @@ const styles = theme => ({
 
 
 //@withRouter
-@withStyles(styles,{withTheme:true})
+@withTheme()
+@withStyles(styles)
 @withWidth()
 class Explorer extends React.Component{
+	constructor(props){
+		super(props);
+		window.ex = this
 
+	}
 
 	render() {
 		const {classes,width}= this.props
 		return (
-			<div id="Explorer" >
-
+			<div id="Explorer">
 				<div id="headerHelper" className={classes.headerHelper}>
 					<div className={classes.seccions}>
 						<Route path="/SC/unidad" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee2}/>
@@ -175,12 +198,18 @@ class Explorer extends React.Component{
 		);
 	}
 }
+
 export default Explorer
 
 
 
 const stylesToolBar = theme => ({
+	toolbar:{
+		height:"50px",
+		paddingLeft:"10px",
+	},
 	root:{
+
 		alignItems:"center",
 		display:"flex",
 		flexGrow:1,
@@ -188,22 +217,28 @@ const stylesToolBar = theme => ({
 	selection:{
 
 	},
+	button: {
+    	marginLeft: theme.spacing.unit,
+  	},
 	actionIcos:{flexGrow:0},
 	info:{flexGrow:1}
 })
 
 
 
+/**Toolbar Pasar a modulo independiente*/
 @connect(state=>{ 
 	var router = state.getIn(["router"]);
+	var online = state.getIn(["app","online"])
 	var currentType = state.getIn(["explorer","currentType"]);
 	var toolBar = state.getIn(["explorer","toolBar"]);
 	var selection = state.getIn(["explorer","selection"]);
 	var selecteds = state.getIn(["explorer","selection","selecteds"]);
-	return {filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
+	return {online,filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
 })
 @withStyles(stylesToolBar,{withTheme:true})
 //@withRouter
+@withMobileDialog()
 class ToolBar extends React.Component {
 	constructor(props) {
 		super(props);
@@ -220,8 +255,6 @@ class ToolBar extends React.Component {
 		//store.dispatch({type:"FILTER_TOOLBAR",payload:{filter:e}})
 	}
 
-
-
 	onFilterChangeDebounce=_.debounce((value)=>{
 		//console.log(target)
 		store.dispatch({type:"FILTER_TOOLBAR",payload:{filter:value}})
@@ -234,20 +267,34 @@ class ToolBar extends React.Component {
 	}
 
 	handleAction(event,data){
-		if(data.action == "goparen"){
-			store.dispatch(push("/SC/unidad#"+getParent( parsePath(this.props.router.location.hash)  )))
-		}	
-		if(data.action == "refresh"){
-				store.dispatch(fetchingPath(parsePath(this.props.router.location.hash)))
-		}
 		if(data.action == "selectemode"){
 			this.onChangeSelectMode()
 		}
-		if(data.action == "delete"){
-
+		if(!this.props.online){
+			alert("Se encuentra desconectado para proceder con la accion. Porfavor verifique su conexion a internet o refresque la pagina.")
+			return
+		}
+		if(data.action == "goparent"){
+			store.dispatch(push("/SC/unidad#"+getParent( parsePath(this.props.router.location.hash)  )))
+		}	
+		if(data.action == "refresh"){
+				store.dispatch(fetchingPath(parsePath(this.props.router.location.hash),true))
+		}
+		if (data.action == "delete") {
+			store.dispatch({
+				type: "DELETING_PATHS",
+				middle:"EXPLORER",
+				payload:{
+					listPath:this.props.selecteds.keySeq().toList()
+				}
+			});
+			//this.onChangeSelectMode()
 		}
 		if(data.action == "download"){
-
+			
+			/**Accinador de descargas multiples*/
+			DownloadManagerInstance.instance.addDownload(this.props.selecteds.toList());
+			this.onChangeSelectMode()
 		}
 		if(data.action == "copy"){
 
@@ -258,32 +305,54 @@ class ToolBar extends React.Component {
 
 	}
 
+	createAtionButton(action,CompIcon,title,disabled=false){
+		return (
+			<Tooltip title={title}>
+		 		<IconButton disabled={disabled} color="primary" onClick={(e)=>this.handleAction(e,{action:action})} component="span">
+		         	<CompIcon/>
+		        </IconButton>				       
+ 			</Tooltip>
+		)
+	}
+
 	render(){
-		const isSelecteMode = this.props.isSelecteMode
-		const selecteds = this.props.selecteds
 		const currentType = this.props.currentType
 		const classes = this.props.classes;
 
-		const anySelecte = selecteds.count()>0
-		//console.warn("isSelecteMode",isSelecteMode,this.props.isSelecteMode)
+
+		const isSelecteMode = this.props.isSelecteMode
+		const selecteds = this.props.selecteds
+		var sizeOfSelection = 0;
+		const anySelecte = selecteds.count()>0;
+		if(anySelecte){
+			selecteds.forEach(item=>{
+				if(true||item.get("file")){
+					sizeOfSelection+=item.get("size")
+				}
+			})
+
+		}
+
+		const fullScreen = this.props.fullScreen;
+		
 		return (
-			 <div className={classes.root}>
+			 <div id="toolbar" className={classes.toolbar +" "+ classes.root}>
 			 	{!isSelecteMode&&
 			 	<Fade in={!isSelecteMode}>
 				 	<div>
-				 		<IconButton onClick={(e)=>this.handleAction(e,{action:"goparen"})} color="primary" component="span">
-				          <ArrowUpward />
-				        </IconButton>
+						{
+							this.createAtionButton("goparent", ArrowUpward, "Ir a carpeta contenedora")
+						}
 
-				         <IconButton onClick={(e)=>this.handleAction(e,{action:"refresh"})} color="primary" component="span">
-				          <Refresh />
-				        </IconButton>
 
-				        {currentType=="folder"&&
-				        <IconButton onClick={(e)=>this.handleAction(e,{action:"selectemode"})} color="primary" component="span">
-				          <SelectAll />
-				        </IconButton>
-				    	}
+						{
+							this.createAtionButton("refresh", Refresh, "Actualizar")
+						}
+
+						{
+							currentType == "folder" &&
+								this.createAtionButton("selectemode", SelectAll, "Hacer seleccion")
+						}
 				 	</div>
 				 </Fade>
 				}
@@ -297,30 +366,29 @@ class ToolBar extends React.Component {
 					        		
 					        	<div className={classes.root + " " + classes.actionIcos}>
 							        
-						        	
-						            <IconButton onClick={(e)=>this.handleAction(e,{action:"selectemode"})}  color="primary" component="span">
-							          <ArrowBack />
-							        </IconButton>	
+									{
+										this.createAtionButton("selectemode", ArrowBack, "Atras")
+									}
 
-							 		<IconButton onClick={(e)=>this.handleAction(e,{action:"delete"})} disabled={!anySelecte} color="primary" component="span">
-							          <DeleteForever />
-							        </IconButton>
-							        
-							        <IconButton onClick={(e)=>this.handleAction(e,{action:"download"})} disabled={!anySelecte} color="primary" component="span">
-							          <CloudDownload />
-							        </IconButton>
-							        
-							        <IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
+									{
+										this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte)
+									}
+
+									{
+										this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte)
+									}
+							       
+							       {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
 							          <FilterNone />
-							        </IconButton>
+							        </IconButton>}
 
-							        <IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
+							        {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
 							          <FlipToFront />
-							        </IconButton>
+							        </IconButton>}
 							 	</div>
 						 		<div className={classes.info}>
 						 			
-						 			  {<Zoom in={anySelecte} ><Chip label={selecteds.count()}  /></Zoom>}
+						 			<Zoom in={anySelecte} ><Chip label={`${selecteds.count()}  (${filesize(sizeOfSelection)})`}  /></Zoom>
 						 			{/*<Typography variant="body2">Selecionados: {selecteds.count()}</Typography>*/}
 
 						 		</div>

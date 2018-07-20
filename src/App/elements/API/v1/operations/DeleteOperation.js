@@ -1,8 +1,9 @@
 import ApiInstance from "../Api.js"
-
+import {List} from "immutable"
 class DeleteOperation {
 	constructor({
 		path = "/",
+		paths = null,
 		thenCB = () => {},
 		catchCB = () => {},
 		confirmFun = (path) => {
@@ -10,6 +11,12 @@ class DeleteOperation {
 		}
 	}) {
 
+		var multiPath = null;
+		if(paths!=null){
+			if(List.isList(paths)){
+				multiPath = paths.toJS();
+			}
+		}
 		let timestart = new Date().getTime()
 
 		this.path = path;
@@ -20,6 +27,7 @@ class DeleteOperation {
 			ApiInstance.instance.fetch({
 					apiArg: {
 						path: this.path,
+						paths:multiPath,
 						op: "delete"
 					}
 				})
@@ -37,10 +45,9 @@ class DeleteOperation {
 				})
 				.catch(x => {
 
-					catchCB({
+					this.catchCB({
 						status: "error",
-						error: "connection_error",
-						errorMsg: "error de coneccion"
+						...x
 					})
 
 				})

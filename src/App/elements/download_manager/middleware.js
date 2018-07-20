@@ -10,12 +10,16 @@ export default store => next => action => {
 
 		if(action.type=="ADD_DOWNLOAD"){
 			console.log("csm")
-			store.dispatch(markDownload(action.path,"downloading"))
+			if(!action.dl.multiple){
+				store.dispatch(markDownload(action.path,"downloading"))
+			}
 			next(action)
 			return
 		}
 		if(action.type=="REMOVE_DOWNLOAD"){
-			store.dispatch(markDownload(action.path,"downloaded"))
+			if(!action.dl.multiple){
+				store.dispatch(markDownload(action.path,"downloaded"))
+			}
 			setTimeout(()=>{
 				store.dispatch(markDownload(action.path,"none"))
 			},5000)

@@ -29,8 +29,7 @@ class MkDirOperation {
 
 				catchCB({
 					status: "error",
-					error: "connection_error",
-					errorMsg: "error de coneccion"
+					...x
 				})
 
 			})

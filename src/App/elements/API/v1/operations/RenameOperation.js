@@ -30,10 +30,9 @@ class RenameOperation {
 			})
 			.catch(x => {
 
-				catchCB({
+				this.catchCB({
 					status: "error",
-					error: "connection_error",
-					errorMsg: "error de coneccion"
+					...x
 				})
 			})
 

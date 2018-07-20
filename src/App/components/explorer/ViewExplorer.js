@@ -2,6 +2,7 @@ import React from "react"
 import {
   push
 } from "react-router-redux";
+import {tryNormalize,parsePath} from "./Util.js"
 import {Map,List as ListI} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
@@ -58,10 +59,24 @@ import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
 import  VList from 'react-virtualized/dist/commonjs/List'
 
 import DirectoryList from "./DirectoryList.jsx"
+import DirectoryListVirtualize from "./DirectoryListVirtualize.jsx"
 import fileExtension from "file-extension"
 
-import FileViewer from "../file_viewer"
+//import FileViewer from "../file_viewer"
 import mime from "mime-types"
+import Loadable from 'react-loadable';
+function Loading(props) {
+  if (props.error) {
+    return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
+  } else {
+    return <div>Espere</div>;
+  }
+} 
+const  FileViewer = Loadable({
+    loader: () =>
+      import ('../file_viewer'),
+    loading: Loading
+  });
 
 const styles = theme => ({
   headerHelper:{
@@ -119,8 +134,9 @@ const styles = theme => ({
 @withStyles(styles,{withTheme:true})
 @withWidth()
 @connect((state,props)=>{
-	
-	var currentPath = props.location.hash.split("#")[1];parse(props.location.search).path
+	var currentType = state.getIn(["explorer","currentType"]);
+	var p = props.location.hash;
+	var currentPath = tryNormalize(parsePath(p))//;p.substring(p.indexOf("#")+1);//props.location.hash.split("#")[1];//parse(props.location.search).path
 		currentPath = decodeURI(currentPath)
 	let explorer = state.get("explorer");
 	let paths = explorer.get("paths");
@@ -128,7 +144,7 @@ const styles = theme => ({
 
 	if (!paths.has(currentPath)) {
 		//console.log("get path "+currentPath)
-		store.dispatch(fetchingPath(currentPath))
+		store.dispatch(fetchingPath(currentPath,true))
 		
 		return {
 			paths: paths.toArray(),
@@ -139,7 +155,12 @@ const styles = theme => ({
 
 	}
 	var path = paths.get(currentPath);
-	//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:path.get("file")?"file":"folder"}})
+	if (currentType != (path.get("file") ? "file" : "folder") ) {
+
+		store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:path.get("file")?"file":"folder"}})
+
+	}
+
 	return {
 		paths: paths.toArray(),  
 		path: path,
@@ -157,10 +178,6 @@ class ViewExplorer extends React.Component {
  	
 
 	}
-
-	
-
-	
 
 	handleCloseDialog(){
 		store.dispatch({type:"CLOSE_RENAME_DIALOG"})
@@ -199,90 +216,72 @@ class ViewExplorer extends React.Component {
 	          	 		{<Link to={`/SC/unidad#${x.get("path")}`} >{x.get("path")}</Link>} 
 	          	 	</div>
 	          	 )*/}
-				
-				 {this.props.path != null ? 
 
-				 	<div /*style={{height:this.props.h-(32)}}*/   className={classes.root}>
+	          	 {this.props.path!=null&&
+	          	 	<div /*style={{height:this.props.h-(32)}}*/   className={classes.root}>
 				 	
-				 	{this.props.path.get("status")=="loading" &&
-			 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
-			 	 			<Grid item>
+					 	{this.props.path.get("status")=="loading" &&
+				 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
+				 	 			<Grid item>
 
-			 	 			 	<Typography color="textSecondary" variant="subheading" >
-				           			{this.props.path.get("path")}
-				         		</Typography>
-				          	</Grid>
-				          	<br/>
-			 	 			<Grid item><CircularProgress /></Grid>
-			 	 		</Grid>
-			 			
-			 			
-			 		}
-						 		
-					 	
-					 	{this.props.path.getIn(["data"]) != null ?
+				 	 			 	<Typography color="textSecondary" variant="subheading" >
+					           			{this.props.path.get("path")}
+					         		</Typography>
+					          	</Grid>
+					          	<br/>
+				 	 			<Grid item><CircularProgress /></Grid>
+				 	 		</Grid>	
+				 		}
+				 		
+				 		{this.props.path.get("status")=="error" && 
+				 			
+				 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
+				 	 			<Grid item>
+				 	 			 	<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
+				            			error name: {this.props.path.get("error")}, mensaje: {this.props.path.get("errorMsg")}
+				          			</Typography>
+					          	</Grid>
+				 	 		</Grid>
+						}
+						
+						{this.props.path.get("status")=="ok" /*&& this.props.path.getIn(["data"]) != null */&& 
 
+							<div>
+								{!this.props.path.get("file")&&
+									<div id="folder">
+					          			{/*<DirectoryList data={this.props.path} history={this.props.history} classes={classes}  /> */}   
+					          			<DirectoryListVirtualize data={this.props.path} datalist={this.props.path} history={this.props.history} classes={classes}  />     
+									</div>
+								}
 
-					 		/*
-					 		
-
-						        <FolderSmall path={this.props.path} history={this.props.history} classes={classes}  data={x}/>     
-				          		*/
-					          			
-					          	this.props.path.get("file")?
-
-					          		//"file"
-
-					          		
-					          		<Grid spacing={24} justify="flex-start" direction="row" container >
-										<Grid item xs={12}>
-											<Paper className={classes.paper} >
+								{this.props.path.get("file")&&
+									<div id="file">
+										<div className={classes.paper} >
 											{<FileViewer item={this.props.path} />}
-											{store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	}
+											{/*store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	*/}
 											
 
 											<div>{fileExtension(this.props.path.get("path"))}</div>
 											<div>{mime.contentType(this.props.path.getIn(["data","name"]))}</div>
 											<strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["data","size"]))}
 											{/**/}
-											</Paper>
-										</Grid>
-									</Grid> 	
-
-					          		:
-					          		//folder
-					          		//(width=="sm"||width=="xs"||width=="md") ? 
-					          				<DirectoryList data={this.props.path} history={this.props.history} classes={classes}  />     
-					          			//:
-					          				
-					          			//	<FolderBig data={this.props.path} history={this.props.history} classes={classes}  />     
-					          				
-
-				          		
-
-				          		
-					 			:
-
-					 			(this.props.path.get("status")=="error" && 
-					 			<div>
-					 				<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
-				            			error name: {this.props.path.get("error")}, mensaje: {this.props.path.get("errorMsg")}
-				          			</Typography>
-				          		</div>)
-					 	}
+										</div>
+									</div>
+								}
+							</div>
+						}
 
 				 	</div>
+	          	 }
 
-				 	:
-				 	<div>
+	          	 {this.props.path==null&&
+	          	 	<div>
 				 	 	<Grid style={{ height: "100%"}} justify="center" alignItems="center" container>
 				 	 		<Grid item>none</Grid>
 				 	 	</Grid>
 				 	</div>
-				 }
-
-				 
-				  
+	          	 }
+  
 			 </div>
           	
 			)
@@ -377,346 +376,6 @@ const FolderBig = ({classes,data,history})=>{
 				))}
 			</Grid>
 		)
-}
-
-function collect(props) {
-    return props;
-}
-
-const DynamicMenu = (props) => {
-    const { id, trigger } = props;
-    const {classes} = props;
-    const handleItemClick = trigger ? trigger.onItemClick : null;
-
-    return (
-        <ContextMenu  style={{zIndex:"100"}} id={id}>
-            <div style={{backgroundColor:"grey",color:"white",zIndex:"100"}}>
-            	
-            	{trigger && !trigger.disabled &&
-            		<div>
-            			
-            			<MenuItemCM onClick={handleItemClick} data={{ action: 'open' }}><MenuItem>{`Abrir`}</MenuItem></MenuItemCM>
-
-
-            			<MenuItemCM onClick={handleItemClick} data={{ action: 'rename' }}>
-            			<MenuItem  aria-label="Cambiar nombre" >
-	                        Cambiar nombre
-	                    </MenuItem>
-            			</MenuItemCM>
-
-            			<MenuItemCM onClick={handleItemClick} data={{ action: 'copy' }}>
-            			<MenuItem  aria-label="Copiar" >
-	                        Copiar en
-	                    </MenuItem>
-            			</MenuItemCM>
-
-            			<MenuItemCM onClick={handleItemClick} data={{ action: 'move' }}>
-            			<MenuItem  aria-label="Move" >
-            				Mover a
-	                    </MenuItem>
-            			</MenuItemCM>
-
-
-            			<MenuItemCM onClick={handleItemClick} data={{ action: 'delete' }}>
-            			<MenuItem  aria-label="delete" >
-            				Eliminar
-	                    </MenuItem>
-            			</MenuItemCM>
-
-            			<MenuItemCM onClick={handleItemClick} data={{ action: 'download' }}>
-	            			<MenuItem  aria-label="Descargar" >
-		                        Descargar
-		                    </MenuItem>
-            			</MenuItemCM>
-
-            			
-            			
-            		</div>
-            	}
-            </div>
-        </ContextMenu>
-    );
-};
-
-DynamicMenu.propTypes = {
-    id: PropTypes.string.isRequired,
-    trigger: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        onItemClick: PropTypes.func.isRequired,
-        allowRemoval: PropTypes.bool
-    }).isRequired
-};
-
-const ConnectedMenu = connectMenu("itemList")(withStyles(styles,{theme:true})(DynamicMenu))
-
-class FolderSmall extends React.Component{
-	
-	constructor(props){
-		super(props)
-		this.state = {
-			renamedialog: false,
-			
-			sortBy: "name",
-			order:true //true = asc, false = desc
-		}
-		window.fs = this
-	}
-
-	handleClickItemMenuContext = (e, data, target) => {
-		//const count = parseInt(target.getAttribute('data-count'), 10);
-
-		if (data.action === 'download') {
-			DownloadManagerInstance.instance.addDownload(data.item.get("path"))
-			//console.error(data)
-			return;	
-		}
-
-		if (data.action === 'open' ) {
-
-			this.props.history.push("/SC/unidad#"+data.item.get("path"))
-			console.error(this.props.history,this.props.history.push,push)
-			return
-		}
-
-		if(data.action==="delete"){
-			store.dispatch(deletingPath(data.item.get("path"),data.item.get("name")))
-		}
-
-		if(data.action==="copy"){
-			store.dispatch({
-				type:"OPEN_MOVE_OR_COPY_DIALOG",
-				//middle:"EXPLORER",
-				payload:{
-					op:"copy",
-					path:data.item.get("path"),
-					name:data.item.get("name")
-				}
-			})
-		}
-
-		if(data.action==="move"){
-			store.dispatch({
-				type:"OPEN_MOVE_OR_COPY_DIALOG",
-				//middle:"EXPLORER",
-				payload:{
-					op:"move",
-					path:data.item.get("path"),
-					name:data.item.get("name")
-				}
-			})
-		}
-		if (data.action === 'rename' ) {
-			store.dispatch({
-				type: "OPEN_RENAME_DIALOG",
-				nameFile: data.item.get("name"),
-				path: data.item.get("path")
-			})
-			//this.setState(s=>({renamedialog:true}))
-			return
-		}
-	}
-	
-	stateDownloadString(item) {
-		var state = "";
-		if (item.get("download") != undefined) {
-			if (item.get("download") != "none") {
-				state = item.get("download")
-			}
-		}
-
-		return state!="" ? `, (${state})`:state;
-	}
-
-	sortBy(order, valueA, valueB) {
-
-		var sort = 0;
-
-		if (valueA < valueB) {
-			sort = order ? -1 : 1
-		}
-
-		if (valueA > valueB) {
-			sort = order ? 1 : -1
-		}
-
-		return sort;
-	}
-
-	setSortBy(sortBy,order=true){this.setState({sortBy,order})}
-
-	render(){
-		
-		const {classes,data,history} = this.props;
-		const groups = data.get("data").groupBy(x=>x.get("file")?"file":"folder")
-			console.warn("groups",groups)
-		var folders = groups.get("folder");
-
-		if(folders!=null){
-			folders=folders.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b))
-		}else{
-			folders = new ListI()
-		}
-		//.filter(x=>x.get("file")==false);
-
-		var files = groups.get("file");
-		if(files!=null){
-			files = files.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b))
-		}else{
-			files = new ListI();
-		}
-		//.filter(x=>x.get("file")==true);
-		return (
-				<div style={{overflowX:"hidden"}}>
-				{(folders.count() == 0 && files.count() == 0)&&
-					<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
-		 	 			<Grid item>
-		 	 			 	<Typography>Carpeta Vacia</Typography>
-			          	</Grid>
-		 	 		</Grid>
-					
-				}
-				{(folders.count() > 0 || files.count() > 0 )&&<List dense={true}>
-				 	{folders.count()>0&&
-
-				 		<ListItem divider >		                    
-			
-			                    <ListItemText
-			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-			                      primary={"Carpetas"}
-			                      secondary={folders.count()}
-			                    />
-			            </ListItem>
-				 	}
-				 	
-				 	{folders.map((item,i)=>{
-				 		return (
-						 	<ContextMenuTrigger 
-						 		disabled={false}
-						 		onItemClick={this.handleClickItemMenuContext}
-						 		item={item}
-							 	name={item.get("name")}
-			                    holdToDisplay={1000}
-			                    collect={collect} 
-			                    
-							 	id={"itemList"}>
-			
-			                  <ListItem  key={i.toString()} button 
-			                 
-			                  onClick={()=>{
-					          	history.push("/SC/unidad#"+item.get("path"))
-					          }} 
-					         >	
-					         {!true&&<Checkbox/>}
-			                  {
-			                  	!false&&<ListItemAvatar>
-			                      <Avatar>
-			                       	{item.get("file")?<InsertDriveFile/>:<FolderIcon />}
-			                        
-			                      </Avatar>
-			                    </ListItemAvatar>
-			                  }
-			
-			                    <ListItemText
-			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-			                      primary={item.get("name")}
-			                      secondary={`${item.get("elements")} elementos ${this.stateDownloadString(item)}`}
-			                    />
-			
-			                   {<ListItemSecondaryAction>
-
-			                      {item.get("download") != undefined && item.get("download") == "downloading" && 
-			                      	<IconButton  aria-label="Descargar" onClick={()=>{
-			                      				           	
-			  				          	//DownloadManagerInstance.instance.addDownload(item.get("path"))
-			  				        }}>
-			                        <FileDownload />
-			                      </IconButton>}
-
-								{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
-								   	
-								  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-								  }}>
-								    <DeleteIcon />
-								  </IconButton>*/}
-			                    </ListItemSecondaryAction>}
-			                    <div>
-			
-			                    
-			
-							    </div>
-			                  </ListItem>
-							</ContextMenuTrigger>
-				 			)
-				 	})}
-	
-	
-				 	{files.count()>0&&
-				 	<ListItem divider >
-			                    
-			
-			                    <ListItemText
-			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-			                      primary={"Archivos"}
-			                      secondary={files.count()}
-			                    />
-			        </ListItem>}
-				 	
-				 	{files.map((item,i)=>{
-				 		return (
-						 	<ContextMenuTrigger 
-						 		onItemClick={this.handleClickItemMenuContext}
-						 		item={item}
-							 	name={item.get("name")}
-			                    holdToDisplay={1000}
-			                    collect={collect} 
-			                    
-							 	id={"itemList"}>
-			                  <ListItem key={i} button onClick={()=>{
-					          	history.push("/SC/unidad#"+item.get("path"))
-					          }} >
-			                    <ListItemAvatar>
-			                      <Avatar>
-			                       	{item.get("file")?<InsertDriveFile/>:<FolderIcon />}
-			                        
-			                      </Avatar>
-			                    </ListItemAvatar>
-			
-			                    <ListItemText
-			                      secondaryTypographyProps={{noWrap:false, variant:"body2"}}
-			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-			                      primary={item.get("name")}
-			                      secondary={`${filesize(item.get("size"))} ${this.stateDownloadString(item)}`}
-			                    />
-			
-			                    {<ListItemSecondaryAction>
-
-			                      {item.get("download") != undefined && item.get("download") == "downloading" && 
-			                      	<IconButton  aria-label="Descargar" onClick={()=>{
-			                      				           	
-			  				          	//DownloadManagerInstance.instance.addDownload(item.get("path"))
-			  				        }}>
-			                        <FileDownload />
-			                      </IconButton>}
-
-								{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
-								   	
-								  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-								  }}>
-								    <DeleteIcon />
-								  </IconButton>*/}
-			                    </ListItemSecondaryAction>}
-			                  </ListItem>
-							</ContextMenuTrigger>
-				 			)
-				 	})}
-	                
-	              </List>}
-	              <ConnectedMenu />
-				</div>
-			)}
 }
 
 

@@ -215,7 +215,8 @@ export default (state = new Map(), action) => {
 		
 		case "SELECTED_MODE_TOOLBAR":
 			var newState = state;
-			var selection = newState.get("selection")
+			var selecteds = newState.getIn(["selection","selecteds"]);
+			var selection = newState.get("selection");
 				selection = selection.set("selecteds",new Map())
 				newState = newState.set("selection",selection);
 			var newStateSelection = action.payload.selecteMode;
@@ -223,6 +224,34 @@ export default (state = new Map(), action) => {
 
 				selection = selection.set("isSelecteMode",newStateSelection);
 				newState = newState.set("selection",selection)
+
+
+				selecteds.forEach(item => {
+
+
+					var path=item.get("path");
+					var parentPath = getParent(path);
+					var targetName = getName(path);
+						var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+					
+						if (childrensByParent!=null) {
+							let index  = null; 
+							console.warn(" childrensByParent ", childrensByParent.toJS())
+							var targetPath = childrensByParent.find((x,i) => (index=i,x.get("name") == targetName))
+							if (targetPath != null) {
+								console.warn("targetPath ", targetPath.toJS(),index)
+								var oldPathUpdate = targetPath.set("selectioned",false)
+								//oldPathUpdate = oldPathUpdate.set("path",action.payload.newPath)
+								console.warn("oldPathUpdate ", oldPathUpdate.toJS())
+
+								if(index!= null){
+									childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
+									newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+								}
+
+							}
+						}
+				});
 			return newState
 
 		case "ADD_ITEM_SELECTION":
@@ -235,6 +264,29 @@ export default (state = new Map(), action) => {
 				selection = selection.set("selecteds",selecteds);
 
 				newState = newState.set("selection",selection);
+
+			var parentPath = getParent(path);
+			var targetName = getName(path);
+				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+			
+				if (childrensByParent!=null) {
+					let index  = null; 
+					console.warn(" childrensByParent ", childrensByParent.toJS())
+					var targetPath = childrensByParent.find((x,i) => (index=i,x.get("name") == targetName))
+					if (targetPath != null) {
+						console.warn("targetPath ", targetPath.toJS(),index)
+						var oldPathUpdate = targetPath.set("selectioned",true)
+						//oldPathUpdate = oldPathUpdate.set("path",action.payload.newPath)
+						console.warn("oldPathUpdate ", oldPathUpdate.toJS())
+
+						if(index!= null){
+							childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
+							newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+						}
+
+					}
+				}
+
 			return newState;
 
 		case "REMOVE_ITEM_SELECTION":
@@ -248,6 +300,28 @@ export default (state = new Map(), action) => {
 				selection = selection.set("selecteds",selecteds);
 
 				newState = newState.set("selection",selection);
+
+			var parentPath = getParent(path);
+			var targetName = getName(path);
+				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+			
+				if (childrensByParent!=null) {
+					let index  = null; 
+					console.warn(" childrensByParent ", childrensByParent.toJS())
+					var targetPath = childrensByParent.find((x,i) => (index=i,x.get("name") == targetName))
+					if (targetPath != null) {
+						console.warn("targetPath ", targetPath.toJS(),index)
+						var oldPathUpdate = targetPath.set("selectioned",false)
+						//oldPathUpdate = oldPathUpdate.set("path",action.payload.newPath)
+						console.warn("oldPathUpdate ", oldPathUpdate.toJS())
+
+						if(index!= null){
+							childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
+							newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+						}
+
+					}
+				}
 			return newState;
 
 

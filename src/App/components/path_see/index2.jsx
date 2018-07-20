@@ -26,8 +26,9 @@ const styles2 = theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
   },
-  tabsRoot: {
-    borderBottom: '1px solid #e8e8e8',
+  tabRoot2: {
+    boxShadow:"none",
+   // borderBottom: '1px solid #e8e8e8',
   },
   tabsIndicator: {
     backgroundColor: '#1890ff',
@@ -157,9 +158,8 @@ class PathSee extends React.Component {
     const {isSelecteMode} = this.props
     return (
       <div id="PathSee-2" className={classes.root}>
-        <AppBar position="static" color="default">
-          <Tabs
-
+        <AppBar style={{boxShadow:"none"}}  position="static" color="default">
+          <Tabs          	  
             value={value}
             onChange={this.handleChange}
             indicatorColor="primary"
@@ -169,7 +169,10 @@ class PathSee extends React.Component {
           >
           
           <Tab disabled={isSelecteMode} className={classes.tabHome} icon={<CloudCircleIcon/>} />
-          {this.state.paths.map(x=><Tab  disabled={isSelecteMode}
+          {this.state.paths.map((x,i)=>
+          	<Tab 
+			key={i.toString()}
+          	disabled={isSelecteMode}
           	disableRipple
           	//classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
           	className={classes.tabRoot2} label={x.title} />)}

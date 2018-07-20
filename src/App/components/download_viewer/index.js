@@ -27,7 +27,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-
+import {DownloadManagerInstance} from "../../elements/download_manager/index.js"
 
 
  const styles = theme => ({
@@ -57,6 +57,13 @@ const getLoaded = (data)=>{
 	}
 }
 
+
+const getSpeedDownload = (data)=>{
+		
+	return filesize(data.get("speed"))+"/s"
+}
+
+
 const getSize = (data)=>{
 		
 	if(isFile(data)){
@@ -66,10 +73,14 @@ const getSize = (data)=>{
 	}
 }
 
+const isDeterminantBarProgress = (data) => {
+	return !Math.floor(data.getIn(["payload","loaded"]))<=0;
+}
+
 const getProgress = (data)=>{
 		
 	if(isFile(data)||true){
-		return (  Math.ceil(data.getIn(["progress"])) )+"%  ("+ getLoaded(data) +" de "+getSize(data)+")"
+		return (  Math.ceil(data.getIn(["progress"])) )+"%  ("+ getLoaded(data) +" de "+getSize(data)+") ("+getSpeedDownload(data)+")"
 	}else{
 		return filesize( data.getIn(["progress"])   )
 	}
@@ -80,6 +91,18 @@ const hasError = (data)=>{
 	return data.get("error")
 }
 
+const isMultipe=(data)=>{
+	return data.get("multiple");
+}
+
+const getNameDownload=(data)=>{
+	if(isMultipe(data)){
+		return data.getIn(["payload","name"])
+	}else{
+		return data.get("path")
+	}
+
+}
 
 const view=({data,history})=>{
 	
@@ -87,20 +110,23 @@ const view=({data,history})=>{
 		return (
 		<Paper elevation={0}>
 			<ListItem button onClick={()=>{
-		      history.push("/unidad#"+data.getIn(["path"]))
+				if(isMultipe(data)){return}
+		      	history.push("/SC/unidad#"+data.getIn(["path"]))
 		    }}>
 		       
 		        <ListItemText
-		          primary={data.getIn(["path"])}
+		          primary={getNameDownload(data)}
 		          secondary={!hasError(data) ? getProgress(data):"error al descargar" }
 		        />
 		        <ListItemSecondaryAction>
-		          <IconButton aria-label="Delete">
+		          <IconButton aria-label="Delete" 
+		          	onClick={_=>confirm(`Desea cancelar descarga de ${getNameDownload(data)}?`)&&DownloadManagerInstance.instance.cancelDownload(data.get("id"))}>
 		            <DeleteIcon />
 		          </IconButton>
 		        </ListItemSecondaryAction>
 	      	</ListItem>
-	      	{data.getIn(["progress"])<=99?<LinearProgress value={Math.ceil(data.getIn(["progress"]))} variant={"determinate"}/>:""}
+	      	{data.getIn(["progress"])<=100&&
+	      	<LinearProgress value={Math.floor(data.getIn(["progress"]))} variant={isDeterminantBarProgress(data)?"determinate":"query"}/>}
 	      	
 		</Paper>)
 		

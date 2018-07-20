@@ -1,189 +1,158 @@
+/*  
+	15 y 8 = 23, mas 4 
+	155.32
+*/
 import download from "downloadjs"
+window.d = download
 import filesize from "filesize"
 import uniqid from "uniqid"
 import _ from "lodash"
 import {DownloadManagerInstance as dlm} from "./index.js"
 import ApiInstance from "../API/v1/Api.js"
-
-/**Eliminar todo esto
-const get = (p, op) => {
-
-	var args = {
-		path: p,
-		op: op
-	}
-	var fd = new FormData()
-	fd.append("args", JSON.stringify(args))
-	var options = {
-		method: 'POST',
-		mode: 'cors',
-		headers: {
-			'Accept': 'application/json',
-			//'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-		},
-		body: (fd)
-	}
-	return fetch(`http://orchi:8080/api/`, options).then(x => (console.log(x),
-		x.json())).then(x => x)
-
-}
-const ls = (p) => {
-	get(p, "list").then(x => {
-		//console.warn(x)
-		if (x.file) {
-			console.log(x.data.name)
-			console.log(filesize(x.data.size))
-		} else {
-			x.data.forEach(i => {
-				console.log(i.name + " " + filesize(i.size))
-			})
-		}
-	})
-}
-
-const dl = (p,downloadBind)=>{
-    get(p, "getstatus").then(x=>{
-    	downloadBind.bind(x)
-        var url = `http://orchi:8080/api/`
-        var args = {
-            path: p,
-            op: "download"
-        }
-        var fd = new FormData()
-        fd.append("args", JSON.stringify(args))
-
-        var argsSend = `args=${JSON.stringify(args)}`
-
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', url, true);
-        xhr.responseType = 'blob';
-       //xhr.setRequestHeader("content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-        xhr.onprogress = function(pe) {
-        	downloadBind.debounceProgress(pe,x)
-            //console.log('progress '+filesize(pe.loaded));
-            if (pe.lengthComputable) {
-                console.log((pe.loaded / pe.total) * 100);
-            }
-        }
-        ;
-        xhr.onerror = (event)=>{downloadBind.onErrorDownload(event,x)}
-        xhr.onload = function(e) {
-            if (this.status == 200) {
-                var blob = this.response;
-                console.log(x, this)
-                downloadBind.onEndDonwload(e,x)
-                if (x.file) {
-                    //download(blob, x.data.name, x.mime)
-                } else {
-                    //download(blob, ""+x.data.name + ".zip","application/zip")
-                }
-
-            }
-        }
-        ;
-
-        xhr.send((fd));
-    }
-    );
-
-}
-
-function urlencodeFormData(fd) {
-	var s = '';
-
-	function encode(s) {
-		return encodeURI(s);
-	}
-	for (var pair of fd.entries()) {
-		if (typeof pair[1] == 'string') {
-			s += (s ? '&' : '') + encode(pair[0]) + '=' + encode(pair[1]);
-		}
-	}
-	return s;
-}
-
-*/
-
+import {Map,List} from "immutable";
 
 class Download {
 
+	/**genera el payload de los elementos a descargar (descarga multiple), generando una sola salida*/
+	generatePayloadByListItems(listItems){
+		var size = listItems.map(x=>x.get("size")).reduce((a,b)=>a+b,0);
+		var count = listItems.count();
+		var name = `Descarga-multiple-elementos-(${count}).zip`
+		return new Map({size,name});
+	}
 
-	constructor(path) {
+	constructor(element/*Map(item), List([item,item])*/) {
+		var path = "/";
+		var multiple = false;
+		var pathList = null;
+		var payload = null;
+
+		/**Item con la info dela rruta q se quieres descargar*/
+		if(Map.isMap(element)){
+			path = element.get("path")
+			payload = element;
+
+		/**Si la descarga es de rrutas multiples de
+			genera el payload reduciendo los datos contenidos
+			en la lista de items seleccionados en element*/
+		}else if(List.isList(element)){
+			pathList = element.map(x=>x.get("path")).toJS();
+			multiple = true;
+			/**reducir y generar datos*/
+			payload = this.generatePayloadByListItems(element);
+
+		}else if(typeof element == "string") {
+			throw new Error("Elemento de descarga no puede ser de tipo string.")
+		}else if(element == null){
+			throw new Error("Elemento de descarga no puede ser de null.")
+		}
+
 		this.id = uniqid();
+		this.speed = 0
+		this.intervalSpeedDl = setInterval(this.calcSpeed.bind(this),1000)
+		this.currentDls = [];
+		this.multiple = multiple;
 		this.error = false;
 		this.path = path;
 		this.progress = 0;
 		this.payload = {
-			size: 0,
+			...payload.toJS(),
 			loaded: 0
 		}
-		//this.downloadManager = downloadManager;
-		ApiInstance.instance.callOperation("download", {
+
+
+		
+		this.op = ApiInstance.instance.callOperation("download", {
 			path: path,
+			paths:pathList,
 			preStart: payload => {
-				this.payload = { ...this.payload,
+				/*this.payload = { ...this.payload,
 					...payload.data
-				}
+				}*/
 			},
 			onProgress: this.debounceProgress,
 			onError: (event,payload)=>{
 				this.onErrorDownload(event,payload)
 			},
 			onLoad: (event, x) => {
-				console.error("onload download", this, event, x)
+				//console.error("onload download", this, event, x)
 				if (event.status == 200) {
 					var blob = event.response;
 					console.log(x, event)
-					this.onEndDonwload(event, x)
-					if (x.file) {
-						download(blob, x.data.name, x.mime)
-					} else {
-						download(blob, ""+x.data.name + ".zip","application/zip")
+					this.onEndDonwload(event, payload)
+					/**descarga es multiple*/
+					if(multiple){
+						download(blob, payload.get("name"),"application/zip")
+					}else{/**descarga de archivo o carpeta*/
+						if (payload.get("file")) {
+							download(blob, payload.get("name"), payload.get("mime"))
+						} else {
+							download(blob, ""+payload.get("name") + ".zip","application/zip")
+						}	
 					}
-
 				}
 			}
-		})
-		//dl(this.path,this)
+		});
+
+
+		
+
 	}
+
+	calcSpeed(){
+	    this.speed = ((this.currentDls.slice(this.currentDls.length-5,this.currentDls.length).reduce((a,c)=>a+c,0)));
+	    this.currentDls.splice(0,this.currentDls.length-6);
+	}
+
 
 	debounceProgress = _.debounce((event, data) => {
 		this.onprogress(event, data)
-	}, 800, {
-		'maxWait': 800
+	}, 200, {
+		'maxWait': 200
 	})
 
 	toObject() {
 		return JSON.parse(JSON.stringify(this))
 	}
-
+	/**eliminar*/
 	bind(payload) {
 		this.payload = payload.data
 	}
 
 	onEndDonwload(event, data) {
-		console.warn("onEndDonwload", event, data)
+		this.clear()
+		console.warn("onEndDonwload",this,event, this.payload)
 		dlm.instance.endDownload(this, event)
 	}
 
 	onErrorDownload(event, data) {
+		this.clear()
 		//console.error(event)
 		this.error = true;
 		dlm.instance.onError(this, event)
 	}
 
-	onprogress(event, data) {
-		if (data.file) {
-			this.payload.loaded = event.loaded
-			//console.warn("onprogress progress "+this.id,(event.loaded / data.data.size) * 100)
-			this.progress = (event.loaded / data.data.size) * 100
-		} else {
-			this.payload.loaded = event.loaded
-			//console.warn("onprogress "+this.id,event,data)
-			this.progress = (event.loaded / data.data.size) * 100
-		}
+
+	onprogress(event) {
+		var data = this.payload;
+		this.currentDl = Math.abs(this.payload.loaded-event.loaded);
+		this.currentDls.push(this.currentDl);
+		this.payload.loaded = event.loaded		
+		this.progress = (event.loaded / data.size) * 100
+		
 		dlm.instance.onProgress(this, event)
+	}
+
+	cancelDownload(){
+		this.clear()
+		console.warn("cancelando descarga "+this.id,this.payload.name);
+		this.op.cancelDownload();
+	}
+
+	clear(){
+		clearInterval(this.intervalSpeedDl);
+		this.currentDls = null;
+		//this.payload = null;
 	}
 
 

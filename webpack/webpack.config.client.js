@@ -2,7 +2,7 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-//hola
+const OfflinePlugin = require('offline-plugin');
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const minifyOpts = {}
 const pluginOpts = {
@@ -51,7 +51,7 @@ export default [{
 		path: path.resolve(__dirname, '../dist/SC')
 	},
 	devServer: {
-		host: "orchi",
+		host: "localhost",
 		port: 9090,
 		allowedHosts: ["ubuntu", "*", "10.42.0.1"],
 		overlay: true,
@@ -105,6 +105,29 @@ export default [{
 		}]
 	},
 	plugins: [
+	new OfflinePlugin({
+		ServiceWorker:{
+			 entry:path.resolve(__dirname, 'SC-sw.js'),
+			events: true,
+			prefetchRequest:{credentials: 'include', mode: 'cors'}
+		},
+		AppCache: {
+			FALLBACK: {
+				'/SC/unidad': '/SC/'
+			}
+		},
+		includeCrossOrigin:true,
+		// Unless specified in webpack's configuration itself
+		publicPath: '/SC/',
+
+		appShell: '/SC/',
+		externals: [
+			'/api/',
+			'/SC/',
+			'/SC/unidad',
+			'/SC/download',
+		]
+	}),
 		new webpack.DefinePlugin({
 			SIDE: JSON.stringify("client"),
 			'process.env': {
@@ -173,7 +196,7 @@ export default [{
 		path: path.resolve(__dirname, '../dist')
 	},
 	devServer: {
-		host: "orchi",
+		host: "localhost",
 		port: 9090,
 		allowedHosts: ["ubuntu", "*", "10.42.0.1"],
 		overlay: true,
@@ -227,6 +250,15 @@ export default [{
 		}]
 	},
 	plugins: [
+		new OfflinePlugin({
+			// Unless specified in webpack's configuration itself
+			publicPath: '/',
+
+			appShell: '/',
+			externals: [
+				'/'
+			]
+		}),
 		new webpack.DefinePlugin({
 			SIDE: JSON.stringify("client"),
 			'process.env': {

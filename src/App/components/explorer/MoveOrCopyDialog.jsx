@@ -176,6 +176,8 @@ class MoveOrCopyDialog extends React.Component {
       <div>
        
         <Dialog
+          disableBackdropClick={!this.state.inProgress}
+          disableEscapeKeyDown={!this.state.inProgress}
           fullScreen={fullScreen}
           //style={{minWidth:"500px"}}
           open={this.props.open}

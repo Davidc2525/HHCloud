@@ -23,7 +23,7 @@
   }
 
   const tryNormalize=(path)=>{
-  	return isRoot(path) ? path : (path.replace(/\/{2,}/ig, "/")).replace(/(\/?){1,}$/ig,"")
+  	return isRoot(path) ? path : (path.replace(/\/{2,}/ig, "/")).replace(/(\/?){1,}$/ig,"").replace(/(\/+)$/ig,"")
   }
 
   const isRoot = (path)=>{
@@ -31,12 +31,15 @@
   }
 
   const parsePath = (hashPath)=>{
-  	return hashPath.split("#")[1]
+  	var p = hashPath;
+	return p.substring(p.indexOf("#")+1);
+  	//return hashPath.split("#")[1]
   }
   window.gp = getParent
   window.mp = mergePath
   window.gn = getName
   export {
+  	tryNormalize,
   	parsePath,
   	getName,
   	getParent,

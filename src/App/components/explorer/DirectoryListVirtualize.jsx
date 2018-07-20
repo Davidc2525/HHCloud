@@ -1,3 +1,4 @@
+//DirectoryListVirtualize.jsx
 import React from "react"
 import {
   push
@@ -359,6 +360,66 @@ class DirectoryList extends React.Component{
 
 		return  !(isSelecteMode || !online)
 	}
+	_rowRenderer = ({index, isScrolling, isVisible, key, style,isSelecteMode,online,fullScreen,activeDirectory}) => {
+	    const {classes,data,history} = this.props;
+
+	    const item = data.get("data").get(index);
+	    const selectioned = item.get("selectioned");
+	   	
+	    return (
+		<ListItem style={style} disabled={!online} disableRipple={activeDirectory} key={key} button onClick={(e)=>{
+          	this.handleItemEvent(e,{item,action:"open"})
+          	//history.push("/SC/unidad#"+item.get("path"))
+          }}
+         >
+         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
+         	(e,c)=>{
+         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
+         	}
+         }/>}
+         {
+          	!isSelecteMode&&<ListItemAvatar>
+              <Avatar>
+               	<FolderIcon />
+
+              </Avatar>
+            </ListItemAvatar>
+          }
+
+            <ListItemText
+              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+              primaryTypographyProps={{noWrap:true, variant:"title"}}
+              primary={item.get("name")}
+              secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
+            />
+
+           {<ListItemSecondaryAction>
+
+              {item.get("download") != undefined && item.get("download") == "downloading" &&
+              	<IconButton  aria-label="Descargar">
+                <FileDownload />
+              </IconButton>}
+
+			{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+
+			  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+			  }}>
+			    <DeleteIcon />
+			  </IconButton>*/}
+            </ListItemSecondaryAction>}
+            <div>
+
+
+
+		    </div>
+          </ListItem>
+	     
+	  );
+	};
+
+	_setRef = windowScroller => {
+	    this._windowScroller = windowScroller;
+	};
 
 	render(){
 
@@ -399,179 +460,45 @@ class DirectoryList extends React.Component{
 		const activeDirectory = !this.isActiveDirectory()
 		return (
 
-			
-				<div id="DirectoryList" style={{overflowX:"hidden"}}>
-
-					{(folders.count() == 0 && files.count() == 0 && filter == "")&&
-						<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
-			 	 			<Grid item>
-			 	 			 	<Typography>Carpeta Vacia</Typography>
-				          	</Grid>
-			 	 		</Grid>
-
-					}
-
-					{(folders.count() == 0 && files.count() == 0 && filter != "")&&
-						<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
-			 	 			<Grid item>
-			 	 			 	<Typography>Sin resultados para: {filter}</Typography>
-				          	</Grid>
-			 	 		</Grid>
-
-					}
-					{(folders.count() > 0 || files.count() > 0 )&&
-						<List dense={!fullScreen}>
-						 	{folders.count()>0&&
-
-						 		<ListItem divider >
-
-					                    <ListItemText
-					                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-					                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-					                      primary={"Carpetas"}
-					                      secondary={folders.count()}
-					                    />
-					            </ListItem>
-						 	}
-
-						 	{folders.map((item,i)=>{
-						 		return (
-								 	<ContextMenuTrigger
-								 		key={i.toString()}
-								 		disabled={activeDirectory}
-								 		onItemClick={this.handleClickItemMenuContext}
-								 		item={item}
-									 	name={item.get("name")}
-					                    holdToDisplay={1000}
-					                    collect={collect}
-
-									 	id={"itemList"}>
-
-					                  <ListItem disabled={!online} disableRipple={activeDirectory} key={i.toString()} button onClick={(e)=>{
-					                  	this.handleItemEvent(e,{item,action:"open"})
-							          	//history.push("/SC/unidad#"+item.get("path"))
-							          }}
-							         >
-							         {isSelecteMode&&<Checkbox onChange={
-							         	(e,c)=>{
-							         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
-							         	}
-							         }/>}
-					                 {
-					                  	!isSelecteMode&&<ListItemAvatar>
-					                      <Avatar>
-					                       	<FolderIcon />
-
-					                      </Avatar>
-					                    </ListItemAvatar>
-					                  }
-
-					                    <ListItemText
-					                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-					                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-					                      primary={item.get("name")}
-					                      secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
-					                    />
-
-					                   {<ListItemSecondaryAction>
-
-					                      {item.get("download") != undefined && item.get("download") == "downloading" &&
-					                      	<IconButton  aria-label="Descargar">
-					                        <FileDownload />
-					                      </IconButton>}
-
-										{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
-
-										  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-										  }}>
-										    <DeleteIcon />
-										  </IconButton>*/}
-					                    </ListItemSecondaryAction>}
-					                    <div>
-
-
-
-									    </div>
-					                  </ListItem>
-									</ContextMenuTrigger>
-						 			)
-						 	})}
-
-
-							 	{files.count()>0&&
-							 	<ListItem divider >
-
-
-						                    <ListItemText
-						                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-						                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-						                      primary={"Archivos"}
-						                      secondary={files.count()}
-						                    />
-						        </ListItem>}
-
-							 	{files.map((item,i)=>{
-							 		return (
-									 	<ContextMenuTrigger
-									 		key={i.toString()}
-
-									 		disabled={activeDirectory}
-									 		onItemClick={this.handleClickItemMenuContext}
-									 		item={item}
-										 	name={item.get("name")}
-						                    holdToDisplay={1000}
-						                    collect={collect}
-
-										 	id={"itemList"}>
-						                  <ListItem disabled={!online} disableRipple={activeDirectory} key={i} button onClick={(e)=>{
-						                  	this.handleItemEvent(e,{item,action:"open"})
-								          	//history.push("/SC/unidad#"+item.get("path"))
-								          }} >
-
-						                    {isSelecteMode&&<Checkbox onChange={
-								         	(e,c)=>{
-								         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
-								         	}
-								         }/>}
-						                 {
-						                  	!isSelecteMode&&<ListItemAvatar>
-						                      <Avatar>
-						                       	<InsertDriveFile/>
-
-						                      </Avatar>
-						                    </ListItemAvatar>
-						                  }
-
-						                    <ListItemText
-						                      secondaryTypographyProps={{noWrap:false, variant:"body2"}}
-						                      primaryTypographyProps={{noWrap:true, variant:"title"}}
-						                      primary={item.get("name")}
-						                      secondary={`${filesize(item.get("size"))} ${this.stateDownloadString(item)}`}
-						                    />
-
-						                    {<ListItemSecondaryAction>
-
-						                      {item.get("download") != undefined && item.get("download") == "downloading" &&
-						                      	<IconButton  aria-label="Descargar">
-						                        <FileDownload />
-						                      </IconButton>}
-
-											{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
-
-											  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-											  }}>
-											    <DeleteIcon />
-											  </IconButton>*/}
-						                    </ListItemSecondaryAction>}
-						                  </ListItem>
-										</ContextMenuTrigger>
-							 		)
-							 	})}
-			            </List>
-		          	}
-	              <ConnectedMenu />
-				</div>
-			)}
+				<div id="listV">
+					<WindowScroller
+			          ref={this._setRef}
+			          scrollElement={ window}>
+			          {({height, isScrolling, registerChild, onChildScroll, scrollTop}) => (
+			            <div >
+			              <AutoSizer disableHeight>
+			                {({width}) => (
+			                	<List ref={registerChild} dense={!fullScreen}>
+				                    <VList
+				                      ref={el => {
+				                        window.listEl = el;
+				                      }}
+				                      autoHeight
+				                      //className={styles.List}
+				                      height={height}
+				                      isScrolling={isScrolling}
+				                      onScroll={onChildScroll}
+				                      overscanRowCount={5}
+				                      rowCount={data.get("data").count()}
+				                      rowHeight={fullScreen?64:53}
+				                      rowRenderer={({index, isScrolling, isVisible, key, style})=>
+											this._rowRenderer({index, isScrolling, isVisible, key, style,isSelecteMode,online,fullScreen,activeDirectory})
+				                      }
+				                      //scrollToIndex={scrollToIndex}
+				                      scrollTop={scrollTop}
+				                      width={width}
+				                    />
+			                 
+			                	</List>
+			                 
+			                )}
+			              </AutoSizer>
+			            </div>
+			          )}
+			        </WindowScroller>
+				</div>	
+		)
+	}
 }
 
 

@@ -10,9 +10,9 @@ export default (state = new Map(), action) => {
 
 
 		case "ADD_DOWNLOAD":
-			var downloads = state.get("downloads")
-			downloads = downloads.set(action.dlId,fromJS(action.dl.toObject()))
-			var newState = state.set("downloads", downloads)
+			var downloads = state.get("downloads");
+			downloads = downloads.set(action.dl.id,fromJS(action.dl.toObject()));
+			var newState = state.set("downloads", downloads);
 
 
 			return newState
@@ -20,8 +20,8 @@ export default (state = new Map(), action) => {
 
 		case "REMOVE_DOWNLOAD":
 			var downloads = state.get("downloads")
-			//var index = downloads.indexOf(action.dlId)
-			downloads = downloads.delete(action.dlId)
+			//var index = downloads.indexOf(action.dl.id)
+			downloads = downloads.delete(action.dl.id)
 
 			var newState = state.set("downloads", downloads)
 
@@ -30,11 +30,11 @@ export default (state = new Map(), action) => {
 
 		case "PROGRESS_DOWNLOAD":
 			var downloads = state.get("downloads")
-			//var index = downloads.indexOf(action.dlId)
-			//downloads = downloads.set(action.dlId)
-			var item =state.getIn(["downloads",action.dlId]);
+			//var index = downloads.indexOf(action.dl.id)
+			//downloads = downloads.set(action.dl.id)
+			var item =state.getIn(["downloads",action.dl.id]);
 			if (item != null) {
-				var newState = state.setIn(["downloads", action.dlId], fromJS(action.dl.toObject()))
+				var newState = state.setIn(["downloads", action.dl.id], fromJS(action.dl.toObject()))
 			}else{
 				return state
 			}
@@ -43,10 +43,10 @@ export default (state = new Map(), action) => {
 
 		case "ERROR_DOWNLOAD":
 			var downloads = state.get("downloads")
-			//var index = downloads.indexOf(action.dlId)
-			//downloads = downloads.set(action.dlId)
+			//var index = downloads.indexOf(action.dl.id)
+			//downloads = downloads.set(action.dl.id)
 
-			var newState = state.setIn(["downloads",action.dlId],fromJS(action.dl.toObject()  ))
+			var newState = state.setIn(["downloads",action.dl.id],fromJS(action.dl.toObject()  ))
 
 
 			return newState

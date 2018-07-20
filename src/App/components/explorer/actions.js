@@ -7,11 +7,12 @@ const DELETED_PATH = "DELETED_PATH";
 
 
 
-const fetchingPath = (path) => {
+const fetchingPath = (path,withContent=false) => {
 	return ({
 		type: FETCHING_PATH,
 		middle: MIDDLEWARE,
-		path: path
+		path: path,
+		payload:{withContent}
 
 	})
 }
