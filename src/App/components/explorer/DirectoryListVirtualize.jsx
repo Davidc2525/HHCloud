@@ -360,10 +360,10 @@ class DirectoryList extends React.Component{
 
 		return  !(isSelecteMode || !online)
 	}
-	_rowRenderer = ({index, isScrolling, isVisible, key, style,isSelecteMode,online,fullScreen,activeDirectory}) => {
+	_rowRenderer = ({index, isScrolling, isVisible, key, style,dataList,isSelecteMode,online,fullScreen,activeDirectory}) => {
 	    const {classes,data,history} = this.props;
 
-	    const item = data.get("data").get(index);
+	    const item = dataList.get(index);
 	    const selectioned = item.get("selectioned");
 	   	
 	    return (
@@ -385,6 +385,7 @@ class DirectoryList extends React.Component{
 		         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
 		         	(e,c)=>{
 		         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
+		         		return false
 		         	}
 		         }/>}
 		         {
@@ -491,10 +492,10 @@ class DirectoryList extends React.Component{
 				                      isScrolling={isScrolling}
 				                      onScroll={onChildScroll}
 				                      overscanRowCount={5}
-				                      rowCount={data.get("data").count()}
+				                      rowCount={dataList.count()}
 				                      rowHeight={fullScreen?64:53}
 				                      rowRenderer={({index, isScrolling, isVisible, key, style})=>
-											this._rowRenderer({index, isScrolling, isVisible, key, style,isSelecteMode,online,fullScreen,activeDirectory})
+											this._rowRenderer({index, isScrolling, isVisible, key, style,dataList,isSelecteMode,online,fullScreen,activeDirectory})
 				                      }
 				                      //scrollToIndex={scrollToIndex}
 				                      scrollTop={scrollTop}

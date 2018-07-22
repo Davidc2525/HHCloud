@@ -27,7 +27,7 @@ class DownloadOperation {
 		fd.append("args", JSON.stringify(args))
 
 		this.xhr = new XMLHttpRequest();
-		this.xhr.open('POST', ApiInstance.instance.urlService + `?args=${btoa(JSON.stringify(args))}`, true);
+		this.xhr.open('POST', ApiInstance.instance.urlService /*+ `?args=${btoa(JSON.stringify(args))}`*/, true);
 		this.xhr.responseType = 'blob';
 
 

@@ -62,7 +62,7 @@ class Api {
 
 		        var xhr = new XMLHttpRequest();
 
-		        xhr.open('POST', this.urlService+`?args=${btoa(JSON.stringify(arg))}`, true);
+		        xhr.open('POST', this.urlService/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
 		         //xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
                 //xhr.setRequestHeader('Content-type', 'application/json');
                 //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');

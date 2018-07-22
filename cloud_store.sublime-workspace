@@ -523,7 +523,7 @@
 			"file": "src/App/index.js",
 			"settings":
 			{
-				"buffer_size": 856,
+				"buffer_size": 3335,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -899,7 +899,7 @@
 	],
 	"find":
 	{
-		"height": 21.0
+		"height": 22.0
 	},
 	"find_in_files":
 	{
@@ -945,15 +945,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 856,
+						"buffer_size": 3335,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								747,
-								747
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1004,7 +1004,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 21.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1049,7 +1049,7 @@
 	"project": "",
 	"replace":
 	{
-		"height": 38.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":

@@ -9,6 +9,38 @@ import {
 
 import {getParent,getName} from "./Util.js"
 
+/**
+  * editar un item dentro de la data de un item q contiene elementos dentro,
+  * Cambiar una propiedad un item de un directorio, ya q se repetia este codigo en algunos reducers
+  */
+const setPropertyInChildreDiretory = (state,pathParent,pathChild, name, value) => {
+
+	var newState = state;
+	var parentPath = pathParent;//getParent(path);
+	var targetName = pathChild;//getName(path);
+	var childrensByParent = newState.getIn(["paths", parentPath, "data"]);
+
+	if (childrensByParent != null) {
+		let index = null;
+		//console.warn(" childrensByParent ", childrensByParent.toJS())
+		var targetPath = childrensByParent.find((x, i) => (index = i, x.get("name") == targetName))
+		if (targetPath != null) {
+			//console.warn("targetPath ", targetPath.toJS(), index)
+			var oldPathUpdate = targetPath.set(name, value)
+			//oldPathUpdate = oldPathUpdate.set("path",action.payload.newPath)
+			//console.warn("oldPathUpdate ", oldPathUpdate.toJS())
+
+			if (index != null) {
+				childrensByParent = childrensByParent.update(index, _ => oldPathUpdate)
+				newState = newState.setIn(["paths", parentPath, "data"], childrensByParent)
+			}
+
+		}
+	}
+
+	return newState;
+}
+
 export default (state = new Map(), action) => {
 
 	switch (action.type) {
@@ -63,6 +95,8 @@ export default (state = new Map(), action) => {
 				/**hijos de la rruta padre*/
 			var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
 			
+			return setPropertyInChildreDiretory(newState,parentPath,targetName,"download",action.payload.status);
+
 			if (childrensByParent!=null) {
 				let index  = null; 
 				console.warn(" childrensByParent ", childrensByParent.toJS())
@@ -166,7 +200,14 @@ export default (state = new Map(), action) => {
 				/**hijos de la rruta padre*/
 			var childrensByParent = newState.getIn(["paths",action.payload.parentPath,"data"]);
 			
-			if (childrensByParent!=null) {
+			newState = setPropertyInChildreDiretory(
+				newState,action.
+				payload.parentPath,
+				action.payload.oldName,
+				"name",
+				action.payload.newName);
+			
+			/*if (childrensByParent!=null) {
 				let index  = null; 
 				//console.warn(" childrensByParent ", childrensByParent.toJS())
 				var oldPath = childrensByParent.find((x,i) => (index=i,x.get("name") == action.payload.oldName))
@@ -182,7 +223,7 @@ export default (state = new Map(), action) => {
 					}
 
 				}
-			}
+			}*/
 
 			/**eliminar rrutas q comiensen con la rruta anterios(rruta antes de cambiar el nombre )*/
 			var paths =  newState.get("paths");
@@ -228,9 +269,13 @@ export default (state = new Map(), action) => {
 
 
 				selecteds.forEach(item => {
-
-
 					var path=item.get("path");
+					var parentPath = getParent(path);
+					var targetName = getName(path);
+
+					newState =  setPropertyInChildreDiretory(newState,parentPath,targetName,"selectioned",false);
+
+					/*var path=item.get("path");
 					var parentPath = getParent(path);
 					var targetName = getName(path);
 						var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
@@ -251,7 +296,7 @@ export default (state = new Map(), action) => {
 								}
 
 							}
-						}
+						}*/
 				});
 			return newState
 
@@ -266,9 +311,12 @@ export default (state = new Map(), action) => {
 
 				newState = newState.set("selection",selection);
 
-				
-			var parentPath = getParent(path);
-			var targetName = getName(path);
+				var parentPath = getParent(path);
+				var targetName = getName(path);
+
+				return setPropertyInChildreDiretory(newState,parentPath,targetName,"selectioned",true);
+
+
 				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
 			
 				if (childrensByParent!=null) {
@@ -302,9 +350,11 @@ export default (state = new Map(), action) => {
 				selection = selection.set("selecteds",selecteds);
 
 				newState = newState.set("selection",selection);
-
 			var parentPath = getParent(path);
 			var targetName = getName(path);
+
+				return setPropertyInChildreDiretory(newState,parentPath,targetName,"selectioned",false);
+
 				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
 			
 				if (childrensByParent!=null) {
