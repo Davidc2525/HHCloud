@@ -131,7 +131,7 @@ function Transition(props) {
           <DialogTitle id="form-dialog-title">Renombrar archivo o carpeta</DialogTitle>
           <DialogContent>
             <DialogContentText>
-             Cambiar de nombre '{this.props.path}'
+             Cambiar de nombre '{this.props.nameFile}'
              <br/>
              {this.props.status == "error"&&(<strong>A ocurrido un error ({this.props.errorMsg}), intente de nuevo!</strong>)}
             </DialogContentText>

@@ -226,6 +226,7 @@ export default (state = new Map(), action) => {
 				newState = newState.set("selection",selection)
 
 
+
 				selecteds.forEach(item => {
 
 
@@ -265,6 +266,7 @@ export default (state = new Map(), action) => {
 
 				newState = newState.set("selection",selection);
 
+				
 			var parentPath = getParent(path);
 			var targetName = getName(path);
 				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);

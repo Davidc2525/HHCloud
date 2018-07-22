@@ -30,6 +30,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "css-loader": "^0.28.11",
+    "dateformat": "^3.0.3",
     "downloadjs": "^1.4.7",
     "draft-js": "^0.10.5",
     "express": "^4.16.3",

@@ -5,6 +5,7 @@ import { Provider ,connect} from 'react-redux'
 import {store,history} from "./redux/index.js"
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 //console.log(store)
+window.df = require("dateformat")
 
 import { withRouter } from 'react-router-dom'
 

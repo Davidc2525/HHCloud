@@ -367,52 +367,63 @@ class DirectoryList extends React.Component{
 	    const selectioned = item.get("selectioned");
 	   	
 	    return (
-		<ListItem style={style} disabled={!online} disableRipple={activeDirectory} key={key} button onClick={(e)=>{
-          	this.handleItemEvent(e,{item,action:"open"})
-          	//history.push("/SC/unidad#"+item.get("path"))
-          }}
-         >
-         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
-         	(e,c)=>{
-         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
-         	}
-         }/>}
-         {
-          	!isSelecteMode&&<ListItemAvatar>
-              <Avatar>
-               	<FolderIcon />
+			<ContextMenuTrigger
+				key={key}
+				disabled={activeDirectory}
+				onItemClick={this.handleClickItemMenuContext}
+				item={item}
+				name={item.get("name")}
+				holdToDisplay={1000}
+				collect={collect}
 
-              </Avatar>
-            </ListItemAvatar>
-          }
+				id={"itemList"}>
+				<ListItem style={style} disabled={!online} disableRipple={activeDirectory} key={key} button onClick={(e)=>{
+		          	this.handleItemEvent(e,{item,action:"open"})
+		          	//history.push("/SC/unidad#"+item.get("path"))
+		          }}
+		         >
+		         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
+		         	(e,c)=>{
+		         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
+		         	}
+		         }/>}
+		         {
+		          	!isSelecteMode&&<ListItemAvatar>
+		              <Avatar>
+		               	<FolderIcon />
 
-            <ListItemText
-              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-              primaryTypographyProps={{noWrap:true, variant:"title"}}
-              primary={item.get("name")}
-              secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
-            />
+		              </Avatar>
+		            </ListItemAvatar>
+		          }
 
-           {<ListItemSecondaryAction>
+		            <ListItemText
+		              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+		              primaryTypographyProps={{noWrap:true, variant:"title"}}
+		              primary={item.get("name")}
+		              secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
+		            />
 
-              {item.get("download") != undefined && item.get("download") == "downloading" &&
-              	<IconButton  aria-label="Descargar">
-                <FileDownload />
-              </IconButton>}
+		           {<ListItemSecondaryAction>
 
-			{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+		              {item.get("download") != undefined && item.get("download") == "downloading" &&
+		              	<IconButton  aria-label="Descargar">
+		                <FileDownload />
+		              </IconButton>}
 
-			  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-			  }}>
-			    <DeleteIcon />
-			  </IconButton>*/}
-            </ListItemSecondaryAction>}
-            <div>
+					{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+
+					  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+					  }}>
+					    <DeleteIcon />
+					  </IconButton>*/}
+		            </ListItemSecondaryAction>}
+		            <div>
 
 
 
-		    </div>
-          </ListItem>
+				    </div>
+		          </ListItem>
+		</ContextMenuTrigger>
 	     
 	  );
 	};
@@ -461,6 +472,7 @@ class DirectoryList extends React.Component{
 		return (
 
 				<div id="listV">
+				  <ConnectedMenu />
 					<WindowScroller
 			          ref={this._setRef}
 			          scrollElement={ window}>

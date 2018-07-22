@@ -1,9 +1,9 @@
 /*  
-	15 y 8 = 23, mas 4 
+	15 y 8 = 23, mas 4
 	155.32
 */
 import download from "downloadjs"
-window.d = download
+import dateformat from "dateformat"
 import filesize from "filesize"
 import uniqid from "uniqid"
 import _ from "lodash"
@@ -17,7 +17,14 @@ class Download {
 	generatePayloadByListItems(listItems){
 		var size = listItems.map(x=>x.get("size")).reduce((a,b)=>a+b,0);
 		var count = listItems.count();
-		var name = `Descarga-multiple-elementos-(${count}).zip`
+		var time = dateformat(new Date(),"'F'yyyymmdd'T'HHMMss");
+		var dataName = `C${count}Z${size}${time}`; //parser /(?:^C(\d+))(?:Z(\d+))(?:F(\d{1,4})(\d{1,2})(\d{1,2}))(?:T(\d{1,2})(\d{1,2})(\d{1,2}))/ig
+		var name = "";
+		if(count>1){
+			name = `Descarga de (${count}) elementos-${dataName}.zip`;
+		}else{
+			name = `Descarga de un elemento-${dataName}.zip`;
+		}
 		return new Map({size,name});
 	}
 
@@ -151,7 +158,7 @@ class Download {
 
 	clear(){
 		clearInterval(this.intervalSpeedDl);
-		this.currentDls = null;
+		this.currentDls = [];
 		//this.payload = null;
 	}
 
