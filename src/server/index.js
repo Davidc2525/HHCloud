@@ -31,5 +31,5 @@ app.get('/SC/*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../dist/SC', 'index.html'));
 });
 app.listen(9090,function(){
-    console.log("Started listening on port", 9090);
+    console.log("HHCloud client start in port", 9090);
 })

@@ -1,12 +1,14 @@
-# SucreCloud
+# HHCloud applicacion web
 
-git clone https://github.com/Davidc2525/SucreCloud.git
+git clone https://github.com/Davidc2525/HHCloud.git
 
-cd SucreCloud
+cd HHCloud
 
 npm install
 
-npm run start-client
+npm run build-client
+
+node src/server/index.js
 
 http://localhost:9090
 
