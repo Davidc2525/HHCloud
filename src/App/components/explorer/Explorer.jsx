@@ -12,7 +12,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 //import Button from '@material-ui/core/Button';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import DeleteForever from '@material-ui/icons/DeleteForever';
+import CloudUpload from '@material-ui/icons/CloudUpload';
 import CloudDownload from '@material-ui/icons/CloudDownload';
+import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
 import Refresh from '@material-ui/icons/Refresh';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import SelectAll from '@material-ui/icons/SelectAll';
@@ -25,7 +27,7 @@ import FilterNone from '@material-ui/icons/FilterNone';
 import FlipToFront from '@material-ui/icons/FlipToFront';
 import Chip from '@material-ui/core/Chip';
 import Zoom from '@material-ui/core/Zoom';
-import {getParent,parsePath} from"./Util.js"
+import {getParent,parsePath,tryNormalize} from"./Util.js"
 //import IconButton from '@material-ui/core/IconButton';
 import { withTheme } from '@material-ui/core/styles';
 /**/
@@ -171,15 +173,90 @@ const styles = theme => ({
 @withTheme()
 @withStyles(styles)
 @withWidth()
+@connect(state=>{ 
+	var upload = state.getIn(["explorer","upload"]);
+	var path = tryNormalize(parsePath(state.getIn(["router"]).hash));
+	var online = state.getIn(["app","online"])
+	var currentType = state.getIn(["explorer","currentType"]);
+	var toolBar = state.getIn(["explorer","toolBar"]);
+	var selection = state.getIn(["explorer","selection"]);
+	var selecteds = state.getIn(["explorer","selection","selecteds"]);
+	return {upload,online,filter:toolBar.get("filter"),path,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
+})
 class Explorer extends React.Component{
 	constructor(props){
 		super(props);
 		window.ex = this
+		this.state = {items:[]}
 
+		this.tmpItems =new ListI()
+	}
+	scanFiles(item) {
+		//console.warn("sacn",item)
+		this.tmpItems = this.tmpItems.push(item)
+		//this.setState(p=>({items:[item,...p.items]}))
+
+		if (item.isDirectory) {
+			let directoryReader = item.createReader();
+			
+
+			directoryReader.readEntries((entries)=> {
+				entries.forEach((entry)=> {
+					this.scanFiles(entry);
+				});
+			});
+		}
+	}
+	handleFileSelect(e) {
+		var itemsToState = []
+		console.warn(e)
+		var evt = e;
+		evt.stopPropagation();
+		evt.preventDefault();
+		console.error(evt.dataTransfer.types)
+		var items = evt.dataTransfer.items; // FileList object.
+		Array.prototype.forEach.call(items, _ => {
+			
+			//this.tmpItems.push(_.webkitGetAsEntry())
+			this.scanFiles(_.webkitGetAsEntry())
+			//console.warn(_.webkitGetAsEntry())
+		})
+		this.setState({items:this.tmpItems.toJS()})
+		console.warn(this.tmpItems)
+		//this.tmpItems=[]
+
+		return;
+
+		var files = evt.dataTransfer.files; // FileList object.
+		Array.prototype.forEach.call(files, _ => {
+			console.log(_)
+			var f = new FileReader()
+			f.onload = x => {
+				console.warn(x.target.result)
+				var b = new Blob([x.target.result], {
+					type: _.type
+				})
+
+				window.open(URL.createObjectURL(b))
+			}
+			f.readAsArrayBuffer(_)
+
+		})
+		console.warn(files)
+	}
+
+	handleDragOver(e) {
+		console.warn(e)
+		var evt = e;
+		evt.stopPropagation();
+		evt.preventDefault();
+		evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 	}
 
 	render() {
-		const {classes,width}= this.props
+		const {classes,width,upload}= this.props
+
+		const uploadActive = upload.get("active")
 		return (
 			<div id="Explorer">
 				<div id="headerHelper" className={classes.headerHelper}>
@@ -193,7 +270,16 @@ class Explorer extends React.Component{
 				</div>
 				<div style={{height:"100px"}} className={classes.toolbar} />
 				
-				<ViewExplorer/>
+				{true&&<ViewExplorer/>}
+				{false&&uploadActive&&
+					<div onDragOver={this.handleDragOver.bind()} onDrop={this.handleFileSelect.bind(this)}>
+						Subir
+						{this.state.items.map(x=>
+							<div>
+								{x.fullPath}
+							</div>)}
+					</div>
+				}
 			</div>
 		);
 	}
@@ -228,13 +314,14 @@ const stylesToolBar = theme => ({
 
 /**Toolbar Pasar a modulo independiente*/
 @connect(state=>{ 
+	var upload = state.getIn(["explorer","upload"]);
 	var router = state.getIn(["router"]);
 	var online = state.getIn(["app","online"])
 	var currentType = state.getIn(["explorer","currentType"]);
 	var toolBar = state.getIn(["explorer","toolBar"]);
 	var selection = state.getIn(["explorer","selection"]);
 	var selecteds = state.getIn(["explorer","selection","selecteds"]);
-	return {online,filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
+	return {upload,online,filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
 })
 @withStyles(stylesToolBar,{withTheme:true})
 //@withRouter
@@ -279,6 +366,15 @@ class ToolBar extends React.Component {
 		}	
 		if(data.action == "refresh"){
 				store.dispatch(fetchingPath(parsePath(this.props.router.location.hash),true))
+		}
+
+		if(data.action == "mkdir"){
+				store.dispatch({type:"OPEN_MKDIR_DIALOG"})
+		}
+
+		if(data.action == "upload"){
+			var preState = this.props.upload.get("active")
+				store.dispatch({type:"ACTIVE_UPLOAD",payload:{active:!preState}})
 		}
 		if (data.action == "delete") {
 			store.dispatch({
@@ -351,7 +447,11 @@ class ToolBar extends React.Component {
 
 						{
 							currentType == "folder" &&
-								this.createAtionButton("selectemode", SelectAll, "Hacer seleccion")
+								[
+									this.createAtionButton("mkdir", CreateNewFolder, "Crear nueva carpeta"), 
+									this.createAtionButton("upload", CloudUpload, "Subir"),
+									this.createAtionButton("selectemode", SelectAll, "Hacer seleccion")
+								]
 						}
 				 	</div>
 				 </Fade>
@@ -367,15 +467,11 @@ class ToolBar extends React.Component {
 					        	<div className={classes.root + " " + classes.actionIcos}>
 							        
 									{
-										this.createAtionButton("selectemode", ArrowBack, "Atras")
-									}
-
-									{
-										this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte)
-									}
-
-									{
-										this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte)
+										[
+											this.createAtionButton("selectemode", ArrowBack, "Atras"),
+											this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
+											this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
+										]
 									}
 							       
 							       {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">

@@ -6,6 +6,13 @@ import {
 
 const state = {
 	namecomponent: "explorer",
+	mkdirDialog:{
+		open:false,
+		cantEdit:false,
+		name:"",
+		error:false,
+		errorMsg:""
+	},
 	renameDialog: {
 		status: "ready", //ready,changing, error
 		errorMsg: "",
@@ -35,6 +42,9 @@ const state = {
 
 	},
 	currentType:"folder",//folder, file
+	upload:{
+		active:false,
+	},
 	paths: {}
 
 }

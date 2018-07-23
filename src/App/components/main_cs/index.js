@@ -2,6 +2,7 @@ import React from 'react';
 import ReactResizeDetector from 'react-resize-detector';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -24,6 +25,8 @@ import logo from "../../../media/img/logop.png"
 import Nuevo from "../nuevo_cs/index.js"
 import DownloadViewer from "../download_viewer/index.js"
 import PahtSee from "../path_see/index.js"
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 /**/
 
 import Exprorer from "../explorer/Explorer.jsx"
@@ -50,7 +53,7 @@ const styles = theme => ({
     flexGrow: 1,
     
     zIndex: 1,
-   
+    //flexDirection:"column",
     position: 'relative',
     display: 'flex',
     height:"auto",
@@ -95,6 +98,16 @@ const styles = theme => ({
       padding: theme.spacing.unit * 0,
       marginLeft:drawerWidth+"px"
     },
+    footer: {
+      flexGrow: 1,
+
+    },
+    rootGrid:{flexGrow:1,width:"100%",margin:"none"},
+    paper: {
+      padding: theme.spacing.unit * 2,
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    }
 
    
   },
@@ -134,7 +147,7 @@ class ResponsiveDrawer extends React.Component {
   render() {
     const { classes, theme } = this.props;
 
-    const drawer = (
+    const drawerContent = (
       <div id="nc">
         <div className={classes.toolbar} >
           <img width="110px" style={{marginLeft:"60px"}} src={logo}/>
@@ -147,6 +160,38 @@ class ResponsiveDrawer extends React.Component {
         <List><SideVarContent/></List>
         <Divider />
         <List>{otherMailFolderListItems}</List>
+           {/*<div id="footer" className={classes.footer} >
+              <div className={classes.footer}>
+                <Grid className={classes.rootGrid} container justify="center" >
+
+                    <Grid item xs={12}>
+                      <Paper className={classes.paper}>xs=12</Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
+                    </Grid>
+
+
+
+                </Grid>
+              </div>
+            </div>*/}
+
       </div>
     );
 
@@ -154,12 +199,13 @@ class ResponsiveDrawer extends React.Component {
       <div className={classes.root}>
       	<Nav handleDrawerToggle={this.handleDrawerToggle.bind(this)}/>
         <Hidden mdUp>
-          <Drawer
+          <SwipeableDrawer
 
             variant="temporary"
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={this.state.mobileOpen}
             onClose={this.handleDrawerToggle}
+            onOpen={this.handleDrawerToggle}
             classes={{
               paper: classes.drawerPaper,
             }}
@@ -167,12 +213,12 @@ class ResponsiveDrawer extends React.Component {
               keepMounted: true, // Better open performance on mobile.
             }}
           > 
-            {drawer}
-          </Drawer>
+            {drawerContent}
+          </SwipeableDrawer>
         </Hidden>
 
         <Hidden smDown implementation="css">
-          <Drawer
+          <SwipeableDrawer
 
             id={"drawer"}
             variant="permanent"
@@ -181,8 +227,8 @@ class ResponsiveDrawer extends React.Component {
               paper: classes.drawerPaper,
             }}
           >
-            {drawer}
-          </Drawer>
+            {drawerContent}
+          </SwipeableDrawer>
         </Hidden>
 
         <main id="Content" className={classes.content}>
@@ -208,7 +254,9 @@ class ResponsiveDrawer extends React.Component {
                 <Route  component={()=><div>Andas perdido?</div>}/>
             </Switch>
             
+           
         </main>
+        
       </div>
     );
   }

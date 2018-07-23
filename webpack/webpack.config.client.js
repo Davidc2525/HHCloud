@@ -1,3 +1,4 @@
+const CompressionPlugin = require("compression-webpack-plugin")
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -53,11 +54,15 @@ export default [{
 	devServer: {
 		host: "localhost",
 		port: 9090,
-		allowedHosts: ["ubuntu", "*", "10.42.0.1"],
+		compress:true,
+		clientLogLevel: 'info',
+		//lazy: true,
+		allowedHosts: ["*"],
 		overlay: true,
 		contentBase: path.resolve(__dirname, '../dist/SC'),
 		publicPath: "/",
 		hot: true,
+		//hotOnly:true,
 		headers: {
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
@@ -105,9 +110,15 @@ export default [{
 		}]
 	},
 	plugins: [
+	/*new CompressionPlugin({
+		asset: '[path].gz[query]',
+		test: /\.jsx?/,
+		cache: true,
+		 algorithm: 'gzip',
+	}),*/
 	new OfflinePlugin({
 		ServiceWorker:{
-			 entry:path.resolve(__dirname, 'SC-sw.js'),
+			entry:path.resolve(__dirname, 'SC-sw.js'),
 			events: true,
 			prefetchRequest:{credentials: 'include', mode: 'cors'}
 		},
@@ -119,7 +130,6 @@ export default [{
 		includeCrossOrigin:true,
 		// Unless specified in webpack's configuration itself
 		publicPath: '/SC/',
-
 		appShell: '/SC/',
 		externals: [
 			'/api/',
@@ -172,6 +182,9 @@ export default [{
 		}),*/
 		new webpack.NamedModulesPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
+		new webpack.SourceMapDevToolPlugin({
+		  filename: '[name].map'
+		})
 		//new MinifyPlugin(minifyOpts, pluginOpts),
 		//new webpack.HotModuleReplacementPlugin(),
 		//cssExtract,

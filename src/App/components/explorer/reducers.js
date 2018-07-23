@@ -201,11 +201,16 @@ export default (state = new Map(), action) => {
 			var childrensByParent = newState.getIn(["paths",action.payload.parentPath,"data"]);
 			
 			newState = setPropertyInChildreDiretory(
-				newState,action.
-				payload.parentPath,
+				newState, action.payload.parentPath,
 				action.payload.oldName,
 				"name",
 				action.payload.newName);
+
+			newState = setPropertyInChildreDiretory(
+				newState, action.payload.parentPath,
+				action.payload.newName,
+				"path",
+				action.payload.newPath);
 			
 			/*if (childrensByParent!=null) {
 				let index  = null; 
@@ -244,7 +249,61 @@ export default (state = new Map(), action) => {
 			}
 
 			return newState
+			/*rename diaglo*/
 
+
+			/**mkdir dialog*/
+		case "OPEN_MKDIR_DIALOG":
+			var newState = state.setIn(["mkdirDialog","open"], true)
+				newState = newState.setIn(["mkdirDialog","cantEdit"], true)
+				newState = newState.setIn(["mkdirDialog","status"], "ready")
+				newState = newState.setIn(["mkdirDialog","name"], action.nameFile)
+				newState = newState.setIn(["mkdirDialog","path"], action.path)
+
+			return newState
+
+		case "CLOSE_MKDIR_DIALOG":
+			var newState = state.setIn(["mkdirDialog","open"], false)
+				newState = newState.setIn(["mkdirDialog","cantEdit"], false)
+				newState = newState.setIn(["mkdirDialog","status"], "ready")
+				newState = newState.setIn(["mkdirDialog","name"], "")
+				newState = newState.setIn(["mkdirDialog","path"], "")
+			return newState
+
+
+		case "CANT_EDIT_MKDIR_DIALOG":
+			var newState = state.setIn(["mkdirDialog","cantEdit"], action.cantEdit)
+			return newState
+
+		case "STATUS_MKDIR_DIALOG":
+			var newState = state.setIn(["mkdirDialog","status"], action.status)
+				newState = newState.setIn(["mkdirDialog","errorMsg"], action.errorMsg)
+			return newState
+
+		case "CREATED_PATH_MKDIR_DIALOG":
+		
+			var newState = state;
+
+			var data = fromJS(action.payload.data);
+			var parentPath = getParent(data.get("path"));
+			var newPath = data.get("path");
+
+			var parent = newState.getIn(["paths",parentPath],false);
+			
+			if(parent){
+				/**lista de elementos en ese parent*/
+				var parentData = parent.get("data",false);
+				if(parentData){
+
+					parentData = parentData.push(data);
+					parent = parent.set("data",parentData);
+					newState = newState.setIn(["paths",parentPath],parent)
+
+				}
+			}
+			return newState;
+
+			/**mkdir dialog*/
 
 		case "FILTER_TOOLBAR":
 			var newState = state;
@@ -383,6 +442,16 @@ export default (state = new Map(), action) => {
 			var newState = state;
 				newState = newState.setIn(["currentType"],action.payload.type)
 		return newState;
+
+
+		/**Upload*/
+		case "ACTIVE_UPLOAD":
+			var newState = state;
+
+			newState = newState.setIn(["upload","active"],action.payload.active)
+
+			return newState;
+		/**Upload*/
 
 		default:
 			return state

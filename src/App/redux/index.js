@@ -59,7 +59,7 @@ import middlewareDownloadManager from "../elements/download_manager/middleware.j
 const initialState = /*fromJS(initStateTest);*/fromJS({
 	app: {
 		online:true,
-		name: "SucreCloud"
+		name: "HHCloud"
 	},
 	auth: {
 		isLogin: true

@@ -1,4 +1,20 @@
+  /**get parent with indexOf instead spliting and join*/
+  const gp = p => {
+    const index = p.lastIndexOf("/");
+    const path = p || "/"
+    if (index == -1) {
+      return "/"
+    }
+    if (index == 0) {
+      return path.substring(index, 1)
+    } else {
+      return path.substring(0, index)
+    }
+  }
+
   const getParent = (path = "/") => {
+    return gp(path);
+
   	let p = path.split("/").filter(x => x != "")
 
   	let parentPath = p.slice(0, p.length - 1).join("/")
@@ -30,7 +46,7 @@
   	return path == "/"
   }
 
-  const parsePath = (hashPath)=>{
+  const parsePath = (hashPath="#/")=>{
   	var p = hashPath;
 	return p.substring(p.indexOf("#")+1);
   	//return hashPath.split("#")[1]

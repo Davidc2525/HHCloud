@@ -5,7 +5,7 @@ import {
 } from "react-router-redux";
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-import {List as ListI} from "immutable"
+import {List as ListI,Map} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -233,7 +233,7 @@ const ConnectedMenu = connectMenu("itemList")(withStyles(styles,{theme:true})(Dy
 	return {online:online,filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
 })
 @withMobileDialog()
-class DirectoryList extends React.Component{
+class DirectoryListVirtualize extends React.Component{
 
 	constructor(props){
 		super(props)
@@ -360,74 +360,107 @@ class DirectoryList extends React.Component{
 
 		return  !(isSelecteMode || !online)
 	}
-	_rowRenderer = ({index, isScrolling, isVisible, key, style,dataList,isSelecteMode,online,fullScreen,activeDirectory}) => {
+	_rowRenderer = ({index, isScrolling, isVisible, key, style,dataToRender,isSelecteMode,online,fullScreen,activeDirectory}) => {
 	    const {classes,data,history} = this.props;
 
-	    const item = dataList.get(index);
-	    const selectioned = item.get("selectioned");
-	   	
+	    const item = dataToRender.get(index);
+	    const selectioned = item.get("selectioned",false);
+	    const isFile = item.get("file");
+	   	const isHeader = item.get("header",false);
 	    return (
-			<ContextMenuTrigger
-				key={key}
-				disabled={activeDirectory}
-				onItemClick={this.handleClickItemMenuContext}
-				item={item}
-				name={item.get("name")}
-				holdToDisplay={1000}
-				collect={collect}
+	    	<div style={style}>
+	    		{isHeader&&
+		    		
+					 	<ListItem style={{height:style.height}} divider >
+			                    <ListItemText
+			                      secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+			                      primaryTypographyProps={{noWrap:true, variant:"title"}}
+			                      primary={item.get("name")}
+			                      secondary={item.get("count")}
+			                    />
+				        </ListItem>
+				    
+			    }
+		    	
+		    	{!isHeader&&
+		    		<ContextMenuTrigger
+						key={key}
+						disabled={activeDirectory}
+						onItemClick={this.handleClickItemMenuContext}
+						item={item}
+						name={item.get("name")}
+						holdToDisplay={1000}
+						collect={collect}
 
-				id={"itemList"}>
-				<ListItem style={style} disabled={!online} disableRipple={activeDirectory} key={key} button onClick={(e)=>{
-		          	this.handleItemEvent(e,{item,action:"open"})
-		          	//history.push("/SC/unidad#"+item.get("path"))
-		          }}
-		         >
-		         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
-		         	(e,c)=>{
-		         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
-		         		return false
-		         	}
-		         }/>}
-		         {
-		          	!isSelecteMode&&<ListItemAvatar>
-		              <Avatar>
-		               	<FolderIcon />
+						id={"itemList"}>
 
-		              </Avatar>
-		            </ListItemAvatar>
-		          }
+						<ListItem  disabled={!online} disableRipple={activeDirectory} key={key} button onClick={(e)=>{
+				          	this.handleItemEvent(e,{item,action:"open"})
+				          	//history.push("/SC/unidad#"+item.get("path"))
+				          }}
+				         >
+					         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
+					         	(e,c)=>{
+					         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
+					         		return false
+					         	}
+					         }/>}
+					         {
+					          	!isSelecteMode&&<ListItemAvatar>
+					              <Avatar>
+					               	{isFile?<InsertDriveFile />:<FolderIcon />}
+					              </Avatar>
+					            </ListItemAvatar>
+					          }
 
-		            <ListItemText
-		              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
-		              primaryTypographyProps={{noWrap:true, variant:"title"}}
-		              primary={item.get("name")}
-		              secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
-		            />
+					            {!isFile&&	//folder
+					            	<ListItemText
+						              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+						              primaryTypographyProps={{noWrap:true, variant:"title"}}
+						              primary={item.get("name")}
+						              secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
+					            />}
 
-		           {<ListItemSecondaryAction>
+					            {isFile&&		//file
+					            	<ListItemText
+						              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
+						              primaryTypographyProps={{noWrap:true, variant:"title"}}
+						              primary={item.get("name")}
+						              secondary={`${filesize(item.get("size"))} ${this.stateDownloadString(item)}`}
+					            />
+					            }
 
-		              {item.get("download") != undefined && item.get("download") == "downloading" &&
-		              	<IconButton  aria-label="Descargar">
-		                <FileDownload />
-		              </IconButton>}
+					           {<ListItemSecondaryAction>
 
-					{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+					              {item.get("download") != undefined && item.get("download") == "downloading" &&
+					              	<IconButton  aria-label="Descargar">
+					                <FileDownload />
+					              </IconButton>}
 
-					  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-					  }}>
-					    <DeleteIcon />
-					  </IconButton>*/}
-		            </ListItemSecondaryAction>}
-		            <div>
+								{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+
+								  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
+								  }}>
+								    <DeleteIcon />
+								  </IconButton>*/}
+					            </ListItemSecondaryAction>}
+				        </ListItem>
+				</ContextMenuTrigger>
+		    	}
 
 
-
-				    </div>
-		          </ListItem>
-		</ContextMenuTrigger>
-	     
-	  );
+	    	</div>);
 	};
+
+	_rowHeight = ({index,fullScreen,dataToRender}) => {
+		const item = dataToRender.get(index);
+
+		if(item.get("header",false)){
+			return fullScreen?73:73;
+		}else{
+			return fullScreen?64:53
+		}
+	}
 
 	_setRef = windowScroller => {
 	    this._windowScroller = windowScroller;
@@ -437,6 +470,10 @@ class DirectoryList extends React.Component{
 
 		const {classes,data,history,fullScreen} = this.props;
 		const {filter}=this.props
+		const headerFolder = count => new ListI([new Map({header:true,name:"Carpetas",count})])
+		const headerFiles = count => new ListI([new Map({header:true,name:"Archivos",count})])
+		
+		var dataToRender = new ListI();
 		var dataList = data.get("data");
 		if(filter!=""){
 			try {
@@ -450,21 +487,27 @@ class DirectoryList extends React.Component{
 
 		const groups = dataList.groupBy(x=>x.get("file")?"file":"folder")
 
-		var folders = groups.get("folder");
+		var folders = groups.get("folder");	
+
 
 		if(folders!=null){
-			folders=folders.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b))
+			folders=folders.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b));
+			dataToRender = dataToRender.concat(headerFolder(folders.count()));
 		}else{
-			folders = new ListI()
+			folders = new ListI();
 		}
+		dataToRender = dataToRender.concat(folders);
 
 
 		var files = groups.get("file");
 		if(files!=null){
-			files = files.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b))
+			files = files.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b));
+			dataToRender = dataToRender.concat(headerFiles(files.count()));
 		}else{
-			files = new ListI();
+			files = new ListI()
 		}
+		//dataList = dataList.concat(headerFiles);
+		dataToRender = dataToRender.concat(files);
 
 		const {isSelecteMode} = this.props;
 		const {online} = this.props;
@@ -483,6 +526,7 @@ class DirectoryList extends React.Component{
 			                {({width}) => (
 			                	<List ref={registerChild} dense={!fullScreen}>
 				                    <VList
+				                      style={{outline:"black"}}
 				                      ref={el => {
 				                        window.listEl = el;
 				                      }}
@@ -492,10 +536,10 @@ class DirectoryList extends React.Component{
 				                      isScrolling={isScrolling}
 				                      onScroll={onChildScroll}
 				                      overscanRowCount={5}
-				                      rowCount={dataList.count()}
-				                      rowHeight={fullScreen?64:53}
+				                      rowCount={dataToRender.count()}
+				                      rowHeight={ fullScreen?64:53 }
 				                      rowRenderer={({index, isScrolling, isVisible, key, style})=>
-											this._rowRenderer({index, isScrolling, isVisible, key, style,dataList,isSelecteMode,online,fullScreen,activeDirectory})
+											this._rowRenderer({index, isScrolling, isVisible, key, style,dataToRender,isSelecteMode,online,fullScreen,activeDirectory})
 				                      }
 				                      //scrollToIndex={scrollToIndex}
 				                      scrollTop={scrollTop}
@@ -549,7 +593,7 @@ class ErrorBoundary extends React.Component {
 export default (props)=>(
 
 	<ErrorBoundary>
-	  <DirectoryList {...props} />
+	  <DirectoryListVirtualize {...props} />
 	</ErrorBoundary>
 
 	);

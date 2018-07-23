@@ -232,6 +232,50 @@ export default store => next => action => {
 			next(action);
 		}
 
+		/**dialogo de crear carpeta*/
+		if(action.type=="CREATING_PATH"){
+			ApiInstance.instance
+			.callOperation("mkdir",{
+				path:action.payload.namePath,
+				thenCB: payload => {
+
+					ApiInstance.instance.callOperation("status",{
+						path:action.payload.namePath,
+						thenCB:payload=>{
+							store.dispatch({
+								type: "CREATED_PATH_MKDIR_DIALOG",
+								middle: "EXPLORER",
+								payload: {data:payload.data}
+							})
+							store.dispatch({
+								type: "CLOSE_MKDIR_DIALOG",
+								middle: "EXPLORER",
+								payload: {data:payload.data}
+							})
+						}
+					})
+					
+
+
+				},
+				catchCB: (payload) => {
+					store.dispatch({
+						type: "STATUS_MKDIR_DIALOG",
+						middle: "EXPLORER",
+						status: "error",
+						errorMsg: payload.errorMsg
+					})
+					store.dispatch({
+						type: "CANT_EDIT_MKDIR_DIALOG",
+						middle: "EXPLORER",
+						cantEdit: true
+					})
+				}
+			})
+			next(action)
+			return
+		}
+		/**dialogo de crear carpeta*/
 
 		/**dialogo de copiar o mover*/
 

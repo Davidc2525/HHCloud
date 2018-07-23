@@ -48,6 +48,7 @@ import PropTypes from 'prop-types';
 
 import RenameDialog from "./RenameDialog.jsx"
 import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx"
+import MkdirDialog from "./MkdirDialog.jsx"
 
 import withWidth from '@material-ui/core/withWidth';
 import PahtSee1 from "../path_see/index.js"
@@ -187,6 +188,7 @@ class ViewExplorer extends React.Component {
 	render(){
 		//console.error(this.props)
 		const {classes,width}=this.props
+		const data = this.props.path.get("data");
 
 		return (
 
@@ -198,6 +200,9 @@ class ViewExplorer extends React.Component {
 
 				{/**Dialogo de mover o copiar ruta <MoveOrCopyDialog />*/}
 				<MoveOrCopyDialog />
+
+				{/**Dialogo para crear nueva carpeta <MkdirDialog />*/}
+				<MkdirDialog />
 				
 
 				{/*<div className={classes.headerHelper}>
@@ -244,7 +249,7 @@ class ViewExplorer extends React.Component {
 				 	 		</Grid>
 						}
 						
-						{this.props.path.get("status")=="ok" /*&& this.props.path.getIn(["data"]) != null */&& 
+						{this.props.path.get("status")=="ok" && data!=null /*&& this.props.path.getIn(["data"]) != null */&& 
 
 							<div>
 								{!this.props.path.get("file")&&
@@ -268,6 +273,14 @@ class ViewExplorer extends React.Component {
 										</div>
 									</div>
 								}
+							</div>
+						}
+
+						{this.props.path.get("status")=="ok" && (data==null || data.count()==0)&&
+							<div>
+								<Grid style={{ height: "100%"}} justify="center" alignItems="center" container>
+						 	 		<Grid item><Typography variant="display2">Esta carpeta esta vacia</Typography></Grid>
+						 	 	</Grid>
 							</div>
 						}
 
