@@ -1,11 +1,11 @@
-import Auth from "./elements/auth/index.js"
+import {store,history} from "./redux/index.js"
 import DownloadManager from "./elements/download_manager/index.js"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
-import {store,history} from "./redux/index.js"
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 //console.log(store)
 window.df = require("dateformat")
+import Auth from "./elements/auth/index.js"
 
 import { withRouter } from 'react-router-dom'
 
@@ -76,7 +76,7 @@ const light = createMuiTheme({
 });
 
 const Main =()=>(
-    <MuiThemeProvider theme={!true?light:dark}>
+    <MuiThemeProvider theme={true?light:dark}>
      <Route component={Home}/>
     </MuiThemeProvider>
 
@@ -90,18 +90,26 @@ class App extends React.Component{
   render(){
         return   (
             <Switch>
-              <Route exact path="/login" render={()=>
+              <Route exact path="/SC/login" render={(props)=>
                {
                 return (
-                 this.props.auth.get("isLogin") ? (
+                 this.props.auth.get("isLogin") ? (console.warn(props),
                      <Redirect
-                      to={{
-                        pathname: "/",
-                       // state: { from: props.location }
-                      }}
+                      to={props.location.state.from/*{
+                        pathname: props.location.state.from.pathname,
+                        hash:props.location.state.from.hash,
+                        //state:props.state
+                      }*/}
                     />
                   ) : (
-                    <div>login </div>
+                    <div>login
+                    <br/>
+                    <strong onClick={_=>Auth.Auth.googleSigIn()}>inisiar session con google</strong>
+                    <br/>
+                    <strong onClick={_=>Auth.Auth.gitHubSigIn()}>inisiar session con github</strong>
+                    <br/>
+                    <strong onClick={_=>Auth.Auth.facebookSigIn()}>inisiar session con facebook</strong>
+                    </div>
                   )
                 ) 
                }
@@ -114,8 +122,8 @@ class App extends React.Component{
                   ) : (
                     <Redirect
                       to={{
-                        pathname: "/login",
-                        //state: { from: props.location }
+                        pathname: "/SC/login",
+                        state: { from: props.location }
                       }}
                     />
                   )

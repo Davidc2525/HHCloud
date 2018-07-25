@@ -1,5 +1,5 @@
-import ApiInstance from "../../elements/API/v1/Api.js"
-
+//import ApiInstance from "../../elements/API/v1/Api.js"
+var ApiInstance = null;
 import {
 	fromJS
 } from "immutable"
@@ -109,6 +109,9 @@ export {
 	get
 }
 export default store => next => action => {
+	if(ApiInstance==null){
+		ApiInstance = require("../../elements/API/v1/Api.js").default
+	}
 	if (action.middle&&action.middle == "EXPLORER") {
 
 

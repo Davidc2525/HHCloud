@@ -7,6 +7,7 @@ import {
 } from "react-router-redux";
 
 /**/
+import OrderSelect from "./OrderSelect.jsx"
 import Fade from '@material-ui/core/Fade';
 import Tooltip from '@material-ui/core/Tooltip';
 //import Button from '@material-ui/core/Button';
@@ -27,7 +28,7 @@ import FilterNone from '@material-ui/icons/FilterNone';
 import FlipToFront from '@material-ui/icons/FlipToFront';
 import Chip from '@material-ui/core/Chip';
 import Zoom from '@material-ui/core/Zoom';
-import {getParent,parsePath,tryNormalize} from"./Util.js"
+import {getParent,parsePath,tryNormalize,isRoot} from"./Util.js"
 //import IconButton from '@material-ui/core/IconButton';
 import { withTheme } from '@material-ui/core/styles';
 /**/
@@ -91,7 +92,9 @@ import fileExtension from "file-extension"
 import mime from "mime-types"
 
 //import ViewExplorer from "./ViewExplorer.js"
+import Dropzone from 'react-dropzone'
 import Loadable from 'react-loadable';
+
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
@@ -187,7 +190,7 @@ class Explorer extends React.Component{
 	constructor(props){
 		super(props);
 		window.ex = this
-		this.state = {items:[]}
+		this.state = {items:[],files: []}
 
 		this.tmpItems =new ListI()
 	}
@@ -252,7 +255,12 @@ class Explorer extends React.Component{
 		evt.preventDefault();
 		evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 	}
-
+	 onDrop(files) {
+	 	console.log(files)
+	    this.setState({
+	      files
+	    });
+	  }
 	render() {
 		const {classes,width,upload}= this.props
 
@@ -270,15 +278,25 @@ class Explorer extends React.Component{
 				</div>
 				<div style={{height:"100px"}} className={classes.toolbar} />
 				
-				{true&&<ViewExplorer/>}
-				{false&&uploadActive&&
-					<div onDragOver={this.handleDragOver.bind()} onDrop={this.handleFileSelect.bind(this)}>
-						Subir
-						{this.state.items.map(x=>
-							<div>
-								{x.fullPath}
-							</div>)}
-					</div>
+				{!uploadActive&&<ViewExplorer/>}
+				{uploadActive&&
+					 <section>
+				        <div className="dropzone">
+				          <Dropzone multiple inputProps={{webkitdirectory:true ,directory:true, multiple:true}} onDrop={this.onDrop.bind(this)}>
+				            <p>Try dropping some files here, or click to select files to upload.</p>
+				          </Dropzone>
+				        </div>
+				        <aside>
+				          <h2>Dropped files</h2>
+				          <ul>
+				            {
+				              this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+				            }
+				          </ul>
+				        </aside>
+				      </section>
+
+					
 				}
 			</div>
 		);
@@ -286,7 +304,13 @@ class Explorer extends React.Component{
 }
 
 export default Explorer
-
+/*<div onDragOver={this.handleDragOver.bind()} onDrop={this.handleFileSelect.bind(this)}>
+						Subir
+						{this.state.items.map(x=>
+							<div>
+								{x.fullPath}
+							</div>)}
+					</div>*/
 
 
 const stylesToolBar = theme => ({
@@ -307,7 +331,13 @@ const stylesToolBar = theme => ({
     	marginLeft: theme.spacing.unit,
   	},
 	actionIcos:{flexGrow:0},
-	info:{flexGrow:1}
+	info:{flexGrow:1},
+	order:{
+		display:"flex",
+		flexGrow:1,
+		justifyContent:"flex-end",
+		marginRight:10
+	}
 })
 
 
@@ -358,12 +388,16 @@ class ToolBar extends React.Component {
 			this.onChangeSelectMode()
 		}
 		if(!this.props.online){
-			alert("Se encuentra desconectado para proceder con la accion. Porfavor verifique su conexion a internet o refresque la pagina.")
+			//alert("Se encuentra desconectado para proceder con la accion. Porfavor verifique su conexion a internet o refresque la pagina.")
 			return
 		}
-		if(data.action == "goparent"){
-			store.dispatch(push("/SC/unidad#"+getParent( parsePath(this.props.router.location.hash)  )))
-		}	
+		if (data.action == "goparent") {
+
+			if (!isRoot(( parsePath(this.props.router.location.hash))) ) {
+				store.dispatch(push("/SC/unidad#" + getParent(parsePath(this.props.router.location.hash))))
+			}
+
+		}
 		if(data.action == "refresh"){
 				store.dispatch(fetchingPath(parsePath(this.props.router.location.hash),true))
 		}
@@ -430,6 +464,7 @@ class ToolBar extends React.Component {
 		}
 
 		const fullScreen = this.props.fullScreen;
+		const isroot = isRoot((parsePath(this.props.router.location.hash)));
 		
 		return (
 			 <div id="toolbar" className={classes.toolbar +" "+ classes.root}>
@@ -437,7 +472,7 @@ class ToolBar extends React.Component {
 			 	<Fade in={!isSelecteMode}>
 				 	<div>
 						{
-							this.createAtionButton("goparent", ArrowUpward, "Ir a carpeta contenedora")
+							this.createAtionButton("goparent", ArrowUpward, "Ir a carpeta contenedora",isroot)
 						}
 
 
@@ -458,60 +493,68 @@ class ToolBar extends React.Component {
 				}
 
 		        {currentType=="folder"&&
-		        <div className={classes.root} id="folder">
-			        {isSelecteMode&&
-			        <div id="selection" className={ classes.root +" "+classes.selection }>
-				        <Fade in={isSelecteMode}>
-					        <div className={classes.root}>
-					        		
-					        	<div className={classes.root + " " + classes.actionIcos}>
-							        
-									{
-										[
-											this.createAtionButton("selectemode", ArrowBack, "Atras"),
-											this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
-											this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
-										]
-									}
-							       
-							       {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
-							          <FilterNone />
-							        </IconButton>}
+			        <div className={classes.root} id="folder">
+				       
+						{!isSelecteMode&&
+							<Hidden xsDown>
+								<span>
+								 <SearchBar
+								 	style={{height:"35px"}}
+								 	searchIcon={<span></span>}
+								 	closeIcon={<span></span>}
+								    //value={this.state.value}
+									placeholder={"Filtrar"}
+								   	onChange={(newValue) => this.onFilterChange(newValue)}
+								    //onRequestSearch={() => doSomethingWith(this.state.value)}
+								  />
+						        </span>
+					        </Hidden>
+				    	}
 
-							        {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
-							          <FlipToFront />
-							        </IconButton>}
-							 	</div>
-						 		<div className={classes.info}>
-						 			
-						 			<Zoom in={anySelecte} ><Chip label={`${selecteds.count()}  (${filesize(sizeOfSelection)})`}  /></Zoom>
-						 			{/*<Typography variant="body2">Selecionados: {selecteds.count()}</Typography>*/}
+				    	
 
-						 		</div>
+				    	{isSelecteMode&&
+					        <div id="selection" className={ classes.root +" "+classes.selection }>
+						        <Fade in={isSelecteMode}>
+							        <div className={classes.root}>
+							        		
+							        	<div className={classes.root + " " + classes.actionIcos}>
+									        
+											{
+												[
+													this.createAtionButton("selectemode", ArrowBack, "Atras"),
+													this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
+													this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
+												]
+											}
+									       
+									       {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
+									          <FilterNone />
+									        </IconButton>}
 
+									        {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
+									          <FlipToFront />
+									        </IconButton>}
+									 	</div>
+								 		<div className={classes.info}>
+								 			
+								 			<Zoom in={anySelecte} ><Chip label={`${selecteds.count()}  (${filesize(sizeOfSelection)})`}  /></Zoom>
+								 			{/*<Typography variant="body2">Selecionados: {selecteds.count()}</Typography>*/}
+
+								 		</div>
+
+							        </div>
+							 	</Fade>
 					        </div>
-					 	</Fade>
-			        </div>}
+					    }
 
-
-					
-					{!isSelecteMode&&
-					<Hidden xsDown>
-						<span>
-						 <SearchBar
-						 	style={{height:"35px"}}
-						 	searchIcon={<span></span>}
-						 	closeIcon={<span></span>}
-						    //value={this.state.value}
-							placeholder={"Filtrar"}
-						   	onChange={(newValue) => this.onFilterChange(newValue)}
-						    //onRequestSearch={() => doSomethingWith(this.state.value)}
-						  />
-				        </span>
-			        </Hidden>
-			    	}
-					
-				</div>}
+					    <div className={classes.order}>
+				    		<div><OrderSelect/></div>
+				    	</div>
+						
+					</div>
+				}
+				
 				{currentType=="file"&&
 				<div id="file">
 					toolbar to files

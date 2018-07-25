@@ -66,7 +66,14 @@ const styles = theme => (window.theme=theme,{
 
 
 @withStyles(styles,{withTheme:true})
-@connect((store,props)=>({app:store.get("app")}))
+@connect((store, props) => {
+  
+  const app = store.get("app");
+  const auth = store.get("auth");
+
+  return {app,auth}
+
+})
 class ResponsiveDrawer extends React.Component {
   state = {
     mobileOpen: false,
@@ -94,9 +101,15 @@ class ResponsiveDrawer extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    const { auth, anchorEl } = this.state;
+    const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
-   
+    const auth = this.props.auth;
+    const dataUser = auth.get("dataUser",null);
+    var displayName = "";
+    if(dataUser!=null){
+      displayName = dataUser.get("displayName")
+    }
+
     return (
      
        <div>
@@ -144,7 +157,7 @@ class ResponsiveDrawer extends React.Component {
                   onClose={this.handleClose}
                 >
                   <MenuItem onClick={this.handleClose}>Inicio</MenuItem>
-                  <MenuItem onClick={this.handleClose}>Mi unidad</MenuItem>
+                  <MenuItem onClick={this.handleClose}>{displayName}</MenuItem>
                 </Menu>
               
 

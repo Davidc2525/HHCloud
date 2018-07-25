@@ -55,6 +55,7 @@
   window.mp = mergePath
   window.gn = getName
   export {
+    isRoot,
   	tryNormalize,
   	parsePath,
   	getName,

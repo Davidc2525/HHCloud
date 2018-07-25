@@ -47,6 +47,14 @@ import stateExplorer from "../components/explorer/state.js"
 import reducersExplorer from "../components/explorer/reducers.js"
 import middlewareExplorer from "../components/explorer/middleware.js"
 
+
+/**download manager*/
+import stateAuth from "../elements/auth/state.js"
+import reducersAuth from "../elements/auth/reducers.js"
+import middlewareAuth from "../elements/auth/middleware.js"
+//console.info(stateDownloadManager,reducersDownloadManager)
+
+
 /**download manager*/
 import stateDownloadManager from "../elements/download_manager/state.js"
 import reducersDownloadManager from "../elements/download_manager/reducers.js"
@@ -61,9 +69,7 @@ const initialState = /*fromJS(initStateTest);*/fromJS({
 		online:true,
 		name: "HHCloud"
 	},
-	auth: {
-		isLogin: true
-	},
+	auth: stateAuth,
 	explorer: stateExplorer,
 	downloads: stateDownloadManager
 });
@@ -80,12 +86,7 @@ const reducers = combineReducers({
 		}
 		return state;
 	},
-	auth: (state = new Map(), action) => {
-		if (action.type == "setIsLogin") {
-			return state.set("isLogin", action.isLogin)
-		}
-		return state
-	},
+	auth: reducersAuth,
 	explorer: reducersExplorer,
 	downloads: reducersDownloadManager
 })
@@ -97,7 +98,7 @@ const composeEnhancers = composeWithDevTools({
 
 /**Crear store*/
 const store = createStore(reducers, initialState, composeEnhancers(
-	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,mrm),
+	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,middlewareAuth,mrm),
 ));
 
 ononline=_=>{

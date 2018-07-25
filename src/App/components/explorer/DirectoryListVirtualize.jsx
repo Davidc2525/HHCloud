@@ -227,10 +227,11 @@ DynamicMenu.propTypes = {
 const ConnectedMenu = connectMenu("itemList")(withStyles(styles,{theme:true})(DynamicMenu))
 
 @connect(state=>{
+
 	var toolBar = state.getIn(["explorer","toolBar"]);
 	var selection = state.getIn(["explorer","selection"]);
 	var online = state.getIn(["app","online"])
-	return {online:online,filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
+	return {online:online,toolBar,filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
 })
 @withMobileDialog()
 class DirectoryListVirtualize extends React.Component{
@@ -472,6 +473,8 @@ class DirectoryListVirtualize extends React.Component{
 		const {filter}=this.props
 		const headerFolder = count => new ListI([new Map({header:true,name:"Carpetas",count})])
 		const headerFiles = count => new ListI([new Map({header:true,name:"Archivos",count})])
+		const sortby = this.props.toolBar.get("sortBy")
+		const order = this.props.toolBar.get("order")
 		
 		var dataToRender = new ListI();
 		var dataList = data.get("data");
@@ -491,7 +494,7 @@ class DirectoryListVirtualize extends React.Component{
 
 
 		if(folders!=null){
-			folders=folders.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b));
+			folders=folders.sortBy((x)=>x.get(sortby),(a,b)=>this.sortBy(order,a,b));
 			dataToRender = dataToRender.concat(headerFolder(folders.count()));
 		}else{
 			folders = new ListI();
@@ -501,12 +504,11 @@ class DirectoryListVirtualize extends React.Component{
 
 		var files = groups.get("file");
 		if(files!=null){
-			files = files.sortBy((x)=>x.get(this.state.sortBy),(a,b)=>this.sortBy(this.state.order,a,b));
+			files = files.sortBy((x)=>x.get(sortby),(a,b)=>this.sortBy(order,a,b));
 			dataToRender = dataToRender.concat(headerFiles(files.count()));
 		}else{
 			files = new ListI()
 		}
-		//dataList = dataList.concat(headerFiles);
 		dataToRender = dataToRender.concat(files);
 
 		const {isSelecteMode} = this.props;

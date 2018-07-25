@@ -20,7 +20,8 @@ class DownloadOperation {
 		var args = {
 			path: path,
 			op: "download",
-			...rest
+			...rest,
+			uid:ApiInstance.instance.userid
 		}
 
 		var fd = new FormData()
@@ -28,6 +29,7 @@ class DownloadOperation {
 
 		this.xhr = new XMLHttpRequest();
 		this.xhr.open('POST', ApiInstance.instance.urlService /*+ `?args=${btoa(JSON.stringify(args))}`*/, true);
+		this.xhr.withCredentials = true;
 		this.xhr.responseType = 'blob';
 
 

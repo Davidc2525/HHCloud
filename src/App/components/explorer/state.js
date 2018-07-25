@@ -34,6 +34,8 @@ const state = {
 		pathSelectedToMoveOrCopy: ""
 	},
 	toolBar: {
+		sortBy:"name",
+		order:true, //true = asc, false = desc
 		filter: "",
 	},	
 	selection: {

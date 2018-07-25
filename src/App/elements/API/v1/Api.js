@@ -7,10 +7,18 @@ import DownloadOperation from "./operations/DownloadOperation.js"
 
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
 
+import {
+	store
+} from "../../../redux/index.js";
+
+
 class Api {
 
 
 	constructor() {
+
+		store.subscribe(x=>this.getUserId())
+
 		this.hostService = "http://orchi2";
 		this.portService = 8080;
 		this.versionService = "v1"
@@ -21,7 +29,7 @@ class Api {
 		this.urlService.port = this.portService
 
 		this.operations = {}
-
+		this.getUserId();
 		this.registerOperation("list", ListOperation)
 		this.registerOperation("status", GetStatusOperation)
 		this.registerOperation("rename", RenameOperation)
@@ -30,8 +38,18 @@ class Api {
 		this.registerOperation("move", move())
 		this.registerOperation("delete", DeleteOperation)
 		this.registerOperation("download", DownloadOperation)
+	}
 
-
+	getUserId() {
+		//console.warn("API",store)
+		//return 
+		const auth = store.getState().get("auth");
+		
+		const dataUser = auth.get("dataUser", null);
+		var displayName = "";
+		if (dataUser != null) {
+			this.userid = dataUser.get("uid")
+		}
 
 	}
 
@@ -54,7 +72,7 @@ class Api {
 
         return new Promise((resolve,reject)=>{
 
-                var arg = { ...apiArg}
+                var arg = { ...apiArg,uid:this.userid}
 		        var fd = new FormData();
 
 		        fd.append("args", JSON.stringify(arg))

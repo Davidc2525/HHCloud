@@ -312,6 +312,22 @@ export default (state = new Map(), action) => {
 				toolbar = toolbar.set("filter",action.payload.filter)
 				newState = newState.set("toolBar",toolbar)
 			return newState
+
+		case "SORTBY_TOOLBAR":
+			var newState = state;
+
+			var toolbar = newState.get("toolBar")
+				toolbar = toolbar.set("sortBy",action.payload.sortBy)
+				newState = newState.set("toolBar",toolbar)
+			return newState
+
+		case "ORDER_TOOLBAR":
+			var newState = state;
+
+			var toolbar = newState.get("toolBar")
+				toolbar = toolbar.set("order",action.payload.order)
+				newState = newState.set("toolBar",toolbar)
+			return newState
 		
 		case "SELECTED_MODE_TOOLBAR":
 			var newState = state;
