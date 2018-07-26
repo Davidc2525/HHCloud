@@ -1,3 +1,16 @@
+const image = {
+	"png": ["image","png"],
+	"jpg": ["image","jpg"],
+	"jpeg": ["image","jpeg"],
+	"gif": ["image","gif"],
+}
+
+const video = {
+	"mp4": ["video","mp4"],
+	"avi": ["video","avi"],
+	"mp3": ["video","mp3"],
+	
+}
 const exts = {
 	/*ico: "image",
 	png: "image",
@@ -6,12 +19,13 @@ const exts = {
 	wav: "audio",
 	mp3: "audio", 
 	mp4: "video",*/
-
-
+	
+	
 	"gpl": ["plaint","txt"],
 	"cfg": ["plaint","txt"],
 	"log": ["plaint","txt"],
 	"txt": ["plaint","txt"],
+	"xhtml": ["plaint", "txt"],
 	"csv": ["plaint", "txt"],
 	"bat": ["prism", "batch"],
 	"jsp": ["prism", "html"],
@@ -38,8 +52,8 @@ const exts = {
 	"h": ["prism", "c"],
 
 
-	docx: "document",
-	doc: "document",
+	//docx: "document",
+	//doc: "document",
 
 }
 
@@ -63,4 +77,4 @@ const mimes = {
 	"application/javascrip": ["prism", "javascrip"],
 }
 
-export {exts}
+export {exts,image,video}

@@ -1,15 +1,18 @@
 
 import React,{Component} from "react"
 import worker from "worker-loader!./WorkerToGenerateBlobFile.js"
+import {DownloadManagerInstance} from "../../elements/download_manager/index.js"
 /**/
 import RenderPrism from "./RenderPrism.js"
 import RenderPlaint from "./RenderPlaint.js"
+import RenderImage from "./RenderImage.js"
+import RenderVideo from "./RenderVideo.js"
 /**/
 
 import Button from '@material-ui/core/Button';
 import {store} from "../../redux/index.js"
 
-import {exts} from "./maps.js"
+import {exts,image,video} from "./maps.js"
 import fileextension from "file-extension"
 //import { Document } from 'react-pdf/dist/entry.webpack';
 //import {  Page } from 'react-pdf'
@@ -18,7 +21,13 @@ import fileextension from "file-extension"
  
 import   "./prism.css"
 
-
+const styles = {
+	videoContent:{
+		justifyContent: "center",
+		display: "flex",
+		alignItems: "center"
+	}
+}
 
 class FileViewer extends Component{
 	constructor(props){
@@ -55,9 +64,47 @@ class FileViewer extends Component{
 			}
 		}
 
+		if (this.viewImageFiles(fe)) {
+
+			try {
+
+					new RenderImage()
+					.renderAsPromise(item)
+					.then(x => this.setState({
+						typeMedia:"image",
+						contentValue: x
+					}))
+				
+			} catch (e) {
+
+			}
+		}
+
+
+		if (this.viewVideoFiles(fe)) {
+
+			try {
+
+				new RenderVideo()
+					.renderAsPromise(item)
+					.then(x => {
+						this.setState({
+							typeMedia: "video",
+							contentValue: x
+						})
+						//URL.revokeObjectURL(x)
+					})
+
+			} catch (e) {
+
+			}
+		}
+
 
 	}
-
+	componentWillUnmount() {
+		URL.revokeObjectURL(this.state.contentValue)
+	}
 	getContent(ex,base64Content){
 
 		var contentValue = null;
@@ -100,7 +147,27 @@ class FileViewer extends Component{
 		return can 
 	}
 
+	viewImageFiles(ex){
+		var can = false;
+
+		if(image.hasOwnProperty(ex)){
+			can = true;
+		}
+
 	
+		return can 
+	}
+
+	viewVideoFiles(ex){
+		var can = false;
+
+		if(video.hasOwnProperty(ex)){
+			can = true;
+		}
+
+	
+		return can 
+	}
 
 	getBlobUrl(item){
 
@@ -114,17 +181,28 @@ class FileViewer extends Component{
 		w.postMessage({action:"generate",content:item.get("data").get("fileBase64Content"),mime:item.get("data").get("mime")})
 	}
 
+	getUrl(){
+		
+		  this.setState(ps=>({url:ps.contentValue}))
+		
+	}
+
+	download(item){
+		DownloadManagerInstance.instance.addDownload(item);
+	}
+
 	render(){
 
 		const item = this.props.item
 		const path = item.get("path")
 		const fe = fileextension(path)
 
-
+		const mimeContent = item.getIn(["data","mime"])
 		
 
 		return (<div>
-				<Button  onClick={_=>{this.getBlobUrl(item)}} >Generar enlace</Button>
+				<Button  onClick={_=>{this.download(item.get("data"))}} >download</Button>
+				<Button  onClick={_=>{this.getUrl(item)}} >Generar enlace</Button>
 				{
 					this.state.url!=null&&
 					<Button target="_blank" href={this.state.url} >
@@ -139,6 +217,24 @@ class FileViewer extends Component{
 						<pre style={{wordBreak:"break-word",whiteSpace:" pre-wrap",fontSize:"10px"}} dangerouslySetInnerHTML={{__html:this.state.contentValue}}/>
 					</div>
 				}
+
+				{
+					this.state.typeMedia=="image"&&this.state.contentValue!=null&&
+					<div style={styles.videoContent} >
+						<img style={{maxWidth:"100%"}} src={this.state.contentValue}/>
+					</div>
+				}
+
+				{
+					this.state.typeMedia=="video"&&this.state.contentValue!=null&&
+					<div  style={styles.videoContent}>
+						<video id="univideo" autoPlay={true} autoplay={true} controls style={{maxWidth:"75%"}} src={this.state.contentValue}>
+							<source src={this.state.contentValue} type={mimeContent}/>
+							Your browser does not support the video tag.
+						</video>
+					</div>
+				}
+
 
 				{
 					fe=="pdf"&&

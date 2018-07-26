@@ -1,5 +1,5 @@
 export default {
-	isLogin: false,
+	isLogin: !false,
 	dataUser:{
 		displayName:"",
 		email:"",
