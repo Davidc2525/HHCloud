@@ -318,6 +318,7 @@ const stylesToolBar = theme => ({
 	toolbar:{
 		height:"50px",
 		paddingLeft:"10px",
+		paddingRight:"10px"
 	},
 	root:{
 
@@ -337,7 +338,7 @@ const stylesToolBar = theme => ({
 		display:"flex",
 		flexGrow:1,
 		justifyContent:"flex-end",
-		marginRight:10
+		//marginRight:10
 	}
 })
 

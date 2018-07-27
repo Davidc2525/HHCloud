@@ -20,7 +20,10 @@ import fileextension from "file-extension"
 //var Prism = require('prismjs');
 //var Prism = require('./prism.js');
  
+
 import   "./prism.css"
+
+
 
 
 const styles = {
@@ -42,6 +45,14 @@ class FileViewer extends Component{
 		this.state={url:null,contentValue:null,typeMedia:"text"}
 		store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	
 
+	}
+
+	encodeData = (data="/") => {
+    	return (data).split("").map(x=>x.charCodeAt()).map(x=>x.toString(16)).join(":")
+	}
+
+	decodeData = (dData=":") => {
+	    return dData.split(":").map(x=>parseInt(("0x" + x))).map(x=>String.fromCharCode([x])).join("")
 	}
 
 	componentDidMount() {
@@ -87,6 +98,9 @@ class FileViewer extends Component{
 
 			try {
 
+
+				this.setState(_=>({typeMedia:"video",contentValue:`http://orchi2:8080/api/opener?uid=k09809ss&path=${this.encodeData(item.get("path"))}`}))
+				return
 				new RenderVideo()
 					.renderAsPromise(item)
 					.then(x => {
@@ -252,10 +266,10 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="video"&&this.state.contentValue!=null&&
 					<div  style={styles.videoContent}>
-						<video id="univideo" autoPlay={true} controls style={{maxWidth:"80%"}} src={this.state.contentValue}>
+						{true&&<video id="univideo" autoPlay={true} controls style={{maxWidth:"80%"}} src={this.state.contentValue}>
 							<source src={this.state.contentValue} type={mimeContent}/>
 							Your browser does not support the video tag.
-						</video>
+						</video>}
 					</div>
 				}
 

@@ -249,7 +249,7 @@ class ViewExplorer extends React.Component {
 				 	 		</Grid>
 						}
 						
-						{this.props.path.get("status")=="ok" && data!=null /*&& this.props.path.getIn(["data"]) != null */&& 
+						{this.props.path.get("status")=="ok" && (data==null || data.count()>=1) /*&& this.props.path.getIn(["data"]) != null */&& 
 
 							<div>
 								{!this.props.path.get("file")&&
@@ -277,11 +277,14 @@ class ViewExplorer extends React.Component {
 						}
 
 						{this.props.path.get("status")=="ok" && (data==null || data.count()==0)&&
-							<div>
-								<Grid style={{ height: "100%"}} justify="center" alignItems="center" container>
-						 	 		<Grid item><Typography variant="display2">Esta carpeta esta vacia</Typography></Grid>
-						 	 	</Grid>
-							</div>
+							
+							<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
+				 	 			<Grid item>
+				 	 			 	<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
+				            			Esta carpeta esta vacia. 
+				          			</Typography>
+					          	</Grid>
+				 	 		</Grid>
 						}
 
 				 	</div>

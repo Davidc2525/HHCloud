@@ -57,6 +57,7 @@
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.13",
     "react-engine": "^4.5.1",
+    "react-file-viewer": "^0.5.0",
     "react-loadable": "^5.4.0",
     "react-prism": "^4.3.2",
     "react-redux": "^5.0.7",

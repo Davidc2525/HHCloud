@@ -268,7 +268,8 @@ class DirectoryListVirtualize extends React.Component{
 		if (this.props.isSelecteMode) {return}
 
 		if (data.action == "open") {
-			this.props.history.push("/SC/unidad#" + data.item.get("path"))
+			store.dispatch(push("/SC/unidad#" + data.item.get("path")))
+			//this.props.history.push("/SC/unidad#" + data.item.get("path"))
 			//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:data.item.get("file")?"file":"folder"}})
 		}
 	}
@@ -284,7 +285,8 @@ class DirectoryListVirtualize extends React.Component{
 
 		if (data.action === 'open' ) {
 
-			this.props.history.push("/SC/unidad#"+data.item.get("path"))
+			store.dispatch(push("/SC/unidad#" + data.item.get("path")))
+			//this.props.history.push("/SC/unidad#"+data.item.get("path"))
 			//console.error(this.props.history,this.props.history.push,push)
 			return
 		}
