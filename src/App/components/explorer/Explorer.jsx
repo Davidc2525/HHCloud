@@ -5,7 +5,7 @@ window.r = React
 import {
   push
 } from "react-router-redux";
-
+import ApiInstance from "../../elements/API/v1/Api.js"
 /**/
 import OrderSelect from "./OrderSelect.jsx"
 import Fade from '@material-ui/core/Fade';
@@ -32,7 +32,8 @@ import {getParent,parsePath,tryNormalize,isRoot} from"./Util.js"
 //import IconButton from '@material-ui/core/IconButton';
 import { withTheme } from '@material-ui/core/styles';
 /**/
-import {List as ListI} from "immutable"
+
+import {List as ListI,fromJS} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -426,6 +427,23 @@ class ToolBar extends React.Component {
 			DownloadManagerInstance.instance.addDownload(this.props.selecteds.toList());
 			this.onChangeSelectMode()
 		}
+
+		if (data.action == "downloadFile") {
+			ApiInstance
+				.instance
+				.callOperation("status", {
+					path: parsePath(this.props.router.location.hash),
+					thenCB: item => {
+						console.log("downloadFile", fromJS(item.data))
+						DownloadManagerInstance.instance.addDownload(fromJS(item.data));
+					},
+					catchCB: x => alert(x.errorMsg)
+				})
+			/**Accinador de descargas multiples*/
+			//DownloadManagerInstance.instance.addDownload(this.props.selecteds.toList());
+			//this.onChangeSelectMode()
+		}
+
 		if(data.action == "copy"){
 
 		}
@@ -493,6 +511,7 @@ class ToolBar extends React.Component {
 				}
 
 		        {currentType=="folder"&&
+		        <Fade in={currentType=="folder"}>
 			        <div className={classes.root} id="folder">
 				       
 						{!isSelecteMode&&
@@ -553,11 +572,20 @@ class ToolBar extends React.Component {
 				    	</div>
 						
 					</div>
+				</Fade>
 				}
 				
 				{currentType=="file"&&
 				<div id="file">
-					toolbar to files
+					<Fade in={currentType=="file"}>
+						<div className={classes.root + " " + classes.actionIcos}> 
+							{
+								[
+									this.createAtionButton("downloadFile", CloudDownload, "Descargar"),
+								]
+							}
+						</div>
+					</Fade>
 				</div>}
 	        </div>
 	    )

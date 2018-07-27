@@ -25,10 +25,10 @@ class DownloadOperation {
 		}
 
 		var fd = new FormData()
-		fd.append("args", JSON.stringify(args))
+		fd.append("args", JSON.stringify(args,null,2))
 
 		this.xhr = new XMLHttpRequest();
-		this.xhr.open('POST', ApiInstance.instance.urlService /*+ `?args=${btoa(JSON.stringify(args))}`*/, true);
+		this.xhr.open('POST', ApiInstance.instance.urlService+"?save=true" /*+ `?args=${btoa(JSON.stringify(args))}`*/, true);
 		this.xhr.withCredentials = true;
 		this.xhr.responseType = 'blob';
 

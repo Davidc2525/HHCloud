@@ -24,8 +24,13 @@ function showNotification() {
 }
 
  self.addEventListener('fetch', function(event) {
- 	console.warn(self,event ,event.request)
- 	return 
+ return
+  var save=new URL(event.request.url).searchParams.get("save")
+  if(!new Boolean(save)){
+    console.warn("debuelto",event)
+    return;
+  }
+ 	console.warn("cacheado",self,event ,event.request)
  	event.respondWith(caches.match(event.request).then(function(response) {
  		// caches.match() always resolves
  		// but in case of success response will have value

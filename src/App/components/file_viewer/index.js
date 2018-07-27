@@ -15,11 +15,13 @@ import {store} from "../../redux/index.js"
 import {exts,image,video} from "./maps.js"
 import fileextension from "file-extension"
 //import { Document } from 'react-pdf/dist/entry.webpack';
+//import { Document } from 'react-pdf/dist/entry.noworker';
 //import {  Page } from 'react-pdf'
 //var Prism = require('prismjs');
 //var Prism = require('./prism.js');
  
 import   "./prism.css"
+
 
 const styles = {
 	videoContent:{
@@ -100,6 +102,25 @@ class FileViewer extends Component{
 			}
 		}
 
+		if (this.viewPdfFile(fe)) {
+
+			try {
+
+				new RenderVideo()
+					.renderAsPromise(item)
+					.then(x => {
+						this.setState({
+							typeMedia: "pdf",
+							contentValue: x
+						})
+						//URL.revokeObjectURL(x)
+					})
+
+			} catch (e) {
+
+			}
+		}
+
 
 	}
 	componentWillUnmount() {
@@ -169,6 +190,10 @@ class FileViewer extends Component{
 		return can 
 	}
 
+	viewPdfFile(ex){			
+		return ex=="pdf" 
+	}
+
 	getBlobUrl(item){
 
 		const w = new worker()
@@ -201,8 +226,7 @@ class FileViewer extends Component{
 		
 
 		return (<div>
-				<Button  onClick={_=>{this.download(item.get("data"))}} >download</Button>
-				<Button  onClick={_=>{this.getUrl(item)}} >Generar enlace</Button>
+				
 				{
 					this.state.url!=null&&
 					<Button target="_blank" href={this.state.url} >
@@ -228,7 +252,7 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="video"&&this.state.contentValue!=null&&
 					<div  style={styles.videoContent}>
-						<video id="univideo" autoPlay={true} autoplay={true} controls style={{maxWidth:"75%"}} src={this.state.contentValue}>
+						<video id="univideo" autoPlay={true} controls style={{maxWidth:"80%"}} src={this.state.contentValue}>
 							<source src={this.state.contentValue} type={mimeContent}/>
 							Your browser does not support the video tag.
 						</video>
@@ -237,16 +261,12 @@ class FileViewer extends Component{
 
 
 				{
-					fe=="pdf"&&
-					<div>
-						 <div>
-					        {/*<Document
-					          file={"data:application/pdf;base64,"+item.get("data").get("fileBase64Content")}
-					          //onLoadSuccess={this.onDocumentLoad}
-					        >
-					        </Document>
-					         */}
-					       
+					this.state.typeMedia=="pdf"&&this.state.contentValue!=null&&
+					<div id="pdf">
+						 <div>					      	
+					      	<object style={{width:"100%",height:"calc(100% - 200px)"}} data={this.state.contentValue} type="application/pdf">
+							  <embed src={this.state.contentValue} type="application/pdf" />
+							</object>
 					      </div>
 					</div>
 				}

@@ -75,7 +75,7 @@ class Api {
                 var arg = { ...apiArg,uid:this.userid}
 		        var fd = new FormData();
 
-		        fd.append("args", JSON.stringify(arg))
+		        fd.append("args", JSON.stringify(arg,null,2))
 
 
 		        var xhr = new XMLHttpRequest();

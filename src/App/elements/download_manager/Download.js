@@ -28,7 +28,7 @@ class Download {
 		return new Map({size,name});
 	}
 
-	constructor(element/*Map(item), List([item,item])*/) {
+	constructor(element/*Map(item), List([item,item])*/) {//item == data
 		var path = "/";
 		var multiple = false;
 		var pathList = null;

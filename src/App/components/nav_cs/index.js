@@ -100,7 +100,7 @@ class ResponsiveDrawer extends React.Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes, theme} = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const auth = this.props.auth;
