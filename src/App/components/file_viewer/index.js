@@ -14,12 +14,6 @@ import {store} from "../../redux/index.js"
 
 import {exts,image,video,isAudioFile} from "./maps.js"
 import fileextension from "file-extension"
-//import { Document } from 'react-pdf/dist/entry.webpack';
-//import { Document } from 'react-pdf/dist/entry.noworker';
-//import {  Page } from 'react-pdf'
-//var Prism = require('prismjs');
-//var Prism = require('./prism.js');
- 
 
 import   "./prism.css"
 

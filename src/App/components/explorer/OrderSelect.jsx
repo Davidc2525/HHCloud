@@ -45,8 +45,6 @@ const ITEM_HEIGHT = 48;
 class OrderSelect extends React.Component {
   state = {
     anchorEl: null,
-    //option:"name",
-    //order:true,//asc true, desc false
   };
 
   handleClick = event => {

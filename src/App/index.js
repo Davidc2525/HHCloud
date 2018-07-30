@@ -3,7 +3,7 @@ import DownloadManager from "./elements/download_manager/index.js"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-//console.log(store)
+
 window.df = require("dateformat")
 import Auth from "./elements/auth/index.js"
 

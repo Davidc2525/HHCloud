@@ -1,6 +1,5 @@
 import React from "react"
 
-
 window.r = React
 import {
   push
@@ -268,7 +267,7 @@ class Explorer extends React.Component{
 		const position  = (currentType=="folder")?"fixed":"absolute"
 
 		const uploadActive = upload.get("active")
-		
+
 		return (
 			<div id="Explorer">
 				<div style={{position}} id="headerHelper" className={classes.headerHelper}>

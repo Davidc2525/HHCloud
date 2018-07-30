@@ -14,7 +14,7 @@ import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
- import { BrowserRouter as Router, Route, Link,Redirect,Switch,push} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link,Redirect,Switch,push} from "react-router-dom";
 import Chip from '@material-ui/core/Chip';
 import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';

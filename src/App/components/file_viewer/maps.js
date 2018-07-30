@@ -2,7 +2,6 @@ import fileExtension from "file-extension"
 import Mime from "mime-types"
 window.mime = Mime
 
-
 const image = {
 	"png": ["image", "png"],
 	"jpg": ["image", "jpg"],

@@ -99,7 +99,6 @@ class PathSee extends React.Component {
 			value: ps.length,
 			paths: ps
 		};
-
 		//this.update(this.state.paths.length,false)
 	}
 

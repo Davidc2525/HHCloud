@@ -90,8 +90,6 @@ import fileExtension from "file-extension"
 //import FileViewer from "../file_viewer"
 import mime from "mime-types"
 
-
-
 const styles = theme => ({
   headerHelper:{
   	height:"100px",

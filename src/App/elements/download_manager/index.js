@@ -1,6 +1,7 @@
 import {store} from "../../redux/index.js"
 import {Download} from "./Download.js"
 import {Map,List} from "immutable";
+
 class DownloadManager {
 	downloads = {}
 	constructor(){

@@ -21,8 +21,7 @@ import {push} from "react-router-redux"
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fade from '@material-ui/core/Fade';
 
-
- const style = theme => ({
+const style = theme => ({
   button: {
     ...theme.palette.unidadButtom,
     //borderRadius: 3,
