@@ -28,7 +28,7 @@ class Download {
 		return new Map({size,name});
 	}
 
-	constructor(element/*Map(item), List([item,item])*/) {//item == data
+	constructor(element/*Map(item), List([item,item])*/) {//item == data property
 		var path = "/";
 		var multiple = false;
 		var pathList = null;
@@ -142,7 +142,7 @@ class Download {
 
 	onprogress(event) {
 		var data = this.payload;
-		this.currentDl = Math.abs(this.payload.loaded-event.loaded);
+		this.currentDl = Math.abs(event.loaded-this.payload.loaded);
 		this.currentDls.push(this.currentDl);
 		this.payload.loaded = event.loaded		
 		this.progress = (event.loaded / data.size) * 100

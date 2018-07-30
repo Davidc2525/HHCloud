@@ -51,6 +51,8 @@
 	return p.substring(p.indexOf("#")+1);
   	//return hashPath.split("#")[1]
   }
+  window.tn = tryNormalize
+  window.pp = parsePath
   window.gp = getParent
   window.mp = mergePath
   window.gn = getName

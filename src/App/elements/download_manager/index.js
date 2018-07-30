@@ -52,6 +52,7 @@ class DownloadManager {
 	endDownload(dl,event){
 		console.warn(dl)
 		delete this.downloads[dl.id]
+		
 		store.dispatch({
 			type: "REMOVE_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",

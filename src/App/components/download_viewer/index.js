@@ -108,7 +108,7 @@ const view=({data,history})=>{
 	
 
 		return (
-		<Paper elevation={0}>
+		<div elevation={0}>
 			<ListItem button onClick={()=>{
 				if(isMultipe(data)){return}
 		      	history.push("/SC/unidad#"+data.getIn(["path"]))
@@ -128,7 +128,7 @@ const view=({data,history})=>{
 	      	{data.getIn(["progress"])<=100&&
 	      	<LinearProgress value={Math.floor(data.getIn(["progress"]))} variant={isDeterminantBarProgress(data)?"determinate":"query"}/>}
 	      	
-		</Paper>)
+		</div>)
 		
 	
 }

@@ -10,6 +10,8 @@ import AddIcon from '@material-ui/icons/Add';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import {connect} from "react-redux"
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import { withStyles } from '@material-ui/core/styles';
 
 const options = {
   'name':"Nombre",
@@ -20,12 +22,26 @@ const options = {
 
 };
 
+const style = theme => ({
+	root:{
+		display:"flex",
+		flexGrow:1,
+		alignItems:"center",
+		[theme.breakpoints.down("sm")]:{
+			flexDirection: "row-reverse"
+		}
+
+	}
+})
+
 const ITEM_HEIGHT = 48;
 @connect((state,props)=>{
 	var toolBar = state.getIn(["explorer","toolBar"]);
 
 	return {toolBar}
 })
+@withStyles(style,{withTheme:true})
+@withMobileDialog()
 class OrderSelect extends React.Component {
   state = {
     anchorEl: null,
@@ -56,17 +72,21 @@ class OrderSelect extends React.Component {
 	const opt = toolBar.get("sortBy")
 	const order = toolBar.get("order")
     //const op = this.state.option
-
+    const {fullScreen,classes} = this.props
     return (
-      <div>
-        <Button
+      <div className={classes.root}>
+        {!fullScreen&&
+        	<Button size="small" onClick={this.handleClick}>
+        		{options[opt]}
+        	</Button>
+        }
 
-        	size="small" 
-          	onClick={this.handleClick}
-        >
-        	{options[opt]}
-          {/*<MoreVertIcon />**/}
-        </Button>
+        {fullScreen&&
+	        <IconButton size="small" onClick={this.handleClick}>        	
+	          {<MoreVertIcon />}
+	        </IconButton>
+	    }
+
         <Menu
           id="long-menu"
           anchorEl={anchorEl}

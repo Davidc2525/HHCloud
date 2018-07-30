@@ -4,8 +4,21 @@ import {
   push
 } from "react-router-redux";
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-
-import {List as ListI,Map} from "immutable"
+import {
+	exts,
+	image,
+	video,
+	isCodeFile,
+	isTextFile,
+	isImageFile,
+	isAudioFile,
+	isVideoFile,
+	isPdfFile,
+} from "../file_viewer/maps.js"
+import {
+	List as ListI,
+	Map
+} from "immutable"
 import {connect} from "react-redux"
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import { withRouter } from 'react-router'
@@ -39,6 +52,11 @@ import IconButton from '@material-ui/core/IconButton';
 import FormGroup from '@material-ui/core/FormGroup';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import MusicVideoIcon from '@material-ui/icons/MusicVideo';
+import PhotoIcon from '@material-ui/icons/Photo';
+import TextIcon from '@material-ui/icons/TextFields';
+import CodeIcon from '@material-ui/icons/Code';
 import FilterNone from '@material-ui/icons/FilterNone';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import Edit from '@material-ui/icons/Edit';
@@ -363,15 +381,43 @@ class DirectoryListVirtualize extends React.Component{
 
 		return  !(isSelecteMode || !online)
 	}
+
+	IconByExt = ({name}) => {
+		const visCodeFile = isCodeFile(name);
+		const visTextFile = isTextFile(name);
+		const visImageFile = isImageFile(name);
+		const visVideoFile = isVideoFile(name);
+		const visAudioFile = isAudioFile(name);
+		const visPdfFile = isPdfFile(name);
+
+		return (
+			<ListItemAvatar >
+	          <Avatar>
+	          	{visTextFile&&<TextIcon/>}
+	          	{visCodeFile&&<CodeIcon/>}
+	          	{visImageFile&&<PhotoIcon/>}
+	          	{(visVideoFile||visAudioFile)&&<MusicVideoIcon/>}
+	          	{visPdfFile&&<PictureAsPdfIcon/>}
+
+	           	{/**default*/
+	           		(!visAudioFile&&!visTextFile&&!visCodeFile&&!visImageFile&&!visVideoFile&&!visPdfFile)&&
+	           		<InsertDriveFile />
+	           	}
+	          </Avatar>
+			</ListItemAvatar>	        
+		)
+	}
+
 	_rowRenderer = ({index, isScrolling, isVisible, key, style,dataToRender,isSelecteMode,online,fullScreen,activeDirectory}) => {
 	    const {classes,data,history} = this.props;
 
-	    const item = dataToRender.get(index);
+	    var item = dataToRender.get(index);
 	    const selectioned = item.get("selectioned",false);
 	    const isFile = item.get("file");
 	   	const isHeader = item.get("header",false);
+	   	item = item.set("top",style.top)
 	    return (
-	    	<div style={style}>
+	    	<div key={key} style={style}>
 	    		{isHeader&&
 		    		
 					 	<ListItem style={{height:style.height}} divider >
@@ -387,7 +433,7 @@ class DirectoryListVirtualize extends React.Component{
 		    	
 		    	{!isHeader&&
 		    		<ContextMenuTrigger
-						key={key}
+						//key={key}
 						disabled={activeDirectory}
 						onItemClick={this.handleClickItemMenuContext}
 						item={item}
@@ -402,19 +448,30 @@ class DirectoryListVirtualize extends React.Component{
 				          	//history.push("/SC/unidad#"+item.get("path"))
 				          }}
 				         >
-					         {isSelecteMode&&<Checkbox checked={selectioned} onChange={
+					        {isSelecteMode&&<Checkbox checked={selectioned} onChange={
 					         	(e,c)=>{
 					         		this.handleItemEvent(e,{item,action:"checkInList",checked:c})
 					         		return false
 					         	}
-					         }/>}
-					         {
-					          	!isSelecteMode&&<ListItemAvatar>
-					              <Avatar>
-					               	{isFile?<InsertDriveFile />:<FolderIcon />}
-					              </Avatar>
-					            </ListItemAvatar>
-					          }
+					        }/>}
+					         
+					        {/*Icon*/}
+						        {/**File*/
+						          	!isSelecteMode&&isFile&&
+						          	<this.IconByExt name={(item.get("name"))}/>			          		
+						        }
+
+						        {/**Folder*/
+						        	!isSelecteMode&&!isFile&&
+						          	<ListItemAvatar>
+										<Avatar>
+											<FolderIcon />
+										</Avatar>
+						            </ListItemAvatar>
+						        }
+					        {/*Icon*/}
+
+							
 
 					            {!isFile&&	//folder
 					            	<ListItemText

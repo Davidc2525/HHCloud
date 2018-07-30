@@ -7,6 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import {connect} from "react-redux"
+import {parsePath,tryNormalize} from "../explorer/Util.js"
 import {
   push
 } from "react-router-redux";
@@ -133,10 +134,11 @@ class PathSee extends React.Component {
 		return location.hash;
 	}
 	parsePath(path) {
-		var paths = path.split("#")[1].split("\/").slice(1).filter(x => x != "").map((x, i, p) => {
+
+		var paths = tryNormalize(parsePath(path)).split("\/").slice(1).filter(x => x != "").map((x, i, p) => {
 
 			return {
-				path: "/" + p.slice(0, i + 1).join("/"),
+				path:  "/"+p.slice(0, i + 1).join("/"),
 				title: x
 			}
 

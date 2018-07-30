@@ -8,11 +8,11 @@ import RenderPlaint from "./RenderPlaint.js"
 import RenderImage from "./RenderImage.js"
 import RenderVideo from "./RenderVideo.js"
 /**/
-
+import Player from "./Player.jsx"
 import Button from '@material-ui/core/Button';
 import {store} from "../../redux/index.js"
 
-import {exts,image,video} from "./maps.js"
+import {exts,image,video,isAudioFile} from "./maps.js"
 import fileextension from "file-extension"
 //import { Document } from 'react-pdf/dist/entry.webpack';
 //import { Document } from 'react-pdf/dist/entry.noworker';
@@ -57,8 +57,9 @@ class FileViewer extends Component{
 
 	componentDidMount() {
 		//return
-		const item = this.props.item
+		const item = this.props.item.get("data")
 		const path = item.get("path")
+		const name = item.get("name")
 		const fe = fileextension(path)
 
 		if (this.viewTextFiles(fe)) {
@@ -81,6 +82,8 @@ class FileViewer extends Component{
 
 			try {
 
+					this.setState(_=>({typeMedia:"image",contentValue:`http://orchi2:8080/api/opener?uid=k09809ss&path=${this.encodeData(item.get("path"))}`}))
+					return;
 					new RenderImage()
 					.renderAsPromise(item)
 					.then(x => this.setState({
@@ -114,6 +117,12 @@ class FileViewer extends Component{
 			} catch (e) {
 
 			}
+		}
+
+		if(isAudioFile(name)){
+			this.setState(_=>({typeMedia:"audio",contentValue:`http://orchi2:8080/api/opener?uid=k09809ss&path=${this.encodeData(item.get("path"))}`}))
+				return
+				
 		}
 
 		if (this.viewPdfFile(fe)) {
@@ -232,11 +241,11 @@ class FileViewer extends Component{
 
 	render(){
 
-		const item = this.props.item
+		const item = this.props.item.get("data")
 		const path = item.get("path")
 		const fe = fileextension(path)
 
-		const mimeContent = item.getIn(["data","mime"])
+		const mimeContent = item.getIn(["mime"])
 		
 
 		return (<div>
@@ -266,7 +275,19 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="video"&&this.state.contentValue!=null&&
 					<div  style={styles.videoContent}>
-						{true&&<video id="univideo" autoPlay={true} controls style={{maxWidth:"80%"}} src={this.state.contentValue}>
+						<Player style={{maxWidth:"100%"}} item={item} contentValue={this.state.contentValue}/>
+						{false&&<video id="univideo" autoPlay={true} controls style={{width:"100%"}} src={this.state.contentValue}>
+							<source src={this.state.contentValue} type={mimeContent}/>
+							Your browser does not support the video tag.
+						</video>}
+					</div>
+				}
+
+				{
+					this.state.typeMedia=="audio"&&this.state.contentValue!=null&&
+					<div  style={styles.videoContent}>
+						<Player style={{maxWidth:"100%"}} item={item} contentValue={this.state.contentValue}/>
+						{false&&<video id="univideo" autoPlay={true} controls style={{width:"100%"}} src={this.state.contentValue}>
 							<source src={this.state.contentValue} type={mimeContent}/>
 							Your browser does not support the video tag.
 						</video>}
@@ -278,7 +299,7 @@ class FileViewer extends Component{
 					this.state.typeMedia=="pdf"&&this.state.contentValue!=null&&
 					<div id="pdf">
 						 <div>					      	
-					      	<object style={{width:"100%",height:"calc(100% - 200px)"}} data={this.state.contentValue} type="application/pdf">
+					      	<object style={{width:"100%",height:"calc(100% - 50px)"}} data={this.state.contentValue} type="application/pdf">
 							  <embed src={this.state.contentValue} type="application/pdf" />
 							</object>
 					      </div>

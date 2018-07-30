@@ -16,68 +16,102 @@ import {withRouter} from "react-router"
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import CloudDownload from '@material-ui/icons/CloudDownload';
+import {store} from "../../redux/index.js"
+import {push} from "react-router-redux"
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Fade from '@material-ui/core/Fade';
 
 
- const style = {
-   button: {
-     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-     borderRadius: 3,
-     border: 0,
-     color: 'white',
-     width:"100%",
-     height: 48,
-     padding: '0 30px',
-     boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-   }
- }
+ const style = theme => ({
+  button: {
+    ...theme.palette.unidadButtom,
+    //borderRadius: 3,
+    border: 0,
+    color: 'white',
+    width: "100%",
+    height: 48,
+    padding: '0 30px',
+
+  },
+   buttonBlue: {
+     background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+     boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+   },
+   buttonPink: {
+     background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+     boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
+   },
+ })
 
 
 const ButtonLink = withRouter(({ history ,...rest}) => (
   <Button 
   {...rest}
-   onClick={() => { history.push('/SC/unidad#/') }}
-   variant="extendedFab" color="primary" aria-label="delete" >   
+   onClick={() => { store.dispatch(push("/SC/unidad#/"))}}
+   variant="extendedFab" color="primary" aria-label="unidad" >   
     Mi Unidad
   </Button>
  
 ));
 
+/*
+dls = store.getState().get("downloads").get("downloads").toJS()
 
+size = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.payload.loaded})).reduce((a,c)=>( a+=c.size),0)
+
+loaded = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.payload.loaded})).reduce((a,c)=>( a+=c.loaded),0)
+;
+
+(loaded/size)*100
+*/
 @connect((state,props)=>{
   var dl = state.get("downloads").get("downloads")
   var count = dl.count()
-  return {count};
+  return {count,dl};
 })
 class SideVarContent extends React.Component{
+
+
+  getTotalProgress(){
+     
+      var dls = this.props.dl.toJS();
+      var data = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.payload.loaded}));
+
+      var size = data.reduce((a,c)=>( a+=c.size),0);
+
+      var loaded = data.reduce((a,c)=>( a+=c.loaded),0);
+
+      return (loaded / size) * 100;
+  }
+
+
   render(){
     const {location,history,count,classes} = this.props; 
     return (
 
       <div>
-        {/*descargas*/}
-        <ListItem  onClick={()=>{
-            history.push("/SC/unidad#/")
-          }}>
-        
+        {/*ir a unidad*/}
+        <ListItem>  
 
-         <ButtonLink className={classes.button}  {...this.props}/>
+          <ButtonLink className={classes.button}  {...this.props}/>
           
         </ListItem>      
 
         {/*descargas*/}
         <ListItem button onClick={()=>{
-            history.push("/SC/download")
+           store.dispatch(push("/SC/download"))
           }}>
-        <ListItemIcon>
+          <ListItemIcon>
             <CloudDownload />
           </ListItemIcon>
 
-         { count>0?
+          {count>0?
             <ListItemText primary="Descarga" secondary={count} />
             :
             <ListItemText primary="Descarga"  />
           }
         </ListItem>
+       {count>0&& <LinearProgress value={this.getTotalProgress()} variant="determinate"/>}
 
         <ListItem button>
           <ListItemIcon>

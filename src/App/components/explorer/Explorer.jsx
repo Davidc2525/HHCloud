@@ -263,12 +263,15 @@ class Explorer extends React.Component{
 	    });
 	  }
 	render() {
-		const {classes,width,upload}= this.props
+		const {classes,width,upload,currentType}= this.props
+
+		const position  = (currentType=="folder")?"fixed":"absolute"
 
 		const uploadActive = upload.get("active")
+		
 		return (
 			<div id="Explorer">
-				<div id="headerHelper" className={classes.headerHelper}>
+				<div style={{position}} id="headerHelper" className={classes.headerHelper}>
 					<div className={classes.seccions}>
 						<Route path="/SC/unidad" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee2}/>
 					</div>
@@ -519,9 +522,9 @@ class ToolBar extends React.Component {
 							<Hidden xsDown>
 								<span>
 								 <SearchBar
-								 	style={{height:"35px"}}
-								 	searchIcon={<span></span>}
-								 	closeIcon={<span></span>}
+								 	style={{boxShadow:"none"}}
+								 	//searchIcon={<span></span>}
+								 	//closeIcon={<span></span>}
 								    //value={this.state.value}
 									placeholder={"Filtrar"}
 								   	onChange={(newValue) => this.onFilterChange(newValue)}

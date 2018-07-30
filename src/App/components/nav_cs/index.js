@@ -35,7 +35,7 @@ const styles = theme => (window.theme=theme,{
   },
   appBar: {
     backgroundColor:theme.palette.primary[theme.palette.type],
-    position: 'fixed',
+    //position: 'fixed',
     marginLeft: drawerWidth,
     [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -67,11 +67,11 @@ const styles = theme => (window.theme=theme,{
 
 @withStyles(styles,{withTheme:true})
 @connect((store, props) => {
-  
+  const currentType = store.get("explorer").get("currentType")
   const app = store.get("app");
   const auth = store.get("auth");
 
-  return {app,auth}
+  return {app,auth,currentType}
 
 })
 class ResponsiveDrawer extends React.Component {
@@ -100,7 +100,7 @@ class ResponsiveDrawer extends React.Component {
   };
 
   render() {
-    const { classes, theme} = this.props;
+    const { classes, theme,currentType} = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const auth = this.props.auth;
@@ -110,10 +110,12 @@ class ResponsiveDrawer extends React.Component {
       displayName = dataUser.get("displayName")
     }
 
+    const position  = (currentType=="folder")?"fixed":"absolute"
+
     return (
      
        <div>
-          <AppBar color="primary" className={classes.appBar}>
+          <AppBar style={{position}} color="primary" className={classes.appBar}>
 
           <Toolbar>
             <IconButton
