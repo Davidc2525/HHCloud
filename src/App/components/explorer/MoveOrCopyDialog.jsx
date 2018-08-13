@@ -277,7 +277,7 @@ class ListPath extends React.Component {
     var dirList = new ListI()
 
     if(cPath){
-      dirList = cPath.get("data").toArray().sort(x=>x.get("file")?1:-1)//.filter(x=>!x.get("file"));
+      dirList = cPath.get("payload").toArray().sort(x=>x.get("file")?1:-1)//.filter(x=>!x.get("file"));
     }
     const {fullScreen} = this.props
 

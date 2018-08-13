@@ -18,13 +18,13 @@ export default (state = new Map(), action) => {
 			return newState
 
 
+		case "END_DOWNLOAD":
 		case "REMOVE_DOWNLOAD":
 			var downloads = state.get("downloads")
 			//var index = downloads.indexOf(action.dl.id)
 			downloads = downloads.delete(action.dl.id)
 
 			var newState = state.set("downloads", downloads)
-
 
 			return newState
 
@@ -49,7 +49,7 @@ export default (state = new Map(), action) => {
 			var newState = state.setIn(["downloads",action.dl.id],fromJS(action.dl.toObject()  ))
 
 
-			return newState
+			return state
 
 		default:
 			return state

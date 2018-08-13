@@ -146,7 +146,8 @@ const styles = theme => ({
 	if (!paths.has(currentPath)) {
 		//console.log("get path "+currentPath)
 		store.dispatch(fetchingPath(currentPath,true))
-		
+	
+
 		return {
 			paths: paths.toArray(),
 			path: new Map({status:"loading",path:currentPath}),
@@ -188,7 +189,7 @@ class ViewExplorer extends React.Component {
 	render(){
 		//console.error(this.props)
 		const {classes,width}=this.props
-		const data = this.props.path.get("data");
+		const data = this.props.path.get("payload"); // de data a payload 
 
 		return (
 
@@ -243,13 +244,13 @@ class ViewExplorer extends React.Component {
 				 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
 				 	 			<Grid item>
 				 	 			 	<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
-				            			error name: {this.props.path.get("error")}, mensaje: {this.props.path.get("errorMsg")}
+				            			error name: {this.props.path.get("error")}, mensaje: {this.props.path.get("msg") /**cambiar de errorMsg a msg*/}
 				          			</Typography>
 					          	</Grid>
 				 	 		</Grid>
 						}
 						
-						{this.props.path.get("status")=="ok" && (data==null || data.count()>=1) /*&& this.props.path.getIn(["data"]) != null */&& 
+						{this.props.path.get("status")=="ok" && (data==null || data.count()>=1) /*&& this.props.path.getIn(["payload"]) != null */&& 
 
 							<div>
 								{!this.props.path.get("file")&&
@@ -267,8 +268,8 @@ class ViewExplorer extends React.Component {
 											
 
 											<div>{fileExtension(this.props.path.get("path"))}</div>
-											<div>{mime.contentType(this.props.path.getIn(["data","name"]))}</div>
-											<strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["data","size"]))}
+											<div>{mime.contentType(this.props.path.getIn(["payload","name"]))/**de data a payload*/}</div>
+											<strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["payload","size"]))}
 											{/**/}
 										</div>
 									</div>
@@ -311,8 +312,8 @@ const FolderBig = ({classes,data,history})=>{
 		<Link to={`/SC/unidad#${x.get("path")}`} >{x.get("path")}</Link> {filesize(x.get("size"))}
 	</Paper>*/
 	
-	const folders = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==false);
-	const files = data.get("data").sortBy(x=>x.get("file")).filter(x=>x.get("file")==true);
+	const folders = data.get("payload").sortBy(x=>x.get("file")).filter(x=>x.get("file")==false);
+	const files = data.get("payload").sortBy(x=>x.get("file")).filter(x=>x.get("file")==true);
 	return (
 			<Grid data-set="david"  spacing={24} justify="flex-start" direction="row" container >
 				{folders.map(folder =>(

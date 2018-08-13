@@ -248,12 +248,12 @@ export default store => next => action => {
 							store.dispatch({
 								type: "CREATED_PATH_MKDIR_DIALOG",
 								middle: "EXPLORER",
-								payload: {data:payload.data}
+								payload: {payload:payload.payload}
 							})
 							store.dispatch({
 								type: "CLOSE_MKDIR_DIALOG",
 								middle: "EXPLORER",
-								payload: {data:payload.data}
+								payload: {payload:payload.payload}
 							})
 						}
 					})
@@ -266,7 +266,7 @@ export default store => next => action => {
 						type: "STATUS_MKDIR_DIALOG",
 						middle: "EXPLORER",
 						status: "error",
-						errorMsg: payload.errorMsg
+						errorMsg: payload.msg
 					})
 					store.dispatch({
 						type: "CANT_EDIT_MKDIR_DIALOG",
@@ -325,7 +325,7 @@ export default store => next => action => {
 						type: "STATUS_RENAME_DIALOG",
 						middle: "EXPLORER",
 						status: "error",
-						errorMsg: payload.errorMsg
+						errorMsg: payload.msg
 					})
 					store.dispatch({
 						type: "CANT_EDIT_RENAME_DIALOG",

@@ -117,6 +117,7 @@ const isTextFile = (filename) => {
 		can = true;
 	}
 
+	return can
 	if(!can){
 		var mime = Mime.extension(Mime.contentType(filename))
 		if(text.hasOwnProperty(mime)){
@@ -125,7 +126,6 @@ const isTextFile = (filename) => {
 	}
 
 
-	return can
 }
 
 const isImageFile = (filename) => {

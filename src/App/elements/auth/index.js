@@ -1,9 +1,11 @@
-import firebaseApp from "firebase/app"
+/*import firebaseApp from "firebase/app"
 import firebaseAuth from "firebase/auth"
 import firebase from "firebase"
 window.fb = firebase
 window.fbau = firebaseAuth
-
+*/
+import ApiInstance from "../API/v1/Api.js"
+import {STATES} from "./state.js"
 import {
 	store
 } from "../../redux/index.js"
@@ -15,133 +17,159 @@ class Auth {
 		window.Auth = this
 		console.warn(store);
 
-		var config = {
-			apiKey: "AIzaSyCtGmtbl64SB9quCGXpuI8agx5RRh2_moE",
-			authDomain: "hhcloud-29d6a.firebaseapp.com",
-			databaseURL: "https://hhcloud-29d6a.firebaseio.com",
-			projectId: "hhcloud-29d6a",
-			storageBucket: "hhcloud-29d6a.appspot.com",
-			messagingSenderId: "843650094886"
-		};
-
-		this.app = firebaseApp.initializeApp(config)
-		this.auth = this.app.auth();
-
-		this.auth.onAuthStateChanged(user => {
-			if (user) {
-				this.userLogin = user
-				store.dispatch({type:"AUTH_SETLOGIN",payload:{isLogin:true}})
+		this.signIn().then(x => {
+			if (x.login) {
 				store.dispatch({
-					type: "AUTH_SETUSERDATA",
+					type: "AUTH_SET_STATE",
 					payload: {
-						userdata: user.toJSON()
+						state: STATES[1]
 					}
+				});
+				ApiInstance.instance.callOperation("getuser", {
+					user: new User({id:x.userid}),
+					thenCB: user => {
+						store.dispatch({
+							type: "AUTH_SETUSERDATA",
+							payload: {
+								userdata: { ...user.toObject(),displayName: `${user.getLastName()} ${user.getFirstName()}`}
+							}
+						})
+					},
+					catchCB: x => console.warn(x)
 				})
-			} else {
-				this.userLogin = null
-				store.dispatch({type:"AUTH_SETLOGIN",payload:{isLogin:false}})
-				store.dispatch({type:"AUTH_SETUSERDATA",payload:{userdata:null}})
+			}else{
+				store.dispatch({
+					type: "AUTH_SET_STATE",
+					payload: {
+						state: STATES[2]
+					}
+				});
 			}
+		}).catch(x => {
+			store.dispatch({
+				type: "AUTH_SET_STATE",
+				payload: {
+					state: STATES[2]
+				}
+			});
 		})
-
-		console.warn(app)
-	}
-
-
-	signIn(user, pass) {
-		this.auth.signInWithEmailAndPassword(user, pass)
-			.then(x => {
-				console.warn("logeado",x)
-				//this.userLogin = x
-			})
-			.catch(x => console.error(x))
 
 	}
 
 	signUp(user, pass) {
-		this.auth.createUserWithEmailAndPassword(user, pass)
-			.then(x => {
-				console.warn("registrado")
-				this.auth.currentUser.sendEmailVerification
-				//this.userLogin = x
+
+	}
+
+	onLogin(x) {
+		store.dispatch({
+			type: "AUTH_SET_STATE",
+			payload: {
+				state: STATES[1]
+			}
+		});
+		ApiInstance.instance.callOperation("getuser", {
+			user: new User({
+				id: x.userid
+			}),
+			thenCB: user => {
+				store.dispatch({
+					type: "AUTH_SETUSERDATA",
+					payload: {
+						userdata: { ...user.toObject(),
+							displayName: `${user.getLastName()} ${user.getFirstName()}`
+						}
+					}
+				})
+			},
+			catchCB: x => console.warn(x)
+		})
+	}
+
+
+	signOut() {
+		return fetch(`${location.origin}/api/logout`, {
+			credentials: "include"
+		}).then(x => x.json()).then(x => console.warn(x))
+	}
+
+	signIn(username, password, remember) {
+		return new Promise((resolve, reject) => {
+
+				var arg = {op:"login",username,password,remember}
+				//var fd = new FormData();
+
+				//fd.append("args", JSON.stringify(arg, null, 2))
+				var args = "?args="+JSON.stringify(arg, null, 2)
+				var xhr = new XMLHttpRequest();
+
+				xhr.open("get", ApiInstance.instance.urlService+`auth?op=login&args=${(JSON.stringify(arg))}` , true);
+				//xhr.setRequestHeader('Content-type', 'application/json');
+				xhr.withCredentials = true;
+				xhr.responseType = 'json';
+
+
+				xhr.onprogress = (event) => {
+
+				};
+
+				xhr.onerror = (event) => {
+					console.warn(xhr)
+					reject({
+						status:"error",
+						error: "connection_error",
+						msg: "Error al tratar de conectar, revisa tu conexion."
+					})
+				}
+
+				xhr.onload = event => {
+					resolve(xhr.response)
+				};
+
+				xhr.send();
+
 			})
-			.catch(x => console.error(x))
+			.then(x => new AuthObject(x)).then(x => {
 
+				return new Promise((res, rej) => {
+					if ((x.auth || x.exist)) {
+						this.onLogin(x)
+						res(x)
+					} else {
+						rej(x)
+					}
+
+				})
+
+			});
 	}
-
-	googleSigIn(){
-		var p=new firebaseApp.auth.GoogleAuthProvider()
-		
-		this.auth.signInWithPopup(p).then(function(result) {
-		  // This gives you a Google Access Token. You can use it to access the Google API.
-			//r=result
-		   //token = result.credential.accessToken;
-		  // The signed-in user info.
-		   //user = result.user;
-		console.log("logeado",result)
-		  // ...
-		}).catch(function(error) {
-		  // Handle Errors here.
-		  var errorCode = error.code;
-		  var errorMessage = error.message;
-		  // The email of the user's account used.
-		  var email = error.email;
-		  // The firebase.auth.AuthCredential type that was used.
-		  var credential = error.credential;
-		  // ...
-		});
-	}
-
-	gitHubSigIn(){
-		var p=new firebaseApp.auth.GithubAuthProvider()
-		
-		this.auth.signInWithPopup(p).then(function(result) {
-		  // This gives you a Google Access Token. You can use it to access the Google API.
-			//r=result
-		   //token = result.credential.accessToken;
-		  // The signed-in user info.
-		   //user = result.user;
-		console.log("logeado",result)
-		  // ...
-		}).catch(function(error) {
-		  // Handle Errors here.
-		  var errorCode = error.code;
-		  var errorMessage = error.message;
-		  // The email of the user's account used.
-		  var email = error.email;
-		  // The firebase.auth.AuthCredential type that was used.
-		  var credential = error.credential;
-		  // ...
-		});
-	}
-
-	facebookSigIn(){
-		var p=new firebaseApp.auth.FacebookAuthProvider()
-		
-		this.auth.signInWithPopup(p).then(function(result) {
-		  // This gives you a Google Access Token. You can use it to access the Google API.
-			//r=result
-		   //token = result.credential.accessToken;
-		  // The signed-in user info.
-		   //user = result.user;
-		console.log("logeado",result)
-		  // ...
-		}).catch(function(error) {
-		  // Handle Errors here.
-		  var errorCode = error.code;
-		  var errorMessage = error.message;
-		  // The email of the user's account used.
-		  var email = error.email;
-		  // The firebase.auth.AuthCredential type that was used.
-		  var credential = error.credential;
-		  // ...
-		});
-	}
-
-
-
 }
 
+
+class AuthObject {
+
+	constructor({
+		sesid,
+		userid,
+		auth,
+		exist,
+		msg,
+		username,
+		password
+	}) {
+		this.login = false;
+		this.userid = userid;
+		this.sesid = sesid;
+		this.auth = auth;
+		this.exist = exist;
+		this.msg = msg;
+		this.username = username;
+		this.password = password;
+		if (this.auth || this.exist) {
+			this.login = true;
+		}
+	}
+
+}
 
 const auth = {
 

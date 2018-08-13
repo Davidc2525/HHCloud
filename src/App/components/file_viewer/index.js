@@ -12,12 +12,22 @@ import Player from "./Player.jsx"
 import Button from '@material-ui/core/Button';
 import {store} from "../../redux/index.js"
 
-import {exts,image,video,isAudioFile} from "./maps.js"
+import {
+	exts,
+	image,
+	video,
+	isAudioFile,
+	isCodeFile,
+	isTextFile,
+	isImageFile,
+	isVideoFile,
+	isPdfFile,
+} from "./maps.js"
 import fileextension from "file-extension"
 
 import   "./prism.css"
 
-
+import ApiInstance from "../../elements/API/v1/Api.js"
 
 
 const styles = {
@@ -27,7 +37,7 @@ const styles = {
 		alignItems: "center"
 	}
 }
-
+ 
 class FileViewer extends Component{
 	constructor(props){
 		super(props)
@@ -51,16 +61,15 @@ class FileViewer extends Component{
 
 	componentDidMount() {
 		//return
-		const item = this.props.item.get("data")
+		const item = this.props.item.get("payload")
 		const path = item.get("path")
 		const name = item.get("name")
 		const fe = fileextension(path)
-
-		if (this.viewTextFiles(fe)) {
+ if (isTextFile(name)||isCodeFile(name)) {
 
 			try {
 
-				this.getContent(fe, item.get("data").get("fileBase64Content"))
+				this.getContent(fe, item.get("fileBase64Content"))
 					.then(x => this.setState({
 						typeMedia:"text",
 						contentValue: x
@@ -72,11 +81,11 @@ class FileViewer extends Component{
 			}
 		}
 
-		if (this.viewImageFiles(fe)) {
+		if (isImageFile(name)) {
 
 			try {
 
-					this.setState(_=>({typeMedia:"image",contentValue:`http://orchi2:8080/api/opener?uid=k09809ss&path=${this.encodeData(item.get("path"))}`}))
+					this.setState(_=>({typeMedia:"image",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
 					return;
 					new RenderImage()
 					.renderAsPromise(item)
@@ -91,12 +100,12 @@ class FileViewer extends Component{
 		}
 
 
-		if (this.viewVideoFiles(fe)) {
+		if (isVideoFile(name)) {
 
 			try {
 
 
-				this.setState(_=>({typeMedia:"video",contentValue:`http://orchi2:8080/api/opener?uid=k09809ss&path=${this.encodeData(item.get("path"))}`}))
+				this.setState(_=>({typeMedia:"video",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
 				return
 				new RenderVideo()
 					.renderAsPromise(item)
@@ -114,14 +123,16 @@ class FileViewer extends Component{
 		}
 
 		if(isAudioFile(name)){
-			this.setState(_=>({typeMedia:"audio",contentValue:`http://orchi2:8080/api/opener?uid=k09809ss&path=${this.encodeData(item.get("path"))}`}))
+			this.setState(_=>({typeMedia:"audio",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
 				return
 				
 		}
 
-		if (this.viewPdfFile(fe)) {
+		if (isPdfFile(name)) {
 
 			try {
+				this.setState(_=>({typeMedia:"pdf",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
+				return
 
 				new RenderVideo()
 					.renderAsPromise(item)
@@ -235,7 +246,7 @@ class FileViewer extends Component{
 
 	render(){
 
-		const item = this.props.item.get("data")
+		const item = this.props.item.get("payload")
 		const path = item.get("path")
 		const fe = fileextension(path)
 
@@ -269,8 +280,8 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="video"&&this.state.contentValue!=null&&
 					<div  style={styles.videoContent}>
-						<Player style={{maxWidth:"100%"}} item={item} contentValue={this.state.contentValue}/>
-						{false&&<video id="univideo" autoPlay={true} controls style={{width:"100%"}} src={this.state.contentValue}>
+						{false&&<Player style={{maxWidth:"100%"}} item={item} contentValue={this.state.contentValue}/>}
+						{true&&<video id="univideo" autoPlay={true} controls style={{width:"100%"}} src={this.state.contentValue}>
 							<source src={this.state.contentValue} type={mimeContent}/>
 							Your browser does not support the video tag.
 						</video>}
@@ -280,11 +291,11 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="audio"&&this.state.contentValue!=null&&
 					<div  style={styles.videoContent}>
-						<Player style={{maxWidth:"100%"}} item={item} contentValue={this.state.contentValue}/>
-						{false&&<video id="univideo" autoPlay={true} controls style={{width:"100%"}} src={this.state.contentValue}>
+						{false&&<Player style={{maxWidth:"100%"}} item={item} contentValue={this.state.contentValue}/>}
+						{true&&<audio id="univideo" autoPlay={true} controls style={{width:"100%"}} src={this.state.contentValue}>
 							<source src={this.state.contentValue} type={mimeContent}/>
 							Your browser does not support the video tag.
-						</video>}
+						</audio>}
 					</div>
 				}
 

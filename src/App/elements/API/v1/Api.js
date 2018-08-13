@@ -6,12 +6,12 @@ import DeleteOperation from "./operations/DeleteOperation.js"
 import DownloadOperation from "./operations/DownloadOperation.js"
 
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
-
+import apiUser,{GetUserOperation,CreateUserOperation} from "./user/index.js"
 import {
 	store
 } from "../../../redux/index.js";
 
-
+const API_DEFAULT = "fs";
 class Api {
 
 
@@ -19,8 +19,8 @@ class Api {
 
 		store.subscribe(x=>this.getUserId())
 
-		this.hostService = "http://orchi2";
-		this.portService = 8080;
+		this.hostService = SERVICE_URL;//"http://orchi";
+		this.portService = SERVICE_PORT; //8080;
 		this.versionService = "v1"
 		this.pathService = "/api/"
 
@@ -38,17 +38,19 @@ class Api {
 		this.registerOperation("move", move())
 		this.registerOperation("delete", DeleteOperation)
 		this.registerOperation("download", DownloadOperation)
+		this.registerOperation("getuser", GetUserOperation)
+		this.registerOperation("createuser", CreateUserOperation)
 	}
 
 	getUserId() {
 		//console.warn("API",store)
-		//return 
+		//return
 		const auth = store.getState().get("auth");
-		
+
 		const dataUser = auth.get("dataUser", null);
 		var displayName = "";
 		if (dataUser != null) {
-			this.userid = dataUser.get("uid")
+			this.userid = dataUser.get("id")
 		}
 
 	}
@@ -68,7 +70,7 @@ class Api {
 		this.operations[name] = Operation;
 	}
 
-     fetch({apiArg}){
+     fetch({apiArg},api = API_DEFAULT){
 
         return new Promise((resolve,reject)=>{
 
@@ -76,11 +78,12 @@ class Api {
 		        var fd = new FormData();
 
 		        fd.append("args", JSON.stringify(arg,null,2))
+		        fd.append("op", arg.op)
 
 
 		        var xhr = new XMLHttpRequest();
 
-		        xhr.open('POST', this.urlService/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
+		        xhr.open('POST', this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
 		         //xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
                 //xhr.setRequestHeader('Content-type', 'application/json');
                 //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
@@ -91,13 +94,13 @@ class Api {
 		        xhr.onprogress = (event) => {
 
 		        };
- 
+
 				xhr.onerror = (event) => {
 
 					console.warn(xhr)
 					reject({
 						error: "connection_error",
-						errorMsg: "Error al tratar de conectar, revisa tu conexion."
+						msg: "Error al tratar de conectar, revisa tu conexion."
 					})
 				}
 

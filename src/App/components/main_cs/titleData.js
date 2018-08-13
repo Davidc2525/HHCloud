@@ -20,6 +20,7 @@ import {store} from "../../redux/index.js"
 import {push} from "react-router-redux"
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Fade from '@material-ui/core/Fade';
+import filesize from "filesize"
 
 const style = theme => ({
   button: {
@@ -74,6 +75,7 @@ class SideVarContent extends React.Component{
   getTotalProgress(){
      
       var dls = this.props.dl.toJS();
+
       var data = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.payload.loaded}));
 
       var size = data.reduce((a,c)=>( a+=c.size),0);
@@ -81,6 +83,18 @@ class SideVarContent extends React.Component{
       var loaded = data.reduce((a,c)=>( a+=c.loaded),0);
 
       return (loaded / size) * 100;
+  }
+
+  getTotalSpeedDownload() {
+
+    var dls = this.props.dl;
+
+    const speeds = dls.toList().map(x => x.getIn(["speed"]))
+
+    const speedAvg = speeds.reduce((a, n) => (a + n), 0);// / speeds.count();
+
+    return speedAvg;
+
   }
 
 
@@ -105,7 +119,7 @@ class SideVarContent extends React.Component{
           </ListItemIcon>
 
           {count>0?
-            <ListItemText primary="Descarga" secondary={count} />
+            <ListItemText primary="Descarga" secondary={`${count}, (${filesize(this.getTotalSpeedDownload())}/s)`} />
             :
             <ListItemText primary="Descarga"  />
           }

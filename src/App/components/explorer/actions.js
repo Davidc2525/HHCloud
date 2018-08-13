@@ -17,13 +17,13 @@ const fetchingPath = (path,withContent=false) => {
 	})
 }
 
-const fetchtedPath = (path, data,status="loading") => {
+const fetchtedPath = (path, payload,status="loading") => {
 	return ({
 		path: path,
 		status:status,
 		type: FETCHTED_PATH,
 		middle: "EXPLORER",
-		payload :{data}
+		payload :{payload}
 	})
 }
 

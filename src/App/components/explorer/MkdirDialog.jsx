@@ -77,7 +77,7 @@ function Transition(props) {
   	/**Encontrar el ultimo numer usado en Nueva carpeta, para sugerencia de nombre de nueva carpeta*/
 	findTheLastNumberUsed() {
 		var last = 0;
-		var paths = this.props.paths.getIn([this.props.path, "data"], false);
+		var paths = this.props.paths.getIn([this.props.path, "payload"], false);
 		if (paths) {
 			paths = paths.map(x => x.get("name"));
 			var pathsFilters = paths.filter(x => x.startsWith(this.defaultNameOfNewFolder))

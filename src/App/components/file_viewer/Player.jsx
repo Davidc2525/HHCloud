@@ -14,7 +14,6 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-
 const styles = theme => ({
   card: {
     display: 'flex',
@@ -126,7 +125,7 @@ class Player extends React.Component {
 					</video>
 					<div>
 						<LinearProgress onClick={_=>{var a = _.target;console.log(_,_.layerX,_.layerY) }} value={this.state.progress} variant={"determinate"}/>
-					
+						
 						<div style={{position:"relative",height:5,width:"100%"}} id="bufered">
 							{
 								this.state.buffers.map((x,i,a)=>{
@@ -136,6 +135,10 @@ class Player extends React.Component {
 								})
 							}
 						</div>
+
+						{this.ae&&false&&
+							<input onChange={_=>this.setState({progress:_})} type="range" value={this.state.progress} min="0"/>
+						}
 					</div>
 			      </CardContent>
 			      <div className={classes.controls}>
@@ -153,11 +156,11 @@ class Player extends React.Component {
 			        </IconButton>}
 			      </div>
 			    </div>
-			    <CardMedia
+			    {false&&<CardMedia
 			      className={classes.cover}
 			      image="/static/images/cards/live-from-space.jpg"
 			      title="Live from space album cover"
-			    />
+			    />}
 			  </Card>
 			</div>
 		);

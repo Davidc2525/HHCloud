@@ -18,7 +18,7 @@ const setPropertyInChildreDiretory = (state,pathParent,pathChild, name, value) =
 	var newState = state;
 	var parentPath = pathParent;//getParent(path);
 	var targetName = pathChild;//getName(path);
-	var childrensByParent = newState.getIn(["paths", parentPath, "data"]);
+	var childrensByParent = newState.getIn(["paths", parentPath, "payload"]);
 
 	if (childrensByParent != null) {
 		let index = null;
@@ -32,7 +32,7 @@ const setPropertyInChildreDiretory = (state,pathParent,pathChild, name, value) =
 
 			if (index != null) {
 				childrensByParent = childrensByParent.update(index, _ => oldPathUpdate)
-				newState = newState.setIn(["paths", parentPath, "data"], childrensByParent)
+				newState = newState.setIn(["paths", parentPath, "payload"], childrensByParent)
 			}
 
 		}
@@ -56,13 +56,13 @@ export default (state = new Map(), action) => {
 			return newState
 
 		case FETCHTED_PATH:
-			delete action.payload.data.args
+			//delete action.payload.payload.args
 			var newState = state.setIn(["paths", action.path], fromJS({
 				status: action.status,
-				...action.payload.data
+				...action.payload.payload //cambiar de data a payload
 			}))
 
-			//newState.setIn(["currentType"],action.payload.data.file?"file":"folder")
+			//newState.setIn(["currentType"],action.payload.payload.file?"file":"folder")
 
 			return newState
 
@@ -93,7 +93,7 @@ export default (state = new Map(), action) => {
 			
 			/**actualizar padre en donde se encuentra esa rruta hijo*/
 				/**hijos de la rruta padre*/
-			var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+			var childrensByParent = newState.getIn(["paths",parentPath,"payload"]);
 			
 			return setPropertyInChildreDiretory(newState,parentPath,targetName,"download",action.payload.status);
 
@@ -109,7 +109,7 @@ export default (state = new Map(), action) => {
 
 					if(index!= null){
 						childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
-						newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+						newState = newState.setIn(["paths",parentPath,"payload"],childrensByParent)
 					}
 
 				}
@@ -198,7 +198,7 @@ export default (state = new Map(), action) => {
 			
 			/**actualizar padre en donde se encuentra esa rruta hijo*/
 				/**hijos de la rruta padre*/
-			var childrensByParent = newState.getIn(["paths",action.payload.parentPath,"data"]);
+			var childrensByParent = newState.getIn(["paths",action.payload.parentPath,"payload"]);
 			
 			newState = setPropertyInChildreDiretory(
 				newState, action.payload.parentPath,
@@ -224,7 +224,7 @@ export default (state = new Map(), action) => {
 
 					if(index!= null){
 						childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
-						newState = newState.setIn(["paths",action.payload.parentPath,"data"],childrensByParent)
+						newState = newState.setIn(["paths",action.payload.parentPath,"payload"],childrensByParent)
 					}
 
 				}
@@ -284,7 +284,7 @@ export default (state = new Map(), action) => {
 		
 			var newState = state;
 
-			var data = fromJS(action.payload.data);
+			var data = fromJS(action.payload.payload);
 			var parentPath = getParent(data.get("path"));
 			var newPath = data.get("path");
 
@@ -292,11 +292,11 @@ export default (state = new Map(), action) => {
 			
 			if(parent){
 				/**lista de elementos en ese parent*/
-				var parentData = parent.get("data",false);
+				var parentData = parent.get("payload",false);
 				if(parentData){
 
 					parentData = parentData.push(data);
-					parent = parent.set("data",parentData);
+					parent = parent.set("payload",parentData);
 					newState = newState.setIn(["paths",parentPath],parent)
 
 				}
@@ -353,7 +353,7 @@ export default (state = new Map(), action) => {
 					/*var path=item.get("path");
 					var parentPath = getParent(path);
 					var targetName = getName(path);
-						var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+						var childrensByParent = newState.getIn(["paths",parentPath,"payload"]);
 					
 						if (childrensByParent!=null) {
 							let index  = null; 
@@ -367,7 +367,7 @@ export default (state = new Map(), action) => {
 
 								if(index!= null){
 									childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
-									newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+									newState = newState.setIn(["paths",parentPath,"payload"],childrensByParent)
 								}
 
 							}
@@ -392,7 +392,7 @@ export default (state = new Map(), action) => {
 				return setPropertyInChildreDiretory(newState,parentPath,targetName,"selectioned",true);
 
 
-				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+				var childrensByParent = newState.getIn(["paths",parentPath,"payload"]);
 			
 				if (childrensByParent!=null) {
 					let index  = null; 
@@ -406,7 +406,7 @@ export default (state = new Map(), action) => {
 
 						if(index!= null){
 							childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
-							newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+							newState = newState.setIn(["paths",parentPath,"payload"],childrensByParent)
 						}
 
 					}
@@ -430,7 +430,7 @@ export default (state = new Map(), action) => {
 
 				return setPropertyInChildreDiretory(newState,parentPath,targetName,"selectioned",false);
 
-				var childrensByParent = newState.getIn(["paths",parentPath,"data"]);
+				var childrensByParent = newState.getIn(["paths",parentPath,"payload"]);
 			
 				if (childrensByParent!=null) {
 					let index  = null; 
@@ -444,7 +444,7 @@ export default (state = new Map(), action) => {
 
 						if(index!= null){
 							childrensByParent=childrensByParent.update(index,_=>oldPathUpdate)
-							newState = newState.setIn(["paths",parentPath,"data"],childrensByParent)
+							newState = newState.setIn(["paths",parentPath,"payload"],childrensByParent)
 						}
 
 					}

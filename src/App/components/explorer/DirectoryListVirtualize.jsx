@@ -534,7 +534,7 @@ class DirectoryListVirtualize extends React.Component{
 		const order = this.props.toolBar.get("order")
 		
 		var dataToRender = new ListI();
-		var dataList = data.get("data");
+		var dataList = data.get("payload"); //de data a payload
 		if(filter!=""){
 			try {
 				const regex = new RegExp(filter, "ig");

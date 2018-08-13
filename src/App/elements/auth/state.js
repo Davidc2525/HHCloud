@@ -1,9 +1,18 @@
+const STATES = {
+	0: "NONE",
+	1: "LOGIN",
+	2: "NOLOGIN",
+}
 export default {
-	isLogin: !false,
-	dataUser:{
-		displayName:"",
-		email:"",
-		phoneNumber:"",
-		photoURL:""
+	state: STATES[0],
+	stateLogin:"",
+	isLogin: false,
+	dataUser: {
+		displayName: "",
+		email: "",
+		phoneNumber: "",
+		photoURL: ""
 	}
 }
+
+export {STATES}

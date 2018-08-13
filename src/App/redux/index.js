@@ -40,7 +40,9 @@ const history = (createHistory());
 window.h = history
 window.p=push
 const middleware = routerMiddleware(history);
-const mrm = s=>n=>ax=>(console.log(ax),middleware(ax)(n)(ax))
+//const mrm = s=>n=>ax=>(console.log(ax),middleware(ax)(n)(ax))
+
+import {reducer as formReducer} from 'redux-form/immutable'
 
 /**explorer*/
 import stateExplorer from "../components/explorer/state.js"
@@ -76,6 +78,7 @@ const initialState = /*fromJS(initStateTest);*/fromJS({
 
 /**Reducers para cada estado*/
 const reducers = combineReducers({
+	form:formReducer,
 	router: routerReducer,
 	app: (state = new Map(), action) => {
 		if(action.type=="APP_CONNECTION"){
@@ -88,7 +91,7 @@ const reducers = combineReducers({
 	},
 	auth: reducersAuth,
 	explorer: reducersExplorer,
-	downloads: reducersDownloadManager
+	downloads: reducersDownloadManager,
 })
 
 /**Dev tools*/
@@ -98,7 +101,7 @@ const composeEnhancers = composeWithDevTools({
 
 /**Crear store*/
 const store = createStore(reducers, initialState, composeEnhancers(
-	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,middlewareAuth,mrm),
+	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,middlewareAuth,middleware),
 ));
 
 ononline=_=>{

@@ -40,7 +40,7 @@ class MoveOrCopyOperation {
 
 	onGetStatus(payload) {
 		console.log(payload, this)
-		this.srcSize = payload.data.size;
+		this.srcSize = payload.payload.size; //data a payload
 		this.dstSize = 0;
 
 
@@ -48,6 +48,7 @@ class MoveOrCopyOperation {
 			ApiInstance.instance.fetch({
 					apiArg: {
 						path: this.path,
+						srcPath: this.path,
 						dstPath: this.dstPath,
 						op: this.type.move ? "move" : "copy"
 					}
@@ -79,7 +80,7 @@ class MoveOrCopyOperation {
 				ApiInstance.instance.callOperation("status", {
 					path: this.dstPath,
 					thenCB: (x) => {
-						this.dstSize = x.data.size;
+						this.dstSize = x.payload.size;
 					},
 					catchCB: this.catchCB
 				})
@@ -94,8 +95,6 @@ class MoveOrCopyOperation {
 
 			}, 1000)
 		}
-
-
 
 	}
 

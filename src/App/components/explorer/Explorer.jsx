@@ -437,8 +437,8 @@ class ToolBar extends React.Component {
 				.callOperation("status", {
 					path: parsePath(this.props.router.location.hash),
 					thenCB: item => {
-						console.log("downloadFile", fromJS(item.data))
-						DownloadManagerInstance.instance.addDownload(fromJS(item.data));
+						console.log("downloadFile", fromJS(item.payload))
+						DownloadManagerInstance.instance.addDownload(fromJS(item.payload));
 					},
 					catchCB: x => alert(x.errorMsg)
 				})

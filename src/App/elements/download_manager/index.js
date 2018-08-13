@@ -55,7 +55,7 @@ class DownloadManager {
 		delete this.downloads[dl.id]
 		
 		store.dispatch({
-			type: "REMOVE_DOWNLOAD",
+			type: "END_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",
 			
 			path: dl.path,
@@ -65,7 +65,7 @@ class DownloadManager {
 
 	onError(dl,event){
 		console.warn(dl)
-		
+		delete this.downloads[dl.id]
 		store.dispatch({
 			type: "ERROR_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",

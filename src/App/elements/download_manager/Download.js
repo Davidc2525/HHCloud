@@ -85,17 +85,27 @@ class Download {
 				//console.error("onload download", this, event, x)
 				if (event.status == 200) {
 					var blob = event.response;
-					console.log(x, event)
-					this.onEndDonwload(event, payload)
+
+					this.onEndDonwload(event, payload);
+
 					/**descarga es multiple*/
-					if(multiple){
-						download(blob, payload.get("name"),"application/zip")
-					}else{/**descarga de archivo o carpeta*/
+					if (multiple) {
+
+						blob = new Blob([blob], {type:"application/zip"});
+						download(blob, payload.get("name"), "application/zip");
+
+					} else { /**descarga de archivo o carpeta*/
 						if (payload.get("file")) {
-							download(blob, payload.get("name"), payload.get("mime"))
+
+							blob = new Blob([blob],{type:payload.get("mime", "application/optec-stream")});
+							download(blob, payload.get("name"), payload.get("mime"));
+
 						} else {
-							download(blob, ""+payload.get("name") + ".zip","application/zip")
-						}	
+
+							blob = new Blob([blob], {type:"application/zip"});
+							download(blob, "" + payload.get("name") + ".zip", "application/zip");
+
+						}
 					}
 				}
 			}

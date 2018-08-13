@@ -5,7 +5,8 @@ import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 window.df = require("dateformat")
-import Auth from "./elements/auth/index.js"
+import Auth,{STATE} from "./elements/auth/index.js"
+import {STATES} from "./elements/auth/state.js"
 
 import { withRouter } from 'react-router-dom'
 
@@ -29,6 +30,10 @@ import Loadable from 'react-loadable';
 import red from '@material-ui/core/colors/red';
 
 // import Button from '@material-ui/core/Button';
+ const Login = Loadable({
+  loader: () => import('./components/login/index.jsx'),
+ loading: Loading
+});
  const Home2 = Loadable({
   loader: () => import('./components/main_cs/index.js'),
  loading: Loading
@@ -103,48 +108,45 @@ const Main =()=>(
 class App extends React.Component{
 
   render(){
+   const authState =  this.props.auth.get("state");
         return   (
-            <Switch>
-              <Route exact path="/SC/login" render={(props)=>
-               {
-                return (
-                 this.props.auth.get("isLogin") ? (console.warn(props),
-                     <Redirect
-                      to={props.location.state.from/*{
-                        pathname: props.location.state.from.pathname,
-                        hash:props.location.state.from.hash,
-                        //state:props.state
-                      }*/}
-                    />
-                  ) : (
-                    <div>login
-                    <br/>
-                    <strong onClick={_=>Auth.Auth.googleSigIn()}>inisiar session con google</strong>
-                    <br/>
-                    <strong onClick={_=>Auth.Auth.gitHubSigIn()}>inisiar session con github</strong>
-                    <br/>
-                    <strong onClick={_=>Auth.Auth.facebookSigIn()}>inisiar session con facebook</strong>
-                    </div>
-                  )
-                ) 
-               }
-              } /> 
-              <Route
-                
-                render={props =>
-                  this.props.auth.get("isLogin") ? (
-                    <Main/>
-                  ) : (
-                    <Redirect
-                      to={{
-                        pathname: "/SC/login",
-                        state: { from: props.location }
-                      }}
-                    />
-                  )
+            <Switch>              
+              <Route path="/SC/unidad" render={
+                ()=>{
+                  if(authState!=STATES[2]){
+                    return <Main/>
+                  }
+                  if(authState==STATES[2]){
+                    return <Redirect to="/SC/login"/>
+                  }
                 }
-              />
+              }/>
 
+              <Route path="/SC/login" render={
+                ()=>{
+                  if(authState==STATES[1]){
+                    return <Redirect to="/SC/unidad#/"/>
+                  }else{
+                    return <Login/>
+                  }
+                }
+              }/>
+
+              <Route render={
+                ()=>{
+                  if(authState==STATES[2]){
+                    return <Redirect to="/SC/login"/>
+                  }
+
+                  if(authState==STATES[1]){
+                    return <Redirect to="/SC/unidad#/"/>
+                  }
+
+                  if(authState==STATES[0]){
+                    return <Main/>
+                  }
+                }
+              }/>
             </Switch>
       )
   }
