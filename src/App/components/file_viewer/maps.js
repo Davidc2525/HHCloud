@@ -22,10 +22,14 @@ const audio = {
 }
 
 const text = {
-	"txt":["plaint", "txt"]
+	"txt":["plaint", "txt"],
+	"gitignore": ["plaint", "txt"],
 }
 
-
+const doc = {
+	"doc": [],
+	"docx": [],
+}
 const exts = {
 	/*ico: "image",
 	png: "image",
@@ -39,7 +43,7 @@ const exts = {
 	"gpl": ["plaint", "txt"],
 	"cfg": ["plaint", "txt"],
 	"log": ["plaint", "txt"],
-	//"txt": ["plaint", "txt"],
+	
 	"xhtml": ["plaint", "txt"],
 	"csv": ["plaint", "txt"],
 	"bat": ["prism", "batch"],
@@ -52,6 +56,7 @@ const exts = {
 	"makefile": ["prism", "makefile"],
 	"java": ["prism", "java"],
 	"sql": ["prism", "sql"],
+	"cql": ["prism", "sql"],
 	"php": ["prism", "php"],
 	"md": ["prism", "markdown"],
 	"html": ["prism", "html"],
@@ -182,6 +187,23 @@ const isAudioFile = (filename) => {
 	return can
 }
 
+const isDoc = (filename) => {
+	var ex = fileExtension(filename)
+	var can = false;
+
+	if (doc.hasOwnProperty(ex)) {
+		can = true;
+	}
+
+	if(!can){
+		var mime = Mime.extension(Mime.contentType(filename))
+		if(doc.hasOwnProperty(mime)){
+			can = true;
+		}
+	}
+
+	return can
+}
 const isPdfFile = (filename) => {
 	var ex = fileExtension(filename)
 	var can = false;
@@ -208,4 +230,5 @@ export {
 	isAudioFile,
 	isVideoFile,
 	isPdfFile,
+	isDoc
 }

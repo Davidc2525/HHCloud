@@ -96,7 +96,7 @@ const light = createMuiTheme({
 });
 
 const Main =()=>(
-    <MuiThemeProvider theme={!true?light:dark}>
+    <MuiThemeProvider theme={true?light:dark}>
      <Route component={Home}/>
     </MuiThemeProvider>
 

@@ -52,6 +52,10 @@ import IconButton from '@material-ui/core/IconButton';
 import FormGroup from '@material-ui/core/FormGroup';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 
+
+import Badge from '@material-ui/core/Badge';
+import FolderSharedIcon from '@material-ui/icons/FolderShared';
+import ShareIcon from '@material-ui/icons/Share';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 import MusicVideoIcon from '@material-ui/icons/MusicVideo';
 import PhotoIcon from '@material-ui/icons/Photo';
@@ -380,13 +384,14 @@ class DirectoryListVirtualize extends React.Component{
 		return  !(isSelecteMode || !online)
 	}
 
-	IconByExt = ({name}) => {
-		const visCodeFile = isCodeFile(name);
-		const visTextFile = isTextFile(name);
-		const visImageFile = isImageFile(name);
-		const visVideoFile = isVideoFile(name);
-		const visAudioFile = isAudioFile(name);
-		const visPdfFile = isPdfFile(name);
+
+	IconByExt = ({item}) => {
+		const visCodeFile = isCodeFile(item.get("name"));
+		const visTextFile = isTextFile(item.get("name"));
+		const visImageFile = isImageFile(item.get("name"));
+		const visVideoFile = isVideoFile(item.get("name"));
+		const visAudioFile = isAudioFile(item.get("name"));
+		const visPdfFile = isPdfFile(item.get("name"));
 
 		return (
 			<ListItemAvatar >
@@ -452,26 +457,27 @@ class DirectoryListVirtualize extends React.Component{
 					         		return false
 					         	}
 					        }/>}
-					         
+					        
 					        {/*Icon*/}
 						        {/**File*/
 						          	!isSelecteMode&&isFile&&
-						          	<this.IconByExt name={(item.get("name"))}/>			          		
+						          	<this.IconByExt item={item}/>			          		
 						        }
 
 						        {/**Folder*/
 						        	!isSelecteMode&&!isFile&&
 						          	<ListItemAvatar>
-										<Avatar>
-											<FolderIcon />
-										</Avatar>
+											<Avatar>
+							          			{item.get("shared",false)?<FolderSharedIcon/>:<FolderIcon />}
+											</Avatar>
 						            </ListItemAvatar>
 						        }
 					        {/*Icon*/}
+					        
 
 							
 
-					            {!isFile&&	//folder
+					            {!isFile&& //folder
 					            	<ListItemText
 						              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
 						              primaryTypographyProps={{noWrap:true, variant:"title"}}
@@ -479,7 +485,7 @@ class DirectoryListVirtualize extends React.Component{
 						              secondary={`${item.get("elements")} elementos (${filesize(item.get("size"))}) ${this.stateDownloadString(item)}`}
 					            />}
 
-					            {isFile&&		//file
+					            {isFile&& //file
 					            	<ListItemText
 						              secondaryTypographyProps={{noWrap:true, variant:"body2"}}
 						              primaryTypographyProps={{noWrap:true, variant:"title"}}
@@ -488,20 +494,24 @@ class DirectoryListVirtualize extends React.Component{
 					            />
 					            }
 
-					           {<ListItemSecondaryAction>
+						        { 
+						        	<ListItemSecondaryAction>
 
-					              {item.get("download") != undefined && item.get("download") == "downloading" &&
-					              	<IconButton  aria-label="Descargar">
-					                <FileDownload />
-					              </IconButton>}
+						             	{item.get("download") != undefined && item.get("download") == "downloading" &&
+							              	<IconButton  aria-label="Descargar">
+							                	<FileDownload />
+							              	</IconButton>
+						          		}
 
-								{ /*<IconButton  aria-label="Delete" color="secondary"  onClick={()=>{
+									{(item.get("shared",false) && item.get("file",true)) && 
+										<IconButton  aria-label="Compartido" color="primary" >
+										    <FolderSharedIcon />
+									 	</IconButton>
+									}
 
-								  	store.dispatch(deletingPath(item.get("path"),item.get("name")))
-								  }}>
-								    <DeleteIcon />
-								  </IconButton>*/}
-					            </ListItemSecondaryAction>}
+						            </ListItemSecondaryAction>
+						        }
+
 				        </ListItem>
 				</ContextMenuTrigger>
 		    	}

@@ -11,6 +11,7 @@ import RenderVideo from "./RenderVideo.js"
 import Player from "./Player.jsx"
 import Button from '@material-ui/core/Button';
 import {store} from "../../redux/index.js"
+import Loadable from 'react-loadable';
 
 import {
 	exts,
@@ -22,12 +23,27 @@ import {
 	isImageFile,
 	isVideoFile,
 	isPdfFile,
+	isDoc
 } from "./maps.js"
 import fileextension from "file-extension"
 
 import   "./prism.css"
 
 import ApiInstance from "../../elements/API/v1/Api.js"
+//import FW from 'react-file-viewer';
+
+function Loading(props) {
+  if (props.error) {
+    return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
+  } else {
+    return <div>Espere</div>;
+  }
+} 
+const FW = Loadable({
+	loader: () =>
+		import ('react-file-viewer').then(x => Promise.resolve(x.default)),
+	loading: Loading
+});
 
 
 const styles = {
@@ -65,15 +81,33 @@ class FileViewer extends Component{
 		const path = item.get("path")
 		const name = item.get("name")
 		const fe = fileextension(path)
- if (isTextFile(name)||isCodeFile(name)) {
+		if (isTextFile(name)) {
+			var openerPath = `${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`;
+			fetch(openerPath, {
+				credentials: "include"
+			}).then(r => r.text()).then(contentText => {
+
+				this.setState({
+						typeMedia: "text",
+						contentValue: contentText
+					})
+			})
+		}
+		if (isCodeFile(name)) {
 
 			try {
-
-				this.getContent(fe, item.get("fileBase64Content"))
-					.then(x => this.setState({
-						typeMedia:"text",
-						contentValue: x
-					}))
+				var openerPath = `${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`;
+				fetch(openerPath, {
+					credentials: "include"
+				}).then(r => r.text()).then(contentText => {
+					
+					this.getContent(fe,contentText)
+						.then(x => this.setState({
+							typeMedia: "text",
+							contentValue: x
+						}))
+				})
+				return;
 				//var contentValue = Prism.highlight(atob(item.get("data").get("fileBase64Content")), Prism.languages[lagn]);
 
 			} catch (e) {
@@ -131,7 +165,40 @@ class FileViewer extends Component{
 		if (isPdfFile(name)) {
 
 			try {
-				this.setState(_=>({typeMedia:"pdf",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
+				this.setState(_ => ({
+							typeMedia: "pdf",
+							contentValue: `${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`
+						}))
+				
+				return
+
+				new RenderVideo()
+					.renderAsPromise(item)
+					.then(x => {
+						this.setState({
+							typeMedia: "pdf",
+							contentValue: x
+						})
+						//URL.revokeObjectURL(x)
+					})
+
+			} catch (e) {
+
+			}
+		}
+		if (isDoc(name)) {
+
+			try {
+				fetch(`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`,{credentials:"include"})
+					.then(x => x.blob()).then(x => {
+
+						this.setState(_ => ({
+							docType:fe,
+							typeMedia: "doc",
+							contentValue: URL.createObjectURL(x)
+						}))
+					})
+
 				return
 
 				new RenderVideo()
@@ -154,19 +221,19 @@ class FileViewer extends Component{
 	componentWillUnmount() {
 		URL.revokeObjectURL(this.state.contentValue)
 	}
-	getContent(ex,base64Content){
+	getContent(ex,content){
 
 		var contentValue = null;
 		if(exts.hasOwnProperty(ex)){
 			var data = exts[ex];
 			
 			if(typeof data == "string" && this.viewTextFiles(ex)){
-				return  Promise.resolve(atob(base64Content))
+				return  Promise.resolve((content))
 			}else{
 				
 				var render = new this.renderes[data[0]]()
 					render.setLan(data[1])
-					return render.renderAsPromise((base64Content))
+					return render.renderAsPromise((content))
 			}
 
 		}else{
@@ -303,10 +370,21 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="pdf"&&this.state.contentValue!=null&&
 					<div id="pdf">
-						 <div>					      	
-					      	<object style={{width:"100%",height:"calc(100% - 50px)"}} data={this.state.contentValue} type="application/pdf">
+						 <div>	
+						  	<object style={{width:"100%",height:"calc(100% - 50px)"}} data={this.state.contentValue} type="application/pdf">
 							  <embed src={this.state.contentValue} type="application/pdf" />
 							</object>
+					      </div>
+					</div>
+				}
+
+				{
+					this.state.typeMedia=="doc"&&this.state.contentValue!=null&&
+					<div id="doc">
+						 <div>	
+						 	<FW style={{width:"100%",height:"calc(100% - 50px)"}}
+						 		fileType={this.state.docType}
+        						filePath={this.state.contentValue}/>
 					      </div>
 					</div>
 				}

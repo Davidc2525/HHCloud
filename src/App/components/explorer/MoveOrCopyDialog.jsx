@@ -89,7 +89,7 @@ class MoveOrCopyDialog extends React.Component {
           console.warn(payload)
         },
         catchCB:(payload)=>{
-          this.setState({status:"error",errorMsg:payload.errorMsg})
+          this.setState({status:"error",errorMsg:payload.msg})
         }
       });
     }
@@ -147,7 +147,7 @@ class MoveOrCopyDialog extends React.Component {
 
   onClose(){
     store.dispatch({type:"CLOSE_MOVE_OR_COPY_DIALOG"})
-    this.setState(({paths:new Map(),currentPath:"/",pathSelectedToMoveOrCopy:null}))
+    this.setState(({paths:new Map(),currentPath:"/",pathSelectedToMoveOrCopy:null,status:"ok"}))
   }
 
   onOperation(){
@@ -165,7 +165,7 @@ class MoveOrCopyDialog extends React.Component {
           this.setState(({inProgress:false,cantEdit:true,paths:new Map(),currentPath:"/",pathSelectedToMoveOrCopy:null}))
         },
         catchCB:(payload)=>{
-          this.setState({inProgress:false,cantEdit:true,status:"error",errorMsg:payload.errorMsg})
+          this.setState({inProgress:false,cantEdit:true,status:"error",errorMsg:payload.msg})
         }
       })
   }
@@ -233,7 +233,7 @@ class MoveOrCopyDialog extends React.Component {
                 <Grid item lg={24}>
                   <Typography variant="display3">Ups tenemos probelmas :/</Typography>
                   <Typography color="secondary" variant="display1">{this.state.errorMsg}</Typography>
-                  </Grid>
+                </Grid>
               }
 
           </Grid>

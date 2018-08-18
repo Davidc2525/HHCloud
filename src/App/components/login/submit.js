@@ -47,7 +47,7 @@ const submit = values => {
 	}
 
 
-const submitRegister = values => {
+const submitRegister = values => {// agregar valor de usuario genero
 	const email		= values.get("email");
 	const username	= values.get("username");
 	const firstName	= values.get("firstname");
@@ -67,13 +67,10 @@ const submitRegister = values => {
 			}
 		})
 	})
-	.then(user=>{})
-	.catch(x => {
-		throw new SubmissionError({ 
-			...x.errors,
-			_error: x.msg
-		})
-	})
+	/**dejamos el then para la clase register.then(user=>{
+
+	})*/
+	
 
 }
 

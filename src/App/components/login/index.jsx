@@ -24,7 +24,7 @@ import {Field, reduxForm} from 'redux-form/immutable'
 import submit,{submitRegister} from "./submit.js"
 import MaskedInput from 'react-text-mask';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import {SubmissionError} from 'redux-form/immutable'
 
 import {RecoverPassword} from "./RecoverPassword.jsx" 
 
@@ -413,14 +413,33 @@ const validateRegister = values => {
   form: 'register', 
   validate:validateRegister
 })
+@connect(_=>({}))
 class Register extends React.Component{
+
+	onSubmitRegister(values) {
+		return submitRegister(values)
+			.then(user => {
+				this.setIndex(0);
+			}).catch(x => {
+				throw new SubmissionError({
+					...x.errors,
+					_error: x.msg
+				})
+			});
+	}
+
+	setIndex(index){
+		//this.setState({index})
+		this.props.dispatch(push("/SC/login#"+index))
+	}
+
 	render(){
 		console.warn(this.props);
 		const {classes,handleSubmit,invalid, pristine, reset,error, anyTouched,submitting,submitSucceeded} = this.props;
 		const {index} = this.props;
 		return (
 		<div>
-			<form autoComplete="on" onSubmit={handleSubmit(submitRegister)}>
+			<form autoComplete="on" onSubmit={handleSubmit(this.onSubmitRegister.bind(this))}>
 		      <Grid container direction="column" justify="flex-start" >
 		      	<Grid item>
 			      	 <Field

@@ -15,8 +15,8 @@ class Download {
 
 	/**genera el payload de los elementos a descargar (descarga multiple), generando una sola salida*/
 	generatePayloadByListItems(listItems){
-		var size = listItems.map(x=>x.get("size")).reduce((a,b)=>a+b,0);
-		var count = listItems.count();
+		var size = listItems.map(x=>x.get("size")).reduce((a,b)=>a+b,0); // tamaño total de la seleccion
+		var count = listItems.count(); // cantidad de objetos seleccionados
 		var time = dateformat(new Date(),"'F'yyyymmdd'T'HHMMss");
 		var dataName = `C${count}Z${size}${time}`; //parser /(?:^C(\d+))(?:Z(\d+))(?:F(\d{1,4})(\d{1,2})(\d{1,2}))(?:T(\d{1,2})(\d{1,2})(\d{1,2}))/ig
 		var name = "";
@@ -28,7 +28,7 @@ class Download {
 		return new Map({size,name});
 	}
 
-	constructor(element/*Map(item), List([item,item])*/) {//item == data property
+	constructor(element/*Map(item), List([item,item])*/) {//item == payload property
 		var path = "/";
 		var multiple = false;
 		var pathList = null;
@@ -110,10 +110,6 @@ class Download {
 				}
 			}
 		});
-
-
-		
-
 	}
 
 	calcSpeed(){

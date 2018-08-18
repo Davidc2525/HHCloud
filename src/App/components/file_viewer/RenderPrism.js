@@ -22,7 +22,7 @@ class RenderPrism {
 			w.onmessage = (e)=>{
 				r(e.data)
 			}
-			w.postMessage({action:"prism",content:atob(c),lan:this.lan})
+			w.postMessage({action:"prism",content:(c),lan:this.lan})
 		})
 	}
 	render(c) {
@@ -30,7 +30,7 @@ class RenderPrism {
 
 		try {
 			
-			content = Prism.highlight(atob(c), Prism.languages[this.lan]);
+			content = Prism.highlight((c), Prism.languages[this.lan]);
 
 		} catch (e) {
 			throw e
