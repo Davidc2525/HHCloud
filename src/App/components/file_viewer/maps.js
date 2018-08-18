@@ -69,7 +69,10 @@ const exts = {
 	"jsx": ["prism", "jsx"],
 	"cpp": ["prism", "cpp"],
 	"c": ["prism", "c"],
+	"cc": ["prism", "c"],
 	"h": ["prism", "c"],
+	"go": ["prism", "go"],
+	"proto": ["prism", "protobuf"],
 
 
 	//docx: "document",

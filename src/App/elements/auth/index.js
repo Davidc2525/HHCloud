@@ -56,17 +56,28 @@ class Auth {
 
 	}
 
+	setStateLogin(){
+		this.setState(STATES[1]);
+	}
+
+	setStateNoLogin(){
+		this.setState(STATES[2]);
+	}
+
+	setState(newState){
+		store.dispatch({
+			type: "AUTH_SET_STATE",
+			payload: {
+				state: newState
+			}
+		});
+	}
+
 	signUp(user, pass) {
 
 	}
 
 	onLogin(x) {
-		store.dispatch({
-			type: "AUTH_SET_STATE",
-			payload: {
-				state: STATES[1]
-			}
-		});
 		ApiInstance.instance.callOperation("getuser", {
 			user: new User({
 				id: x.userid

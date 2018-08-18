@@ -4,9 +4,14 @@ import RenameOperation from "./operations/RenameOperation.js"
 import MkDirOperation from "./operations/MkDirOperation.js"
 import DeleteOperation from "./operations/DeleteOperation.js"
 import DownloadOperation from "./operations/DownloadOperation.js"
-
+//import {auth} from "../../auth/index.js";
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
-import apiUser,{GetUserOperation,CreateUserOperation} from "./user/index.js"
+import apiUser, {
+	GetUserOperation,
+	CreateUserOperation,
+	SendRecoveryEmailOperation,
+	ChangePasswordByRecoverOperation
+} from "./user/index.js"
 import {
 	store
 } from "../../../redux/index.js";
@@ -40,6 +45,8 @@ class Api {
 		this.registerOperation("download", DownloadOperation)
 		this.registerOperation("getuser", GetUserOperation)
 		this.registerOperation("createuser", CreateUserOperation)
+		this.registerOperation("sendrecoveryemail", SendRecoveryEmailOperation)
+		this.registerOperation("changepasswordbyrecover", ChangePasswordByRecoverOperation)
 	}
 
 	getUserId() {
@@ -104,9 +111,25 @@ class Api {
 					})
 				}
 
-		        xhr.onload = event => {
-			        resolve(xhr.response)
-		        };
+				xhr.onload = event => {
+					const auth = require("../../auth/index.js").auth
+					//resolve(xhr.response)
+					//return
+					var response = xhr.response;
+					console.warn(response)
+					if (response.status === "error") {
+						if (response.error == "session") {
+							reject(response)
+							auth.Auth.setStateNoLogin();
+							return;
+						}
+
+						reject(response)
+
+					} else {
+						resolve(response)
+					}
+				};
 
 		        xhr.send((fd));
 

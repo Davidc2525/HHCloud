@@ -1,4 +1,5 @@
-//index.jsx
+//Login.jsx
+import {auth} from "../../elements/auth/index.js";
 import React from "react";
 import {connect} from "react-redux"
 import {
@@ -21,17 +22,16 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import SwipeableViews from 'react-swipeable-views';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import {Field, reduxForm} from 'redux-form/immutable'
-import submit,{submitRegister} from "./submit.js"
+import {LoginSubmit,submitRegister} from "./submit.js"
 import MaskedInput from 'react-text-mask';
 import Tooltip from '@material-ui/core/Tooltip';
 import {SubmissionError} from 'redux-form/immutable'
-
-import {Login} from "./Login.jsx"
-import {Register} from "./RegisterForm.jsx"
+import Fade from '@material-ui/core/Fade';
+import Slide from '@material-ui/core/Slide';
 import {RecoverPassword} from "./RecoverPassword.jsx" 
 
 import { bindKeyboard } from 'react-swipeable-views-utils';
-const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
+
 const validate = values => {
   // IMPORTANT: values is an Immutable.Map here!
   const errors = {}
@@ -93,7 +93,7 @@ const renderFieldToken = ({showIn,index,input, label, type, meta: {touched, erro
     </Tooltip>
   </div>
 )
-const renderField = ({showIn,index,input, label, type, meta: {touched, error, warning}}) => (
+const renderField = ({showIn,disabled,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
     
     <Tooltip
@@ -107,14 +107,14 @@ const renderField = ({showIn,index,input, label, type, meta: {touched, error, wa
       label={label}
       //helperText={touched&&(error&&error || warning && warning)}
       //placeholder={label}
-
+      disabled={disabled}
       fullWidth
       margin="normal"
     />
     </Tooltip>
   </div>
 )
-const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}}) => (
+const renderFieldChekbox = ({input,disabled, label, type, meta: {touched, error, warning}}) => (
 	<div>
 	
 	  <Grid style={{width:"100%",
@@ -130,6 +130,7 @@ const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}
 			<Grid item >		
 				<Switch
 					{...input}
+					disabled={disabled}
 					checked={input.value ? true : false}
 					onCheck={input.onChange}
 					type={type}
@@ -148,7 +149,7 @@ const styles = theme => ({
 	root: {
 		margin: "0 auto",
 		flexGrow: 1,
-		backgroundColor: theme.palette.primary.main,//"#2196f3", ///"#f2f2f2",
+		backgroundColor: "#2196f3", ///"#f2f2f2",
 		width: "100%",
 		height: "80px",
 
@@ -186,7 +187,7 @@ const styles = theme => ({
 		zIndex: 1,
 	},
 	buttonProgress: {
-		color: green[500],
+		//color: green[500],
 		position: 'absolute',
 		top: '50%',
 		left: '50%',
@@ -215,13 +216,13 @@ const parseIndex = hash => {
 		const hash = router.location.hash
 		return {index:parseIndex(hash)}
 	}
-	return {index:0}
+	return {}
 })
-class AuthArea extends React.Component{
+class Login extends React.Component{
 
 	constructor(props){
 		super(props);
-		this.state = {index:0,NULL:1}//0 login, 1 register
+		this.state = {successLogin:!true,index:0,NULL:1}//0 login, 1 register
 	}
 
 	setIndex(index){
@@ -233,71 +234,132 @@ class AuthArea extends React.Component{
 		console.warn(push("/SC/login#"+index))
 		this.props.dispatch(push("/SC/login#"+index))
 	};
+	handleSubmitForm(values){
+		return auth.Auth.signIn(values.get("email"),values.get("password"),values.get("remember"))
+		.then(authObject => {
+			console.log("session iniciada", authObject)
+			setTimeout(_=>{auth.Auth.setStateLogin()},3000)
+			this.setState({successLogin:true})
+			//setTimeout(_=>{this.setState({successLogin:false})},3000)
+		}).catch(x => {	
+			if (x.username != null) {
+				throw new SubmissionError({
+					email: x.username,
+					_error: x.msg
+				})
+			} else if (x.password != null) {
+				throw new SubmissionError({
+					password: "Clave incorrecta.",
+					_error: x.msg
+				})
+			}else if(x.error){
+				throw new SubmissionError({
+					_error: x.errorMsg
+				})
+			}
 
+		})
+	}
 	render(){
 		console.warn(this.props);
 		const {classes,handleSubmit,invalid, pristine, reset,error, anyTouched,submitting} = this.props;
 		
-		return (
-		  <div className={classes.root}>
-		      <Grid className={classes.gRoot} container spacing={8}>
-		       
-		        <Grid item xs={12}>
-		          <Paper elevation={4} className={classes.paper}>
-		         	<Grid container direction="row" alignItems="center" justify="center" >
-		         		<Grid item>
-		         			 <Typography variant="headline">
-					          	HHCloud
-					          </Typography>
-		         		</Grid>
-		         	</Grid>
-		          <SwipeableViews
-		          	style={{height:"auto"}}
-		          	animateHeight
-			         // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-			          index={this.props.index}
-			          onChangeIndex={this.handleChangeIndex}
-			        >
-		          
-		          		{true&&<Login index={this.props.index}/>}
-				    
-				    	{true&&<Register index={this.props.index}/>}
-				    
-				    	{true&&<RecoverPassword index={this.props.index}/>}
-				    
-				    </SwipeableViews>
-		          </Paper>
-		        </Grid>
-		      
-		      </Grid> 
-		      {true&&
-		      	<Grid style={{width:"100%",justifyContent:"center"}} container spacing={8}>
-				
-		        <Grid item >
-					{this.props.index!=2&&<Button onClick={_=>this.setIndex(2)}>Olvide mi contraseña</Button>}
-		        </Grid>
-		         
-				<Grid item >		
-					{this.props.index!=1&&
-						<Button onClick={_=>this.setIndex(1)} type="button" variant="contained" color="secondary" className={classes.button}>
-							Registrarte
-						</Button>
-					}
- 				</Grid>	
- 				<Grid item >
-					{this.props.index!=0&&
-						<Button onClick={_=>this.setIndex(0)} type="button" variant="contained" color="secondary" className={classes.button}>
-							Ingresar
-						</Button>
-					}
- 				</Grid>
+		return (		          
+          	<div>
+          		{this.state.successLogin&&
+	          		<Slide direction="up" mountOnEnter unmountOnExit in={this.state.successLogin}>	
+	          			<div>
+		          			<Grid container direction="column" alignItems="center" justify="space-evenly"  
+		          			style={{justifyContent:"space-evenly",height:"260px"}}>
+		          				<Grid item>
+							      	<Typography variant="display3">
+							      		Bienvenido!
+							      	</Typography>
+						      	</Grid>
+						      	<Grid item>
+							      	<Typography variant="title">
+							      		Estamos cargando tu informacion.	
+							      	</Typography>
+						      	</Grid>
+						      	<Grid style={{marginTop:"15px"}} item>
+							      	<CircularProgress size={40} />
+						      	</Grid>
+							</Grid>
+	          			</div>
+	          		</Slide>	
+          		}
+				{!this.state.successLogin && 
+					<Slide direction="up" mountOnEnter unmountOnExit in={!this.state.successLogin}>	
+						<form autoComplete="on" onSubmit={handleSubmit(this.handleSubmitForm.bind(this))}>
+					    	<Grid container direction="column" justify="flex-start" >
+						      	<Grid item>
+							      	 <Field
+							      	 	disabled={submitting}
+							      	 	index={this.props.index}
+							      	 	showIn={0}
+								        name="email"
+								        type="text"
+								        component={renderField}
+								        label="Correo"
+								         InputProps={{
+								          startAdornment: (
+								            <InputAdornment position="start">
+								              <AccountCircle />
+								            </InputAdornment>
+								          ),
+								        }}
+								      />
+						      	</Grid>
 
-		      </Grid>}
-		</div>
+						      	<Grid item>
+						      		 <Field
+						      		 	disabled={submitting} 
+						      		 	index={this.props.index}
+						      		 	showIn={0}
+								      	name="password" 
+								      	type="password" 
+								      	component={renderField} 
+								      	label="Contraseña" />
+						      	</Grid>
 
-		)
+						      	<Grid item>
+							      	 <Field
+							      	 	disabled={submitting} 
+								      	name="remember" 				      
+								      	component={renderFieldChekbox} 
+								      	label="Recordar" />
+							     
+						      	</Grid>
+
+						      	<Grid container direction="row" justify="flex-end" >
+						      		<Grid item >	
+									       <Tooltip
+									       	 open={(!submitting&&anyTouched&&invalid&&this.props.index==0&&error)}
+									       	 title={error}
+									       >
+									       <div className={classes.wrapper}>
+									          <Button
+									            variant="contained"
+									            color="primary"
+									            disabled={submitting}
+									            type="submit"
+									          >
+									            Ingresar
+									          </Button>
+									          {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+									        </div>
+									       </Tooltip>
+									</Grid>	
+						      	</Grid>
+
+					     	</Grid>
+					    </form>
+				    </Slide>
+				}
+          	</div>
+        )
 	}
 }
 
 
-export default AuthArea;
+export {Login}

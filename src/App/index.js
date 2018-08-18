@@ -5,7 +5,7 @@ import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 window.df = require("dateformat")
-import Auth,{STATE} from "./elements/auth/index.js"
+import Auth,{auth,STATE} from "./elements/auth/index.js"
 import {STATES} from "./elements/auth/state.js"
 
 import { withRouter } from 'react-router-dom'
@@ -30,7 +30,7 @@ import Loadable from 'react-loadable';
 import red from '@material-ui/core/colors/red';
 
 // import Button from '@material-ui/core/Button';
- const Login = Loadable({
+ const AuthArea = Loadable({
   loader: () => import('./components/login/index.jsx'),
  loading: Loading
 });
@@ -100,7 +100,13 @@ const Main =()=>(
      <Route component={Home}/>
     </MuiThemeProvider>
 
-  )
+)
+
+const AuthAreaThemed = _ => (
+  <MuiThemeProvider theme={true?light:dark}>
+     <Route component={AuthArea}/>
+    </MuiThemeProvider>
+)
 
 
 @withRouter
@@ -127,7 +133,7 @@ class App extends React.Component{
                   if(authState==STATES[1]){
                     return <Redirect to="/SC/unidad#/"/>
                   }else{
-                    return <Login/>
+                    return <AuthAreaThemed/>
                   }
                 }
               }/>
@@ -137,14 +143,9 @@ class App extends React.Component{
                   if(authState==STATES[2]){
                     return <Redirect to="/SC/login"/>
                   }
-
-                  if(authState==STATES[1]){
-                    return <Redirect to="/SC/unidad#/"/>
-                  }
-
-                  if(authState==STATES[0]){
-                    return <Main/>
-                  }
+                  
+                  return <Main/>
+                  
                 }
               }/>
             </Switch>

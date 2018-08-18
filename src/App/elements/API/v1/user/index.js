@@ -8,6 +8,40 @@ class ApiUser {
 		window.au = this;
 	}
 
+	sendRecoveryEmail(email=""){
+		return ApiInstance.instance.fetch({
+			apiArg: {
+				email,
+				op: "sendrecoveryemail"
+			}
+		},API)
+		.then(x=>{
+			if(x.status=="ok"){
+				return Promise.resolve(x.payload)
+			}else{
+				return Promise.reject(x)
+			}
+		});
+	}
+
+	changePasswordByRecover(email = "", token = "", password = "") {
+		return ApiInstance.instance.fetch({
+				apiArg: {
+					email,
+					token,
+					password,
+					op: "changepasswordbyrecover"
+				}
+			}, API)
+			.then(x => {
+				if (x.status == "ok") {
+					return Promise.resolve(x.payload)
+				} else {
+					return Promise.reject(x)
+				}
+			});
+	}
+
 	getUser(user,by="id") {
 		return ApiInstance.instance.fetch({
 			apiArg: {
@@ -51,10 +85,6 @@ class ApiUser {
 		});
 	}
 
-	userExist() {
-
-	}
-
 }
 
 const apiUserInstance = {
@@ -62,6 +92,47 @@ const apiUserInstance = {
 }
 
 export default apiUserInstance;
+
+class ChangePasswordByRecoverOperation {
+	constructor({
+		email,
+		token,
+		password,
+		thenCB = response => {},
+		catchCB = response => {}
+	}) {
+		apiUserInstance
+			.instance
+			.changePasswordByRecover(
+				email,
+				token,
+				password)
+			.then(response => {
+				thenCB(response)
+			})
+			.catch(response => {
+				catchCB(response)
+			});
+	}
+}
+
+class SendRecoveryEmailOperation {
+	constructor({
+		email,
+		thenCB = response => {},
+		catchCB = response => {}
+	}) {
+		apiUserInstance
+		.instance
+		.sendRecoveryEmail(email)
+		.then(response=>{
+			thenCB(response)
+		})
+		.catch(response=>{
+			catchCB(response)
+		});
+	}
+}
 
 class GetUserOperation {
 	constructor({
@@ -99,4 +170,9 @@ class CreateUserOperation {
 		});
 	}
 }
-export {GetUserOperation,CreateUserOperation}
+export {
+	GetUserOperation,
+	CreateUserOperation,
+	SendRecoveryEmailOperation,
+	ChangePasswordByRecoverOperation
+}

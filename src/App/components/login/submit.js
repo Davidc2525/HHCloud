@@ -1,5 +1,5 @@
 import {SubmissionError} from 'redux-form/immutable'
-import {auth} from "/home/david/HHCloud/src/App/elements/auth/index.js";
+import {auth} from "../../elements/auth/index.js";
 import ApiInstance from "../../elements/API/v1/Api.js"
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -21,7 +21,7 @@ function submit2(values) {
     }
   })
 }
-const submit = values => {
+const LoginSubmit = values => {
 
 		return auth.Auth.signIn(values.get("email"),values.get("password"),values.get("remember"))
 		.then(auth => {
@@ -74,5 +74,5 @@ const submitRegister = values => {// agregar valor de usuario genero
 
 }
 
-export default submit
+export {LoginSubmit}
 export {submitRegister}
