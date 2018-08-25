@@ -182,6 +182,7 @@ export default store => next => action => {
 						store.dispatch({type:"SELECTED_MODE_TOOLBAR",payload:{selecteMode:false}})
 						next(action)
 					},
+					catchCB: oError => {},
 					confirmFun:(path)=>confirm("Quiere Eliminar '" + action.payload.listPath.count() + "' elementos seleccionados?")
 				})
 		}
