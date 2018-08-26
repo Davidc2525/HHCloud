@@ -8,10 +8,8 @@ export default {
 	stateLogin:"",
 	isLogin: false,
 	dataUser: {
-		displayName: "",
-		email: "",
-		phoneNumber: "",
-		photoURL: ""
+		//user,
+		//contentSummary
 	}
 }
 

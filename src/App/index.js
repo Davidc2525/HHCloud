@@ -131,7 +131,7 @@ class App extends React.Component{
               <Route path="/SC/login" render={
                 ()=>{
                   if(authState==STATES[1]){
-                    return <Redirect to="/SC/unidad#/"/>
+                    return <Redirect to="/SC/"/>
                   }else{
                     return <AuthAreaThemed/>
                   }

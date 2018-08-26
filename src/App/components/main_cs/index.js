@@ -22,7 +22,7 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router'
 import _ from "lodash"
 import logo from "../../../media/img/logop.png"
-import Nuevo from "../nuevo_cs/index.js"
+import Index from "../index/index.js"
 import DownloadViewer from "../download_viewer/index.js"
 import PahtSee from "../path_see/index.js"
 import Grid from '@material-ui/core/Grid';
@@ -244,11 +244,11 @@ class ResponsiveDrawer extends React.Component {
             <Switch>
 
                 <Route path="/SC/unidad" component={Exprorer}/>
-                <Route exact path="/SC" render={()=><div>Inicio</div>}/>
+               
                 {/*esta rruta es para ese componente
                     en components/nuevo_cs
                 */}
-                <Route exact path="/SC/nuevo" component={Nuevo}/>
+                <Route exact path="/SC" component={Index}/>
                 <Route exact path="/SC/download" component={DownloadViewer}/>
 
                 <Route  component={()=><div>Andas perdido?</div>}/>

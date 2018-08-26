@@ -1,5 +1,6 @@
 import ApiInstance from "../Api.js"
 import User from "./User.js";
+import AccountStatus from "./AccountStatus.js"
 
 const API = "user";
 class ApiUser {
@@ -53,6 +54,21 @@ class ApiUser {
 		.then(x=>{
 			if(x.status=="ok"){
 				return Promise.resolve(new User(x.payload))
+			}else{
+				return Promise.reject(x)
+			}
+		});
+	}
+
+	getAccountStatus() {
+		return ApiInstance.instance.fetch({
+			apiArg: {
+				op: "accountstatus"
+			}
+		},API)
+		.then(x=>{
+			if(x.status=="ok"){
+				return Promise.resolve(new AccountStatus(x.payload.user,x.payload.storageSummary))
 			}else{
 				return Promise.reject(x)
 			}
@@ -134,6 +150,23 @@ class SendRecoveryEmailOperation {
 	}
 }
 
+class GetAccountStatusOperation {
+	constructor({
+		thenCB = accountstatus=>{},
+		catchCB = x => {}
+	}) {
+		apiUserInstance
+		.instance
+		.getAccountStatus()
+		.then(accountstatus=>{
+			thenCB(accountstatus)
+		})
+		.catch(x=>{
+			catchCB(x)
+		});
+	}
+}
+
 class GetUserOperation {
 	constructor({
 		user,
@@ -171,6 +204,7 @@ class CreateUserOperation {
 	}
 }
 export {
+	GetAccountStatusOperation,
 	GetUserOperation,
 	CreateUserOperation,
 	SendRecoveryEmailOperation,

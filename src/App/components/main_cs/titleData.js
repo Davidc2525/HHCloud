@@ -6,6 +6,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ArchiveIcon from '@material-ui/icons/Archive';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import StarIcon from '@material-ui/icons/Star';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -108,7 +109,17 @@ class SideVarContent extends React.Component{
 
           <ButtonLink className={classes.button}  {...this.props}/>
           
-        </ListItem>      
+        </ListItem>    
+
+        {/*inicio*/}
+        <ListItem button onClick={()=>{
+           store.dispatch(push("/SC/"))
+          }}>
+          <ListItemIcon>
+            <DashboardIcon />
+          </ListItemIcon>
+          <ListItemText primary="Control" />
+        </ListItem>  
 
         {/*descargas*/}
         <ListItem button onClick={()=>{
@@ -126,12 +137,7 @@ class SideVarContent extends React.Component{
         </ListItem>
        {count>0&& <LinearProgress value={this.getTotalProgress()} variant="determinate"/>}
 
-        <ListItem button>
-          <ListItemIcon>
-            <StarIcon />
-          </ListItemIcon>
-          <ListItemText primary="Starred" />
-        </ListItem>
+       
 
         <ListItem button>
           <ListItemIcon>

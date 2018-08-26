@@ -7,6 +7,7 @@ import DownloadOperation from "./operations/DownloadOperation.js"
 //import {auth} from "../../auth/index.js";
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
 import apiUser, {
+	GetAccountStatusOperation,
 	GetUserOperation,
 	CreateUserOperation,
 	SendRecoveryEmailOperation,
@@ -43,6 +44,7 @@ class Api {
 		this.registerOperation("move", move())
 		this.registerOperation("delete", DeleteOperation)
 		this.registerOperation("download", DownloadOperation)
+		this.registerOperation("accountstatus", GetAccountStatusOperation)
 		this.registerOperation("getuser", GetUserOperation)
 		this.registerOperation("createuser", CreateUserOperation)
 		this.registerOperation("sendrecoveryemail", SendRecoveryEmailOperation)

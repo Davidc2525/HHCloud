@@ -25,18 +25,8 @@ class Auth {
 						state: STATES[1]
 					}
 				});
-				ApiInstance.instance.callOperation("getuser", {
-					user: new User({id:x.userid}),
-					thenCB: user => {
-						store.dispatch({
-							type: "AUTH_SETUSERDATA",
-							payload: {
-								userdata: { ...user.toObject(),displayName: `${user.getLastName()} ${user.getFirstName()}`}
-							}
-						})
-					},
-					catchCB: x => console.warn(x)
-				})
+				this.onLogin(x);
+				
 			}else{
 				store.dispatch({
 					type: "AUTH_SET_STATE",
@@ -78,16 +68,16 @@ class Auth {
 	}
 
 	onLogin(x) {
-		ApiInstance.instance.callOperation("getuser", {
+		ApiInstance.instance.callOperation("accountstatus", {
 			user: new User({
 				id: x.userid
 			}),
-			thenCB: user => {
+			thenCB: accountstatus => {
 				store.dispatch({
 					type: "AUTH_SETUSERDATA",
 					payload: {
-						userdata: { ...user.toObject(),
-							displayName: `${user.getLastName()} ${user.getFirstName()}`
+						userdata: { ...accountstatus.toObject(),
+							displayName: `${accountstatus.user.getLastName()} ${accountstatus.user.getFirstName()}`
 						}
 					}
 				})
