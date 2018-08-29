@@ -1,6 +1,9 @@
 
 import React,{Component} from "react"
 import {connect} from "react-redux"
+import {
+  push
+} from "react-router-redux";
 //import { RadialBarChart,RadialBar,Legend,Tooltip } from 'recharts';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
@@ -12,7 +15,7 @@ import filesize from "filesize"
 import numeral from "numeral"
 
 const styles = theme => ({
-   root: {
+  root: {
    	padding:theme.spacing.unit * 2,
     flexGrow: 1,
   },
@@ -64,10 +67,10 @@ class MiDivider extends Component{
 
 @withStyles(styles,{withTheme:true})
 @connect((state,props)=>{
-	
-	const user=state.getIn(["auth","dataUser","user"],null)
-	const summary=state.getIn(["auth","dataUser","contentSummary"],null)
-	if(summary==null){
+	const user=state.getIn(["auth","dataUser","user"],null);
+	const summary=state.getIn(["auth","dataUser","contentSummary"],null);
+
+	if(summary==null||user==null){
 		return {
 			user:{emailVerified:true},
 			summary: {
@@ -91,104 +94,94 @@ class Nuevo extends Component{
 
 	render(){
 		const {classes,summary,user} = this.props
-		
+
 		const {emailVerified} = user;
-		
+
 		return (
 
 			<div className={classes.root}>
-			 
 		    {
 		    	!emailVerified&&
-		    	<div> 
-		    		<MiDivider title="Verifica tu cuenta"/>
-		    		<Grid alignItems="center" container spacing={24}>
-		       			<Grid item xs={12} >
-		       				<Typography variant="headline">No haz verificado tu cuenta, hazlo para que disfrutes de mas espacio de almacenamiento, hasta 15GB!</Typography>
-		       				<Typography>Hasta entonces, solo tendras disponible 1GB de espacio.</Typography>
-		       				<Typography>Ve a tu cuenta de correo y verifica tu cuenta, si aun no haz recibido el enlace, debes hacer click aqui.</Typography>
-		       			</Grid>
-		       		</Grid>
+          <div>
+            <MiDivider title="Verifica tu cuenta"/>
+            <Grid alignItems="center" container spacing={24}>
+              <Grid item xs={12} >
+                <Typography variant="headline">No haz verificado tu cuenta, hazlo para que disfrutes de mas espacio de almacenamiento, hasta 15GB!</Typography>
+                <Typography>Hasta entonces, solo tendras disponible 1GB de espacio.</Typography>
+                <Typography>Ve a tu cuenta de correo y verifica tu cuenta, si aun no haz recibido el enlace, ve
+                  <strong
+                    style={{cursor:"pointer"}}
+                    onClick={_=>this.props.dispatch(push("/SC/account"))}> aqui</strong> y haz click sobre tu email.
+                </Typography>
+              </Grid>
+            </Grid>
+          </div>
+        }
 
-		    	</div>
+        <MiDivider title="Espacio"/>
 
-			}
+        <Grid alignItems="center" container spacing={24}>
+          <Grid item xs={12} md={3}>
+            <Paper id="spaceConsumed"  className={classes.spaceConsumed +" "+classes.paper}>
+              <Typography className={classes.spaceConsumedTitleInner}>{this._toView(summary)}%</Typography>
 
+              <div>
+                <CircularProgress className={classes.progressTop} thickness={2} size={100} variant="static" value={this._toView(summary)}/>
+                <CircularProgress className={classes.progressButton} thickness={2} size={100} variant="static" value={100}/>
+              </div>
 
-		    <MiDivider title="Espacio"/>
-			 <Grid alignItems="center" container spacing={24}>
-		        <Grid item xs={12} md={3}>
-		          <Paper id="spaceConsumed"  className={classes.spaceConsumed +" "+classes.paper}>
-
-			          
-
-						<Typography className={classes.spaceConsumedTitleInner}>{this._toView(summary)}%</Typography>
-						
-						<div>
-							<CircularProgress className={classes.progressTop} thickness={2} size={100} variant="static" value={this._toView(summary)}/>
-							<CircularProgress className={classes.progressButton} thickness={2} size={100} variant="static" value={100}/>
-						</div>
-
-						<Typography variant="title">Espacio consumido</Typography>
-
-						
-
-		          </Paper>
-		        </Grid>
+              <Typography variant="title">Espacio consumido</Typography>
+            </Paper>
+          </Grid>
 
 
-		        <Grid item xs={12} md={3}>
-		          <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
+          <Grid item xs={12} md={3}>
+            <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
 
-						<Typography variant="title">Espacio consumido</Typography>
-						<Typography variant="display1">{filesize(summary.length)}</Typography>
+              <Typography variant="title">Espacio consumido</Typography>
+              <Typography variant="display1">{filesize(summary.length)}</Typography>
 
-		          </Paper>
-		        </Grid>
-				
-				<Grid item xs={12} md={3}>
-		          <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
+            </Paper>
+          </Grid>
 
-						<Typography variant="title">Espacio restantes</Typography>
-						<Typography variant="display1">{filesize(summary.spaceQuota - summary.length)}</Typography>
+          <Grid item xs={12} md={3}>
+            <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
 
-		          </Paper>
-		        </Grid>
+              <Typography variant="title">Espacio restantes</Typography>
+              <Typography variant="display1">{filesize(summary.spaceQuota - summary.length)}</Typography>
 
-		         <Grid item xs={12} md={3}>
-		          <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
+            </Paper>
+          </Grid>
 
-			          
+          <Grid item xs={12} md={3}>
+            <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
 
-						<Typography variant="title">Tu espacio</Typography>
-						<Typography variant="display1">{filesize(summary.spaceQuota)}</Typography>
+              <Typography variant="title">Tu espacio</Typography>
+              <Typography variant="display1">{filesize(summary.spaceQuota)}</Typography>
 
-		          </Paper>
-		        </Grid>
-		     </Grid>
+            </Paper>
+          </Grid>
+        </Grid>
 
 
 		    <MiDivider title="Archivos y carpetas"/>
-		      
-		      <Grid container spacing={24}>
-		        <Grid item xs={12} md={6}>
-		          <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
-						<Typography variant="title">Archivos</Typography>
-						<Typography variant="display1">{ numeral(summary.fileCount).format('0,0')}</Typography>
-		          </Paper>
-		        </Grid>
-		        
-		        <Grid item xs={12} md={6}>
-		          <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
-						<Typography variant="title">Directorios</Typography>
-						<Typography variant="display1">{ numeral(summary.directoryCount).format('0,0')}</Typography>
-		          </Paper>
-		        </Grid>
 
-		     </Grid>
-			
-				
+        <Grid container spacing={24}>
+          <Grid item xs={12} md={6}>
+            <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
+              <Typography variant="title">Archivos</Typography>
+              <Typography variant="display1">{ numeral(summary.fileCount).format('0,0')}</Typography>
+            </Paper>
+          </Grid>
 
+          <Grid item xs={12} md={6}>
+            <Paper id="countDirectory"  className={classes.paper+" "+classes.withCenterText}>
+              <Typography variant="title">Directorios</Typography>
+              <Typography variant="display1">{ numeral(summary.directoryCount).format('0,0')}</Typography>
+            </Paper>
+          </Grid>
+
+        </Grid>
 			</div>
 
 			)

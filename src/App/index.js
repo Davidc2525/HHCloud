@@ -38,14 +38,14 @@ import red from '@material-ui/core/colors/red';
   loader: () => import('./components/main_cs/index.js'),
  loading: Loading
 });
-    
+
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
   } else {
     return <div>Loading...</div>;
   }
-} 
+}
 const dark = createMuiTheme({
   palette: {
     primary: {
@@ -64,7 +64,7 @@ const dark = createMuiTheme({
     status: {
       danger: 'orange',
     },
-    
+
     unidadButtom:{
       background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
       boxShadow: '0 3px 5px 2px rgba(33, 203, 243, .3)',
@@ -116,7 +116,7 @@ class App extends React.Component{
   render(){
    const authState =  this.props.auth.get("state");
         return   (
-            <Switch>              
+            <Switch>
               <Route path="/SC/unidad" render={
                 ()=>{
                   if(authState!=STATES[2]){
@@ -143,9 +143,9 @@ class App extends React.Component{
                   if(authState==STATES[2]){
                     return <Redirect to="/SC/login"/>
                   }
-                  
+
                   return <Main/>
-                  
+
                 }
               }/>
             </Switch>

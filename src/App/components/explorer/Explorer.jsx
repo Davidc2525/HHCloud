@@ -101,7 +101,7 @@ function Loading(props) {
   } else {
     return <div>Espere</div>;
   }
-} 
+}
 const  ViewExplorer = Loadable({
     loader: () =>
       import ('./ViewExplorer.js'),
@@ -137,10 +137,10 @@ const styles = theme => ({
   	[theme.breakpoints.up('sm')]: {
       paddingTop: theme.spacing.unit * 2,
     },
-  	
+
   	//height:"100%",
     flexGrow: 1,
-    
+
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -176,7 +176,7 @@ const styles = theme => ({
 @withTheme()
 @withStyles(styles)
 @withWidth()
-@connect(state=>{ 
+@connect(state=>{
 	var upload = state.getIn(["explorer","upload"]);
 	var path = tryNormalize(parsePath(state.getIn(["router"]).hash));
 	var online = state.getIn(["app","online"])
@@ -201,7 +201,7 @@ class Explorer extends React.Component{
 
 		if (item.isDirectory) {
 			let directoryReader = item.createReader();
-			
+
 
 			directoryReader.readEntries((entries)=> {
 				entries.forEach((entry)=> {
@@ -219,7 +219,7 @@ class Explorer extends React.Component{
 		console.error(evt.dataTransfer.types)
 		var items = evt.dataTransfer.items; // FileList object.
 		Array.prototype.forEach.call(items, _ => {
-			
+
 			//this.tmpItems.push(_.webkitGetAsEntry())
 			this.scanFiles(_.webkitGetAsEntry())
 			//console.warn(_.webkitGetAsEntry())
@@ -277,29 +277,27 @@ class Explorer extends React.Component{
 					<div className={classes.seccions}>
 						<ToolBar/>
 					</div>
-					
+
 				</div>
 				<div style={{height:"100px"}} className={classes.toolbar} />
-				
+
 				{!uploadActive&&<ViewExplorer/>}
 				{uploadActive&&
-					 <section>
-				        <div className="dropzone">
-				          <Dropzone multiple inputProps={{webkitdirectory:true ,directory:true, multiple:true}} onDrop={this.onDrop.bind(this)}>
-				            <p>Try dropping some files here, or click to select files to upload.</p>
-				          </Dropzone>
-				        </div>
-				        <aside>
-				          <h2>Dropped files</h2>
-				          <ul>
-				            {
-				              this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-				            }
-				          </ul>
-				        </aside>
-				      </section>
-
-					
+          <section>
+            <div className="dropzone">
+              <Dropzone multiple inputProps={{webkitdirectory:true ,directory:true, multiple:true}} onDrop={this.onDrop.bind(this)}>
+                <p>Try dropping some files here, or click to select files to upload.</p>
+              </Dropzone>
+            </div>
+            <aside>
+              <h2>Dropped files</h2>
+              <ul>
+                {
+                  this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                }
+              </ul>
+            </aside>
+          </section>
 				}
 			</div>
 		);
@@ -347,7 +345,7 @@ const stylesToolBar = theme => ({
 
 
 /**Toolbar Pasar a modulo independiente*/
-@connect(state=>{ 
+@connect(state=>{
 	var upload = state.getIn(["explorer","upload"]);
 	var router = state.getIn(["router"]);
 	var online = state.getIn(["app","online"])
@@ -366,7 +364,7 @@ class ToolBar extends React.Component {
 
 		window.tb = this
 	}
-	
+
 
 	onFilterChange(e){
 		//ViewExplorer.nc()
@@ -382,7 +380,7 @@ class ToolBar extends React.Component {
 	},500)
 
 	onChangeSelectMode(){
-		
+
 		store.dispatch({type: 'SELECTED_MODE_TOOLBAR',payload:{selecteMode:!this.props.isSelecteMode}})
 
 	}
@@ -425,7 +423,7 @@ class ToolBar extends React.Component {
 			//this.onChangeSelectMode()
 		}
 		if(data.action == "download"){
-			
+
 			/**Accinador de descargas multiples*/
 			DownloadManagerInstance.instance.addDownload(this.props.selecteds.toList());
 			this.onChangeSelectMode()
@@ -460,8 +458,8 @@ class ToolBar extends React.Component {
 		return (
 			<Tooltip title={title}>
 		 		<IconButton disabled={disabled} color="primary" onClick={(e)=>this.handleAction(e,{action:action})} component="span">
-		         	<CompIcon/>
-		        </IconButton>				       
+          <CompIcon/>
+        </IconButton>
  			</Tooltip>
 		)
 	}
@@ -486,111 +484,111 @@ class ToolBar extends React.Component {
 
 		const fullScreen = this.props.fullScreen;
 		const isroot = isRoot((parsePath(this.props.router.location.hash)));
-		
+
 		return (
 			 <div id="toolbar" className={classes.toolbar +" "+ classes.root}>
-			 	{!isSelecteMode&&
-			 	<Fade in={!isSelecteMode}>
-				 	<div>
-						{
-							this.createAtionButton("goparent", ArrowUpward, "Ir a carpeta contenedora",isroot)
-						}
+         {!isSelecteMode&&
+           <Fade in={!isSelecteMode}>
+             <div>
+               {
+                 this.createAtionButton("goparent", ArrowUpward, "Ir a carpeta contenedora",isroot)
+               }
 
 
-						{
-							this.createAtionButton("refresh", Refresh, "Actualizar")
-						}
+               {
+                 this.createAtionButton("refresh", Refresh, "Actualizar")
+               }
 
-						{
-							currentType == "folder" &&
-								[
-									this.createAtionButton("mkdir", CreateNewFolder, "Crear nueva carpeta"), 
-									this.createAtionButton("upload", CloudUpload, "Subir"),
-									this.createAtionButton("selectemode", SelectAll, "Hacer seleccion")
-								]
-						}
-				 	</div>
-				 </Fade>
-				}
+               {
+                 currentType == "folder" &&
+                 [
+                 this.createAtionButton("mkdir", CreateNewFolder, "Crear nueva carpeta"),
+                 this.createAtionButton("upload", CloudUpload, "Subir"),
+                 this.createAtionButton("selectemode", SelectAll, "Hacer seleccion")
+                 ]
+               }
+             </div>
+           </Fade>
+         }
 
-		        {currentType=="folder"&&
-		        <Fade in={currentType=="folder"}>
-			        <div className={classes.root} id="folder">
-				       
-						{!isSelecteMode&&
-							<Hidden xsDown>
-								<span>
-								 <SearchBar
-								 	style={{boxShadow:"none"}}
-								 	//searchIcon={<span></span>}
-								 	//closeIcon={<span></span>}
-								    //value={this.state.value}
-									placeholder={"Filtrar"}
-								   	onChange={(newValue) => this.onFilterChange(newValue)}
-								    //onRequestSearch={() => doSomethingWith(this.state.value)}
-								  />
-						        </span>
-					        </Hidden>
-				    	}
+         {currentType=="folder"&&
+           <Fade in={currentType=="folder"}>
+             <div className={classes.root} id="folder">
 
-				    	
+               {!isSelecteMode&&
+                 <Hidden xsDown>
+                   <span>
+                     <SearchBar
+                       style={{boxShadow:"none"}}
+                       //searchIcon={<span></span>}
+                       //closeIcon={<span></span>}
+                       //value={this.state.value}
+                       placeholder={"Filtrar"}
+                       onChange={(newValue) => this.onFilterChange(newValue)}
+                       //onRequestSearch={() => doSomethingWith(this.state.value)}
+                     />
+                   </span>
+                 </Hidden>
+               }
 
-				    	{isSelecteMode&&
-					        <div id="selection" className={ classes.root +" "+classes.selection }>
-						        <Fade in={isSelecteMode}>
-							        <div className={classes.root}>
-							        		
-							        	<div className={classes.root + " " + classes.actionIcos}>
-									        
-											{
-												[
-													this.createAtionButton("selectemode", ArrowBack, "Atras"),
-													this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
-													this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
-												]
-											}
-									       
+
+
+               {isSelecteMode&&
+                 <div id="selection" className={ classes.root +" "+classes.selection }>
+                   <Fade in={isSelecteMode}>
+                     <div className={classes.root}>
+
+                       <div className={classes.root + " " + classes.actionIcos}>
+
+                         {
+                           [
+                           this.createAtionButton("selectemode", ArrowBack, "Atras"),
+                           this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
+                           this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
+                           ]
+                         }
+
 									       {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
-									          <FilterNone />
-									        </IconButton>}
+                           <FilterNone />
+                         </IconButton>}
 
-									        {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
-									          <FlipToFront />
-									        </IconButton>}
-									 	</div>
-								 		<div className={classes.info}>
-								 			
-								 			<Zoom in={anySelecte} ><Chip label={`${selecteds.count()}  (${filesize(sizeOfSelection)})`}  /></Zoom>
-								 			{/*<Typography variant="body2">Selecionados: {selecteds.count()}</Typography>*/}
+                         {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"move"})} disabled={!anySelecte} color="primary" component="span">
+                           <FlipToFront />
+                         </IconButton>}
+                       </div>
+                       <div className={classes.info}>
 
-								 		</div>
+                         <Zoom in={anySelecte} ><Chip label={`${selecteds.count()}  (${filesize(sizeOfSelection)})`}  /></Zoom>
+                         {/*<Typography variant="body2">Selecionados: {selecteds.count()}</Typography>*/}
 
-							        </div>
-							 	</Fade>
-					        </div>
-					    }
+                       </div>
 
-					    <div className={classes.order}>
-				    		<div><OrderSelect/></div>
-				    	</div>
-						
-					</div>
-				</Fade>
-				}
-				
-				{currentType=="file"&&
-				<div id="file">
-					<Fade in={currentType=="file"}>
-						<div className={classes.root + " " + classes.actionIcos}> 
-							{
-								[
-									this.createAtionButton("downloadFile", CloudDownload, "Descargar"),
-								]
-							}
-						</div>
-					</Fade>
-				</div>}
-	        </div>
+                     </div>
+                   </Fade>
+                 </div>
+               }
+
+               <div className={classes.order}>
+                 <div><OrderSelect/></div>
+               </div>
+
+             </div>
+           </Fade>
+         }
+
+         {currentType=="file"&&
+           <div id="file">
+             <Fade in={currentType=="file"}>
+               <div className={classes.root + " " + classes.actionIcos}>
+                 {
+                   [
+                   this.createAtionButton("downloadFile", CloudDownload, "Descargar"),
+                   ]
+                 }
+               </div>
+             </Fade>
+           </div>}
+       </div>
 	    )
 	}
 

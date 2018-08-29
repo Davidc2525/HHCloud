@@ -9,8 +9,11 @@ import {move,copy} from "./operations/MoveOrCopyOperation.js"
 import apiUser, {
 	GetAccountStatusOperation,
 	GetUserOperation,
+	UpdateUserOperation,
 	CreateUserOperation,
+	SendVerifyEmailOperation,
 	SendRecoveryEmailOperation,
+	ChangePasswordOperation,
 	ChangePasswordByRecoverOperation
 } from "./user/index.js"
 import {
@@ -47,7 +50,10 @@ class Api {
 		this.registerOperation("accountstatus", GetAccountStatusOperation)
 		this.registerOperation("getuser", GetUserOperation)
 		this.registerOperation("createuser", CreateUserOperation)
+		this.registerOperation("updateuser", UpdateUserOperation)
 		this.registerOperation("sendrecoveryemail", SendRecoveryEmailOperation)
+		this.registerOperation("sendverifyemail", SendVerifyEmailOperation)
+		this.registerOperation("changepassword", ChangePasswordOperation)
 		this.registerOperation("changepasswordbyrecover", ChangePasswordByRecoverOperation)
 	}
 

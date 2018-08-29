@@ -28,7 +28,7 @@ import {SubmissionError} from 'redux-form/immutable'
 
 import {Login} from "./Login.jsx"
 import {Register} from "./RegisterForm.jsx"
-import {RecoverPassword} from "./RecoverPassword.jsx" 
+import {RecoverPassword} from "./RecoverPassword.jsx"
 
 import { bindKeyboard } from 'react-swipeable-views-utils';
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
@@ -47,7 +47,7 @@ const validate = values => {
   ) {
     errors.email = 'La direccion de correo no es valida.';
   }
- 
+
   return errors
 }
 const warn = values => {
@@ -73,61 +73,61 @@ function TextMaskCustom(props) {
 }
 const renderFieldToken = ({showIn,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
     >
 
-    <Input
-      {...input}
-      type={type}
-      label={label}
-      //helperText={touched&&(error&&error || warning && warning)}
-      //placeholder={label}
-      inputComponent={TextMaskCustom}
-      onChange={event=>console.warn( event.target.value.split("-").join(""))}
-      fullWidth
-      margin="normal"
-    />
+      <Input
+        {...input}
+        type={type}
+        label={label}
+        //helperText={touched&&(error&&error || warning && warning)}
+        //placeholder={label}
+        inputComponent={TextMaskCustom}
+        onChange={event=>console.warn( event.target.value.split("-").join(""))}
+        fullWidth
+        margin="normal"
+      />
     </Tooltip>
   </div>
 )
 const renderField = ({showIn,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
     >
 
-    <TextField
-      {...input}
-      type={type}
-      label={label}
-      //helperText={touched&&(error&&error || warning && warning)}
-      //placeholder={label}
+      <TextField
+        {...input}
+        type={type}
+        label={label}
+        //helperText={touched&&(error&&error || warning && warning)}
+        //placeholder={label}
 
-      fullWidth
-      margin="normal"
-    />
+        fullWidth
+        margin="normal"
+      />
     </Tooltip>
   </div>
 )
 const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}}) => (
 	<div>
-	
+
 	  <Grid style={{width:"100%",
-					alignItems: "center",
-				    width: "100%",
-				    justifyContent: "left"}} 
+      alignItems: "center",
+      width: "100%",
+    justifyContent: "left"}}
 			container spacing={8}>
-					
-		    <Grid item >
+
+      <Grid item >
 				<Typography variant="body1" gutterBottom>{label}</Typography>
-		    </Grid>
-		     
-			<Grid item >		
+      </Grid>
+
+			<Grid item >
 				<Switch
 					{...input}
 					checked={input.value ? true : false}
@@ -137,10 +137,10 @@ const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}
 					//placeholder={label}
 					fullWidth
 					margin="normal"
-				/>
-			</Grid>	
+    />
+			</Grid>
 
-	    </Grid>
+    </Grid>
 	</div>
 )
 
@@ -237,63 +237,63 @@ class AuthArea extends React.Component{
 	render(){
 		console.warn(this.props);
 		const {classes,handleSubmit,invalid, pristine, reset,error, anyTouched,submitting} = this.props;
-		
+
 		return (
 		  <div className={classes.root}>
-		      <Grid className={classes.gRoot} container spacing={8}>
-		       
-		        <Grid item xs={12}>
-		          <Paper elevation={4} className={classes.paper}>
+        <Grid className={classes.gRoot} container spacing={8}>
+
+          <Grid item xs={12}>
+            <Paper elevation={4} className={classes.paper}>
 		         	<Grid container direction="row" alignItems="center" justify="center" >
 		         		<Grid item>
-		         			 <Typography variant="headline">
-					          	HHCloud
-					          </Typography>
+                  <Typography variant="headline">
+                    HHCloud
+                  </Typography>
 		         		</Grid>
 		         	</Grid>
 		          <SwipeableViews
 		          	style={{height:"auto"}}
 		          	animateHeight
-			         // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
 			          index={this.props.index}
 			          onChangeIndex={this.handleChangeIndex}
-			        >
-		          
-		          		{true&&<Login index={this.props.index}/>}
-				    
-				    	{true&&<Register index={this.props.index}/>}
-				    
-				    	{true&&<RecoverPassword index={this.props.index}/>}
-				    
-				    </SwipeableViews>
-		          </Paper>
-		        </Grid>
-		      
-		      </Grid> 
-		      {true&&
-		      	<Grid style={{width:"100%",justifyContent:"center"}} container spacing={8}>
-				
+            >
+
+                {true&&<Login index={this.props.index}/>}
+
+                {true&&<Register index={this.props.index}/>}
+
+                {true&&<RecoverPassword index={this.props.index}/>}
+
+              </SwipeableViews>
+            </Paper>
+          </Grid>
+
+        </Grid>
+        {true&&
+          <Grid style={{width:"100%",justifyContent:"center"}} container spacing={8}>
+
 		        <Grid item >
-					{this.props.index!=2&&<Button onClick={_=>this.setIndex(2)}>Olvide mi contraseña</Button>}
+              {this.props.index!=2&&<Button onClick={_=>this.setIndex(2)}>Olvide mi contraseña</Button>}
 		        </Grid>
-		         
-				<Grid item >		
-					{this.props.index!=1&&
-						<Button onClick={_=>this.setIndex(1)} type="button" variant="contained" color="secondary" className={classes.button}>
-							Registrarte
-						</Button>
-					}
- 				</Grid>	
- 				<Grid item >
-					{this.props.index!=0&&
-						<Button onClick={_=>this.setIndex(0)} type="button" variant="contained" color="secondary" className={classes.button}>
-							Ingresar
-						</Button>
-					}
- 				</Grid>
+
+            <Grid item >
+              {this.props.index!=1&&
+                <Button onClick={_=>this.setIndex(1)} type="button" variant="contained" color="secondary" className={classes.button}>
+                  Registrarte
+                </Button>
+              }
+            </Grid>
+            <Grid item >
+              {this.props.index!=0&&
+                <Button onClick={_=>this.setIndex(0)} type="button" variant="contained" color="secondary" className={classes.button}>
+                  Ingresar
+                </Button>
+              }
+            </Grid>
 
 		      </Grid>}
-		</div>
+      </div>
 
 		)
 	}

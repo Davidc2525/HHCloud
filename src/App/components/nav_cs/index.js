@@ -19,13 +19,13 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 //import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
- 
+
 const drawerWidth = 240;
 
 const styles = theme => (window.theme=theme,{
   root: {
     flexGrow: 1,
-    
+
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -84,7 +84,7 @@ class ResponsiveDrawer extends React.Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
- 
+
 
   handleChange = (event, checked) => {
     this.setState({ auth: checked });
@@ -103,73 +103,73 @@ class ResponsiveDrawer extends React.Component {
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
     const auth = this.props.auth;
-    const dataUser = auth.get("dataUser",null);
+    const dataUser = auth.getIn(["dataUser","user"],null);
     var displayName = "";
     if(dataUser!=null){
-      displayName = dataUser.get("displayName")
+      displayName = dataUser.get("lastName")+" "+dataUser.get("firstName")
     }
 
     const position  = (currentType=="folder")?"fixed":"absolute"
 
     return (
-     
+
        <div>
-          <AppBar style={{position}} color="primary" className={classes.appBar}>
+         <AppBar style={{position}} color="primary" className={classes.appBar}>
 
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={this.props.handleDrawerToggle}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
+           <Toolbar>
+             <IconButton
+               color="inherit"
+               aria-label="open drawer"
+               onClick={this.props.handleDrawerToggle}
+               className={classes.navIconHide}
+             >
+               <MenuIcon />
+             </IconButton>
 
-            <div className={classes.flex}>
-              <Typography variant="title" color="inherit"  noWrap>
-                {this.props.app.get("name")}
-              </Typography>
-            </div>
+             <div className={classes.flex}>
+               <Typography variant="title" color="inherit"  noWrap>
+                 {this.props.app.get("name")}
+               </Typography>
+             </div>
 
-            <div>
+             <div>
 
-              
+
                <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
+                 aria-owns={open ? 'menu-appbar' : null}
+                 aria-haspopup="true"
+                 onClick={this.handleMenu}
+                 color="inherit"
+               >
+                 <AccountCircle />
+               </IconButton>
+               <Menu
+                 id="menu-appbar"
+                 anchorEl={anchorEl}
+                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
-                  }}
-                  transformOrigin={{
+                 }}
+                 transformOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.handleClose}>Inicio</MenuItem>
-                  <MenuItem onClick={this.handleClose}>{displayName}</MenuItem>
+                 }}
+                 open={open}
+                 onClose={this.handleClose}
+               >
+                 <MenuItem onClick={this.handleClose}>Inicio</MenuItem>
+                 <MenuItem onClick={this.handleClose}>{displayName}</MenuItem>
                 </Menu>
-              
+
 
             </div>
-            
+
 
           </Toolbar>
         </AppBar>
        </div>
-        
-      
+
+
     );
   }
 }

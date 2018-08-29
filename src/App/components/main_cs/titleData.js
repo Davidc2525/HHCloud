@@ -11,6 +11,7 @@ import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReportIcon from '@material-ui/icons/Report';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import {connect} from "react-redux"
 import {Link} from "react-router-dom"
 import {withRouter} from "react-router"
@@ -46,13 +47,13 @@ const style = theme => ({
 
 
 const ButtonLink = withRouter(({ history ,...rest}) => (
-  <Button 
+  <Button
   {...rest}
    onClick={() => { store.dispatch(push("/SC/unidad#/"))}}
-   variant="extendedFab" color="primary" aria-label="unidad" >   
+   variant="extendedFab" color="primary" aria-label="unidad" >
     Mi Unidad
   </Button>
- 
+
 ));
 
 /*
@@ -74,7 +75,7 @@ class SideVarContent extends React.Component{
 
 
   getTotalProgress(){
-     
+
       var dls = this.props.dl.toJS();
 
       var data = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.payload.loaded}));
@@ -100,57 +101,54 @@ class SideVarContent extends React.Component{
 
 
   render(){
-    const {location,history,count,classes} = this.props; 
+    const {location,history,count,classes} = this.props;
     return (
 
       <div>
         {/*ir a unidad*/}
-        <ListItem>  
+        <ListItem>
 
           <ButtonLink className={classes.button}  {...this.props}/>
-          
-        </ListItem>    
+
+        </ListItem>
 
         {/*inicio*/}
         <ListItem button onClick={()=>{
-           store.dispatch(push("/SC/"))
-          }}>
+          store.dispatch(push("/SC/"))
+        }}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Control" />
-        </ListItem>  
+        </ListItem>
+
+        {/*Perfil*/}
+        <ListItem button onClick={()=>{
+          store.dispatch(push("/SC/account"))
+        }}>
+          <ListItemIcon>
+            <AccountCircleIcon />
+          </ListItemIcon>
+          <ListItemText primary="cuenta" />
+        </ListItem>
 
         {/*descargas*/}
         <ListItem button onClick={()=>{
-           store.dispatch(push("/SC/download"))
-          }}>
+          store.dispatch(push("/SC/download"))
+        }}>
           <ListItemIcon>
             <CloudDownload />
           </ListItemIcon>
 
           {count>0?
             <ListItemText primary="Descarga" secondary={`${count}, (${filesize(this.getTotalSpeedDownload())}/s)`} />
-            :
-            <ListItemText primary="Descarga"  />
+          :
+          <ListItemText primary="Descarga"  />
           }
         </ListItem>
-       {count>0&& <LinearProgress value={this.getTotalProgress()} variant="determinate"/>}
+        {count>0&& <LinearProgress value={this.getTotalProgress()} variant="determinate"/>}
 
-       
 
-        <ListItem button>
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <ListItemText primary="Send mail" />
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <DraftsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Drafts" />
-        </ListItem>
       </div>
       )
   }

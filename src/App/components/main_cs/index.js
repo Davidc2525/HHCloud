@@ -22,16 +22,16 @@ import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router'
 import _ from "lodash"
 import logo from "../../../media/img/logop.png"
-import Index from "../index/index.js"
+//import Index from "../index/index.js"
 import DownloadViewer from "../download_viewer/index.js"
 import PahtSee from "../path_see/index.js"
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 /**/
 
-import Exprorer from "../explorer/Explorer.jsx"
+//import Exprorer from "../explorer/Explorer.jsx"
 
- 
+
 import Loadable from 'react-loadable';
 function Loading(props) {
   if (props.error) {
@@ -39,19 +39,31 @@ function Loading(props) {
   } else {
     return <div><img src={logo}/></div>;
   }
-} 
-const  Exprorer2 = Loadable({
+}
+const  Exprorer = Loadable({
     loader: () =>
       import ('../explorer/Explorer.jsx'),
     loading: Loading
   });
+
+const  Account = Loadable({
+    loader: () =>
+      import ('../profile/index.jsx'),
+    loading: Loading
+  });
+
+const  Index = Loadable({
+    loader: () =>
+      import ("../index/index.js"),
+  loading: Loading
+});
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    
+
     zIndex: 1,
     //flexDirection:"column",
     position: 'relative',
@@ -72,7 +84,7 @@ const styles = theme => ({
   navIconHide: {
     [theme.breakpoints.up('md')]: {
       display: 'none',
-    }, 
+    },
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
@@ -84,7 +96,7 @@ const styles = theme => ({
   },
   content: {
     boxSizing: "border-box",
-   
+
     //height: "100%",
     width:"100%",
     flexGrow: 1,
@@ -92,7 +104,7 @@ const styles = theme => ({
 
     [theme.breakpoints.up('sm')]: {
       padding: theme.spacing.unit * 0,
-      
+
     },
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing.unit * 0,
@@ -109,7 +121,7 @@ const styles = theme => ({
       color: theme.palette.text.secondary,
     }
 
-   
+
   },
 });
 
@@ -121,14 +133,14 @@ const getBeforePath = (path,index)=>{
 
 
 const ButtonLink = withRouter(({ history }) => (
-  <Button 
+  <Button
    onClick={() => { history.push('/SC/unidad#/') }}
    variant="extendedFab" color="primary" aria-label="delete" >
-    
+
     <NavigationIcon  />
     Mi Unidad
   </Button>
- 
+
 ));
 
 @withStyles(styles, { withTheme: true })
@@ -153,44 +165,44 @@ class ResponsiveDrawer extends React.Component {
           <img width="110px" style={{marginLeft:"60px"}} src={logo}/>
         </div>
         <Divider />
-        
-       
-        
+
+
+
         <Divider />
         <List><SideVarContent/></List>
         <Divider />
         <List>{otherMailFolderListItems}</List>
-           {/*<div id="footer" className={classes.footer} >
-              <div className={classes.footer}>
-                <Grid className={classes.rootGrid} container justify="center" >
+        {/*<div id="footer" className={classes.footer} >
+          <div className={classes.footer}>
+          <Grid className={classes.rootGrid} container justify="center" >
 
-                    <Grid item xs={12}>
-                      <Paper className={classes.paper}>xs=12</Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Paper className={classes.paper}>xs=12 sm=6</Paper>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                    </Grid>
-                    <Grid item xs={6} sm={3}>
-                      <Paper className={classes.paper}>xs=6 sm=3</Paper>
-                    </Grid>
+          <Grid item xs={12}>
+          <Paper className={classes.paper}>xs=12</Paper>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+          <Paper className={classes.paper}>xs=12 sm=6</Paper>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+          <Paper className={classes.paper}>xs=12 sm=6</Paper>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+          <Paper className={classes.paper}>xs=6 sm=3</Paper>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+          <Paper className={classes.paper}>xs=6 sm=3</Paper>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+          <Paper className={classes.paper}>xs=6 sm=3</Paper>
+          </Grid>
+          <Grid item xs={6} sm={3}>
+          <Paper className={classes.paper}>xs=6 sm=3</Paper>
+          </Grid>
 
 
 
-                </Grid>
-              </div>
-            </div>*/}
+          </Grid>
+          </div>
+        </div>*/}
 
       </div>
     );
@@ -212,7 +224,7 @@ class ResponsiveDrawer extends React.Component {
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
             }}
-          > 
+          >
             {drawerContent}
           </SwipeableDrawer>
         </Hidden>
@@ -233,30 +245,31 @@ class ResponsiveDrawer extends React.Component {
 
         <main id="Content" className={classes.content}>
           <div className={classes.toolbar} />
-       {/* <ReactResizeDetector  handleHeight  onResize={this.debounced.bind(this)}>
-                
-               </ReactResizeDetector>
-       */}
-        
-             
-           
-            
-            <Switch>
+          {/* <ReactResizeDetector  handleHeight  onResize={this.debounced.bind(this)}>
 
-                <Route path="/SC/unidad" component={Exprorer}/>
-               
-                {/*esta rruta es para ese componente
-                    en components/nuevo_cs
-                */}
-                <Route exact path="/SC" component={Index}/>
-                <Route exact path="/SC/download" component={DownloadViewer}/>
+            </ReactResizeDetector>
+          */}
 
-                <Route  component={()=><div>Andas perdido?</div>}/>
-            </Switch>
-            
-           
+
+
+
+          <Switch>
+
+            <Route path="/SC/unidad" component={Exprorer}/>
+
+            {/*esta rruta es para ese componente
+              en components/nuevo_cs
+            */}
+            <Route exact path="/SC" component={Index}/>
+            <Route exact path="/SC/download" component={DownloadViewer}/>
+            <Route exact path="/SC/account" component={Account}/>
+
+            <Route  component={()=><div>Andas perdido?</div>}/>
+          </Switch>
+
+
         </main>
-        
+
       </div>
     );
   }

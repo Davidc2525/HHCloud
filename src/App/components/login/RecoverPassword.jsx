@@ -32,43 +32,43 @@ function TextMaskCustom(props) {
 
   return (
     <MaskedInput
-		style = {
-			{
-				width: "100%",
-				fontSize: "30px",
-				"textAlign": "center",
-				outline: "transparent",
-				border: "none",
-			}
-		}
-		{...other}
-		ref={inputRef}
-		mask={[/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/]}
-		placeholderChar={'\u2000'}
-		showMask
-    />
+      style = {
+        {
+          width: "100%",
+          fontSize: "30px",
+          "textAlign": "center",
+          outline: "transparent",
+          border: "none",
+        }
+      }
+      {...other}
+      ref={inputRef}
+      mask={[/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/,'-',/[A-Z0-9]/]}
+        placeholderChar={'\u2000'}
+        showMask
+           />
   );
 }
 const renderFieldToken = ({disabled,showIn,className,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Typography variant="subheading">Codigo de verificacion</Typography>
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
     >
-    <Input
-		{...input}
-		type={type}
-		label={label}
-		helperText={"Codigo de verificacion"}
-		//placeholder={label}
-		inputComponent={TextMaskCustom}
-		onChange={event=>console.warn( event.target.value.split("-").join(""))}
-		fullWidth
-		margin="normal"
-    	disabled={disabled}
-    />
+      <Input
+        {...input}
+        type={type}
+        label={label}
+        helperText={"Codigo de verificacion"}
+        //placeholder={label}
+        inputComponent={TextMaskCustom}
+        onChange={event=>console.warn( event.target.value.split("-").join(""))}
+        fullWidth
+        margin="normal"
+        disabled={disabled}
+      />
     </Tooltip>
   </div>
 )
@@ -76,22 +76,22 @@ const renderFieldToken = ({disabled,showIn,className,index,input, label, type, m
 
 const renderField = ({showIn,disabled,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
     >
 
-    <TextField
-      {...input}
-      type={type}
-      label={label}
-      //helperText={touched&&(error&&error || warning && warning)}
-      //placeholder={label}
-      disabled={disabled}
-      fullWidth
-      margin="normal"
-    />
+      <TextField
+        {...input}
+        type={type}
+        label={label}
+        //helperText={touched&&(error&&error || warning && warning)}
+        //placeholder={label}
+        disabled={disabled}
+        fullWidth
+        margin="normal"
+      />
     </Tooltip>
   </div>
 )
@@ -179,7 +179,7 @@ const validateRecover = values => {
   	errors.repeatedpassword = "La contraseñas no coinciden."
   }
 
- 
+
   if (!values.get('email')) {
     errors.email = 'Requerido.'
   } else if (
@@ -187,14 +187,14 @@ const validateRecover = values => {
   ) {
     errors.email = 'La direccion de correo no es valida.';
   }
- 
+
   return errors
 }
 
 
 @withStyles(styles,{withTheme:true})
 @reduxForm({
-  form: 'recoverPassword', 
+  form: 'recoverPassword',
   validate:validateRecover
 })
 class RecoverPassword extends React.Component{
@@ -209,7 +209,7 @@ class RecoverPassword extends React.Component{
 	onSubmitEmail(values){
 		const email = values.get("email");
 
-		
+
 		return new Promise((re,rej)=>{
 			api.instance.callOperation("sendrecoveryemail", {
 				email,
@@ -285,12 +285,12 @@ class RecoverPassword extends React.Component{
 		<div style={{height:"290px"}}>
 			<div index={this.state.step}>
 				{this.state.step==0&&<div >
-					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==0}>	
-					
-					<form autoComplete="on" onSubmit={handleSubmit(this.onSubmitEmail.bind(this))}>
+					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==0}>
+
+            <form autoComplete="on" onSubmit={handleSubmit(this.onSubmitEmail.bind(this))}>
 				      <Grid className={classes.normalizeGrid} container  direction="column" justify="center" >
 				      	<Grid item>
-					      	 <Field
+                  <Field
 					      	 	disabled={submitting}
 					      	 	index={index}
 					      	 	showIn={2}
@@ -302,39 +302,37 @@ class RecoverPassword extends React.Component{
 				      	</Grid>
 
 
-				      	<Grid container direction="row" justify="flex-end" >
-				      		<Grid item >	
-							       <Tooltip
-							       	 open={(!submitting&&anyTouched&&invalid&&index==2&&error)}
-							       	 title={error}
-							       >
-							       <div className={classes.wrapper}>
+				      	<Grid container direction="row" justify="flex-end">
+				      		<Grid item >
+                    <Tooltip
+                      open={(!submitting&&anyTouched&&invalid&&index==2&&error)}
+                      title={error}
+                    >
+                      <div className={classes.wrapper}>
 							          <Button
 							            variant="contained"
 							            color="primary"
 							            disabled={submitting}
-							            type="submit"
-							          >
-							            Enviar
+                 type="submit">
+                          Enviar
 							          </Button>
 							          {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 							        </div>
-							       </Tooltip>
-							</Grid>	
+                    </Tooltip>
+                  </Grid>
 				      	</Grid>
-
 				      </Grid>
 				    </form>
-				    </Slide>
+          </Slide>
 				</div>}
-
+        
 				{this.state.step==1&&<div>
-					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==1}>	
-					
-				<form autoComplete="on" onSubmit={handleSubmit(this.onSubmitNewPassword.bind(this))}>
+					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==1}>
+
+            <form autoComplete="on" onSubmit={handleSubmit(this.onSubmitNewPassword.bind(this))}>
 				      <Grid className={classes.normalizeGrid} container direction="column" justify="center" >
 				      	<Grid item>
-					      	 <Field
+                  <Field
 					      	 	disabled={submitting}
 					      	 	index={index}
 					      	 	showIn={2}
@@ -347,7 +345,7 @@ class RecoverPassword extends React.Component{
 				      	</Grid>
 
 				      	<Grid item>
-					      	 <Field
+                  <Field
 					      	 	disabled={submitting}
 					      	 	index={index}
 					      	 	showIn={2}
@@ -359,7 +357,7 @@ class RecoverPassword extends React.Component{
 				      	</Grid>
 
 				      	<Grid item>
-					      	 <Field
+                  <Field
 					      	 	disabled={submitting}
 					      	 	index={index}
 					      	 	showIn={2}
@@ -372,55 +370,54 @@ class RecoverPassword extends React.Component{
 
 
 				      	<Grid container direction="row" justify="flex-end" >
-				      		<Grid item >	
-							       <Tooltip
-							       	 open={(!submitting&&anyTouched&&invalid&&index==2&&error)}
-							       	 title={error}
-							       >
-							       <div className={classes.wrapper}>
+				      		<Grid item>
+                    <Tooltip
+                      open={(!submitting&&anyTouched&&invalid&&index==2&&error)}
+                      title={error}
+                    >
+                      <div className={classes.wrapper}>
 							          <Button
 							            variant="contained"
 							            color="primary"
 							            disabled={submitting}
 							            type="submit"
-							          >
+                          >
 							            Cambiar
 							          </Button>
 							          {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
 							        </div>
-							       </Tooltip>
-							</Grid>	
+                    </Tooltip>
+                  </Grid>
 				      	</Grid>
-
 				      </Grid>
 				    </form>
-				    </Slide>
+          </Slide>
 				</div>}
 
 
 				{this.state.step==2&&<div>
-					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==2}>	
-					
-					<Grid className={classes.normalizeGrid} container direction="row" alignItems="center" justify="center"  >
-			      		<Grid item >	
-						       
-				     
-				          <Button
-				          	onClick={_=>{this.setState({step:0}),this.props.dispatch(push("/SC/login#0"))}}
-				            variant="contained"
-				            color="primary"
-				          >
-				            Ingresar
-				          </Button>
-				       
-			      		</Grid>	
-						       
-			      	</Grid>
-			      	</Slide>
-				</div>}
-		    </div>
+					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==2}>
 
-      	</div>
+            <Grid className={classes.normalizeGrid} container direction="row" alignItems="center" justify="center"  >
+              <Grid item >
+
+
+                <Button
+                  onClick={_=>{this.setState({step:0}),this.props.dispatch(push("/SC/login#0"))}}
+                  variant="contained"
+                  color="primary"
+                >
+                  Ingresar
+                </Button>
+
+              </Grid>
+
+            </Grid>
+          </Slide>
+				</div>}
+      </div>
+
+    </div>
 
 		)
 	}

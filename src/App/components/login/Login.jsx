@@ -21,14 +21,13 @@ import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SwipeableViews from 'react-swipeable-views';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import {Field, reduxForm} from 'redux-form/immutable'
+import {Field, reduxForm,SubmissionError} from 'redux-form/immutable'
 import {LoginSubmit,submitRegister} from "./submit.js"
 import MaskedInput from 'react-text-mask';
 import Tooltip from '@material-ui/core/Tooltip';
-import {SubmissionError} from 'redux-form/immutable'
 import Fade from '@material-ui/core/Fade';
 import Slide from '@material-ui/core/Slide';
-import {RecoverPassword} from "./RecoverPassword.jsx" 
+import {RecoverPassword} from "./RecoverPassword.jsx"
 
 import { bindKeyboard } from 'react-swipeable-views-utils';
 
@@ -47,7 +46,7 @@ const validate = values => {
   ) {
     errors.email = 'La direccion de correo no es valida.';
   }
- 
+
   return errors
 }
 const warn = values => {
@@ -66,68 +65,68 @@ function TextMaskCustom(props) {
       {...other}
       ref={inputRef}
       mask={[/[A-Z]/,'-',/[A-Z]/,'-',/[A-Z]/,'-',/[1-9]/,'-',/[1-9]/,'-',/[1-9]/,'-',/[1-9]/,'-',/[1-9]/,'-',/[1-9]/,'-',/[1-9]/,'-',/[1-9]/]}
-      placeholderChar={'\u2000'}
-      showMask
-    />
+        placeholderChar={'\u2000'}
+        showMask
+           />
   );
 }
 const renderFieldToken = ({showIn,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
     >
 
-    <Input
-      {...input}
-      type={type}
-      label={label}
-      //helperText={touched&&(error&&error || warning && warning)}
-      //placeholder={label}
-      inputComponent={TextMaskCustom}
-      onChange={event=>console.warn( event.target.value.split("-").join(""))}
-      fullWidth
-      margin="normal"
-    />
+      <Input
+        {...input}
+        type={type}
+        label={label}
+        //helperText={touched&&(error&&error || warning && warning)}
+        //placeholder={label}
+        inputComponent={TextMaskCustom}
+        onChange={event=>console.warn( event.target.value.split("-").join(""))}
+        fullWidth
+        margin="normal"
+      />
     </Tooltip>
   </div>
 )
 const renderField = ({showIn,disabled,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
     >
 
-    <TextField
-      {...input}
-      type={type}
-      label={label}
-      //helperText={touched&&(error&&error || warning && warning)}
-      //placeholder={label}
-      disabled={disabled}
-      fullWidth
-      margin="normal"
-    />
+      <TextField
+        {...input}
+        type={type}
+        label={label}
+        //helperText={touched&&(error&&error || warning && warning)}
+        //placeholder={label}
+        disabled={disabled}
+        fullWidth
+        margin="normal"
+      />
     </Tooltip>
   </div>
 )
 const renderFieldChekbox = ({input,disabled, label, type, meta: {touched, error, warning}}) => (
 	<div>
-	
+
 	  <Grid style={{width:"100%",
-					alignItems: "center",
-				    width: "100%",
-				    justifyContent: "left"}} 
+      alignItems: "center",
+      width: "100%",
+    justifyContent: "left"}}
 			container spacing={8}>
-					
-		    <Grid item >
+
+      <Grid item >
 				<Typography variant="body1" gutterBottom>{label}</Typography>
-		    </Grid>
-		     
-			<Grid item >		
+      </Grid>
+
+			<Grid item >
 				<Switch
 					{...input}
 					disabled={disabled}
@@ -138,10 +137,10 @@ const renderFieldChekbox = ({input,disabled, label, type, meta: {touched, error,
 					//placeholder={label}
 					fullWidth
 					margin="normal"
-				/>
-			</Grid>	
+    />
+			</Grid>
 
-	    </Grid>
+    </Grid>
 	</div>
 )
 
@@ -241,7 +240,7 @@ class Login extends React.Component{
 			setTimeout(_=>{auth.Auth.setStateLogin()},3000)
 			this.setState({successLogin:true})
 			//setTimeout(_=>{this.setState({successLogin:false})},3000)
-		}).catch(x => {	
+		}).catch(x => {
 			if (x.username != null) {
 				throw new SubmissionError({
 					email: x.username,
@@ -263,99 +262,99 @@ class Login extends React.Component{
 	render(){
 		console.warn(this.props);
 		const {classes,handleSubmit,invalid, pristine, reset,error, anyTouched,submitting} = this.props;
-		
-		return (		          
+
+		return (
           	<div>
           		{this.state.successLogin&&
-	          		<Slide direction="up" mountOnEnter unmountOnExit in={this.state.successLogin}>	
+	          		<Slide direction="up" mountOnEnter unmountOnExit in={this.state.successLogin}>
 	          			<div>
-		          			<Grid container direction="column" alignItems="center" justify="space-evenly"  
-		          			style={{justifyContent:"space-evenly",height:"260px"}}>
+		          			<Grid container direction="column" alignItems="center" justify="space-evenly"
+                      style={{justifyContent:"space-evenly",height:"260px"}}>
 		          				<Grid item>
-							      	<Typography variant="display3">
-							      		Bienvenido!
-							      	</Typography>
-						      	</Grid>
-						      	<Grid item>
-							      	<Typography variant="title">
-							      		Estamos cargando tu informacion.	
-							      	</Typography>
-						      	</Grid>
-						      	<Grid style={{marginTop:"15px"}} item>
-							      	<CircularProgress size={40} />
-						      	</Grid>
-							</Grid>
+                        <Typography variant="display3">
+                          Bienvenido!
+                        </Typography>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="title">
+                          Estamos cargando tu informacion.
+                        </Typography>
+                      </Grid>
+                      <Grid style={{marginTop:"15px"}} item>
+                        <CircularProgress size={40} />
+                      </Grid>
+                    </Grid>
 	          			</div>
-	          		</Slide>	
+	          		</Slide>
           		}
-				{!this.state.successLogin && 
-					<Slide direction="up" mountOnEnter unmountOnExit in={!this.state.successLogin}>	
-						<form autoComplete="on" onSubmit={handleSubmit(this.handleSubmitForm.bind(this))}>
-					    	<Grid container direction="column" justify="flex-start" >
-						      	<Grid item>
-							      	 <Field
-							      	 	disabled={submitting}
-							      	 	index={this.props.index}
-							      	 	showIn={0}
-								        name="email"
-								        type="text"
-								        component={renderField}
-								        label="Correo"
-								         InputProps={{
-								          startAdornment: (
-								            <InputAdornment position="start">
-								              <AccountCircle />
-								            </InputAdornment>
-								          ),
-								        }}
-								      />
-						      	</Grid>
+              {!this.state.successLogin &&
+                <Slide direction="up" mountOnEnter unmountOnExit in={!this.state.successLogin}>
+                  <form autoComplete="on" onSubmit={handleSubmit(this.handleSubmitForm.bind(this))}>
+                    <Grid container direction="column" justify="flex-start" >
+                      <Grid item>
+                        <Field
+                          disabled={submitting}
+                          index={this.props.index}
+                          showIn={0}
+                          name="email"
+                          type="text"
+                          component={renderField}
+                          label="Correo"
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <AccountCircle />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
 
-						      	<Grid item>
-						      		 <Field
-						      		 	disabled={submitting} 
-						      		 	index={this.props.index}
-						      		 	showIn={0}
-								      	name="password" 
-								      	type="password" 
-								      	component={renderField} 
+                      <Grid item>
+                        <Field
+                          disabled={submitting}
+                          index={this.props.index}
+                          showIn={0}
+                          name="password"
+                          type="password"
+                          component={renderField}
 								      	label="Contraseña" />
-						      	</Grid>
+                      </Grid>
 
-						      	<Grid item>
-							      	 <Field
-							      	 	disabled={submitting} 
-								      	name="remember" 				      
-								      	component={renderFieldChekbox} 
+                      <Grid item>
+                        <Field
+                          disabled={submitting}
+                          name="remember"
+                          component={renderFieldChekbox}
 								      	label="Recordar" />
-							     
-						      	</Grid>
 
-						      	<Grid container direction="row" justify="flex-end" >
-						      		<Grid item >	
-									       <Tooltip
-									       	 open={(!submitting&&anyTouched&&invalid&&this.props.index==0&&error)}
-									       	 title={error}
-									       >
-									       <div className={classes.wrapper}>
-									          <Button
-									            variant="contained"
-									            color="primary"
-									            disabled={submitting}
-									            type="submit"
-									          >
-									            Ingresar
-									          </Button>
-									          {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-									        </div>
-									       </Tooltip>
-									</Grid>	
-						      	</Grid>
+                      </Grid>
 
-					     	</Grid>
-					    </form>
-				    </Slide>
-				}
+                      <Grid container direction="row" justify="flex-end" >
+                        <Grid item >
+                          <Tooltip
+                            open={(!submitting&&anyTouched&&invalid&&this.props.index==0&&error)}
+                            title={error}
+                          >
+                            <div className={classes.wrapper}>
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                disabled={submitting}
+                                type="submit"
+                              >
+                                Ingresar
+                              </Button>
+                              {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+                            </div>
+                          </Tooltip>
+                        </Grid>
+                      </Grid>
+
+                    </Grid>
+                  </form>
+                </Slide>
+              }
           	</div>
         )
 	}
