@@ -31,7 +31,7 @@ import Paper from '@material-ui/core/Paper';
 
 //import Exprorer from "../explorer/Explorer.jsx"
 
-
+import Account2 from "../account/index.jsx"
 import Loadable from 'react-loadable';
 function Loading(props) {
   if (props.error) {
@@ -48,7 +48,7 @@ const  Exprorer = Loadable({
 
 const  Account = Loadable({
     loader: () =>
-      import ('../profile/index.jsx'),
+      import ('../account/index.jsx'),
     loading: Loading
   });
 
@@ -262,7 +262,7 @@ class ResponsiveDrawer extends React.Component {
             */}
             <Route exact path="/SC" component={Index}/>
             <Route exact path="/SC/download" component={DownloadViewer}/>
-            <Route exact path="/SC/account" component={Account}/>
+            <Route exact path="/SC/account" component={Account2}/>
 
             <Route  component={()=><div>Andas perdido?</div>}/>
           </Switch>

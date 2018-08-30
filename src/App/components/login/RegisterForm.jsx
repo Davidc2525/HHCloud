@@ -26,7 +26,7 @@ import MaskedInput from 'react-text-mask';
 import Tooltip from '@material-ui/core/Tooltip';
 import {SubmissionError} from 'redux-form/immutable'
 
-import {RecoverPassword} from "./RecoverPassword.jsx" 
+import {RecoverPassword} from "./RecoverPassword.jsx"
 
 import { bindKeyboard } from 'react-swipeable-views-utils';
 
@@ -60,7 +60,7 @@ const validateRegister = values => {
   ) {
     errors.firstname = 'Nombre no valido.';
   }
-  
+
   if (!values.get('lastname')) {
     errors.lastname = 'Requerido.'
   } else if (
@@ -77,7 +77,7 @@ const validateRegister = values => {
   ) {
     errors.email = 'La direccion de correo no es valida.';
   }
- 
+
   return errors
 }
 
@@ -134,7 +134,7 @@ const styles = theme => ({
 
 const renderField = ({showIn,disabled,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
-    
+
     <Tooltip
     	open={touched&&(showIn==index)&&(error&&error || warning && warning)}
     	title={touched&&(error&&error || warning && warning)}
@@ -155,18 +155,18 @@ const renderField = ({showIn,disabled,index,input, label, type, meta: {touched, 
 )
 const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}}) => (
 	<div>
-	
+
 	  <Grid style={{width:"100%",
 					alignItems: "center",
 				    width: "100%",
-				    justifyContent: "left"}} 
+				    justifyContent: "left"}}
 			container spacing={8}>
-					
+
 		    <Grid item >
 				<Typography variant="body1" gutterBottom>{label}</Typography>
 		    </Grid>
-		     
-			<Grid item >		
+
+			<Grid item >
 				<Switch
 					{...input}
 					checked={input.value ? true : false}
@@ -177,7 +177,7 @@ const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}
 					fullWidth
 					margin="normal"
 				/>
-			</Grid>	
+			</Grid>
 
 	    </Grid>
 	</div>
@@ -185,7 +185,7 @@ const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}
 
 @withStyles(styles,{withTheme:true})
 @reduxForm({
-  form: 'register', 
+  form: 'register',
   validate:validateRegister
 })
 @connect(_=>({}))
@@ -216,101 +216,101 @@ class Register extends React.Component{
 		return (
 		<div>
 			<form autoComplete="on" onSubmit={handleSubmit(this.onSubmitRegister.bind(this))}>
-		      <Grid container direction="column" justify="flex-start" >
-		      	<Grid item>
-			      	 <Field
-			      	 	disabled={submitting}
-			      	 	index={index}
-			      	 	showIn={1}
-				        name="email"
-				        type="text"
-				        component={renderField}
-				        label="Correo"
-				      />
-		      	</Grid>
+        <Grid container direction="column" justify="flex-start" >
+          <Grid item>
+            <Field
+              disabled={submitting}
+              index={index}
+              showIn={1}
+              name="email"
+              type="text"
+              component={renderField}
+              label="Correo"
+            />
+          </Grid>
 
-		      	<Grid item>
-			      	 <Field
-			      	 	disabled={submitting}
-			      	 	index={index}
-			      	 	showIn={1}
-				        name="username"
-				        type="text"
-				        component={renderField}
-				        label="nombre de usuario"
-				      />
-		      	</Grid>
+          <Grid item>
+            <Field
+              disabled={submitting}
+              index={index}
+              showIn={1}
+              name="username"
+              type="text"
+              component={renderField}
+              label="nombre de usuario"
+            />
+          </Grid>
 
-		      	<Grid item>
-			      	 <Field
-			      	 	disabled={submitting}
-			      	 	index={index}
-			      	 	showIn={1}
-				        name="firstname"
-				        type="text"
-				        component={renderField}
-				        label="Nombre"
-				      />
-		      	</Grid>
+          <Grid item>
+            <Field
+              disabled={submitting}
+              index={index}
+              showIn={1}
+              name="firstname"
+              type="text"
+              component={renderField}
+              label="Nombre"
+            />
+          </Grid>
 
-		      	<Grid item>
-			      	 <Field
-			      	 	disabled={submitting}
-			      	 	index={index}
-			      	 	showIn={1}
-				        name="lastname"
-				        type="text"
-				        component={renderField}
-				        label="Apellido"
-				      />
-		      	</Grid>
+          <Grid item>
+            <Field
+              disabled={submitting}
+              index={index}
+              showIn={1}
+              name="lastname"
+              type="text"
+              component={renderField}
+              label="Apellido"
+            />
+          </Grid>
 
-		      	<Grid item>
-		      		 <Field
-		      		 	disabled={submitting} 
-		      		 	index={index}
-		      		 	showIn={1}
-				      	name="password" 
-				      	type="password" 
-				      	component={renderField} 
-				      	label="Contraseña" />
-		      	</Grid>
+          <Grid item>
+            <Field
+              disabled={submitting}
+              index={index}
+              showIn={1}
+              name="password"
+              type="password"
+              component={renderField}
+            label="Contraseña" />
+          </Grid>
 
-		      	<Grid item>
-		      		 <Field
-		      		 	disabled={submitting} 
-		      		 	index={index}
-		      		 	showIn={1}
-				      	name="repeatedpassword" 
-				      	type="password" 
-				      	component={renderField} 
-				      	label="Repita contraseña" />
-		      	</Grid>
+          <Grid item>
+            <Field
+              disabled={submitting}
+              index={index}
+              showIn={1}
+              name="repeatedpassword"
+              type="password"
+              component={renderField}
+            label="Repita contraseña" />
+          </Grid>
 
-		      	<Grid container direction="row" justify="flex-end" >
-		      		<Grid item >	
-					       <Tooltip
-					       	 open={(!submitting&&anyTouched&&invalid&&index==1&&error)}
-					       	 title={error}
-					       >
-					       <div className={classes.wrapper}>
-					          <Button
-					            variant="contained"
-					            color="primary"
-					            disabled={submitting}
-					            type="submit"
-					          >
-					            Registrarme
-					          </Button>
-					          {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-					        </div>
-					       </Tooltip>
-					</Grid>	
-		      	</Grid>
+          <Grid container direction="row" justify="flex-end" >
+            <Grid item >
+              <Tooltip
+                open={(!submitting&&anyTouched&&invalid&&index==1&&error)}
+                title={error}
+              >
+                <div className={classes.wrapper}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={submitting}
+                    type="submit"
+                  >
+                    Registrarme
+                  </Button>
+                  {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+                </div>
+              </Tooltip>
+            </Grid>
+          </Grid>
 
-		      </Grid>
-		    </form>
-      	</div>
+        </Grid>
+      </form>
+    </div>
 
 		)
 	}

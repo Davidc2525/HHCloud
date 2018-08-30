@@ -1,7 +1,4 @@
-/*  
-	15 y 8 = 23, mas 4
-	155.32
-*/
+
 import download from "downloadjs"
 import dateformat from "dateformat"
 import filesize from "filesize"
@@ -68,7 +65,7 @@ class Download {
 		}
 
 
-		
+
 		this.op = ApiInstance.instance.callOperation("download", {
 			path: path,
 			paths:pathList,
@@ -150,9 +147,9 @@ class Download {
 		var data = this.payload;
 		this.currentDl = Math.abs(event.loaded-this.payload.loaded);
 		this.currentDls.push(this.currentDl);
-		this.payload.loaded = event.loaded		
+		this.payload.loaded = event.loaded
 		this.progress = (event.loaded / data.size) * 100
-		
+
 		dlm.instance.onProgress(this, event)
 	}
 

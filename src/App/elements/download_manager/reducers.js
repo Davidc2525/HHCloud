@@ -32,7 +32,7 @@ export default (state = new Map(), action) => {
 			var downloads = state.get("downloads")
 			//var index = downloads.indexOf(action.dl.id)
 			//downloads = downloads.set(action.dl.id)
-			var item =state.getIn(["downloads",action.dl.id]);
+			var item = state.getIn(["downloads",action.dl.id]);
 			if (item != null) {
 				var newState = state.setIn(["downloads", action.dl.id], fromJS(action.dl.toObject()))
 			}else{

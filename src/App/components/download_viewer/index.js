@@ -21,7 +21,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
- 
+
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -48,7 +48,6 @@ const isFile = (data)=>{
 }
 
 const getLoaded = (data)=>{
-		
 	if(isFile(data)){
 		return filesize(data.getIn(["payload","loaded"]))
 	}else{
@@ -56,15 +55,11 @@ const getLoaded = (data)=>{
 	}
 }
 
-
 const getSpeedDownload = (data)=>{
-		
 	return filesize(data.get("speed"))+"/s"
 }
 
-
 const getSize = (data)=>{
-		
 	if(isFile(data)){
 		return filesize(data.getIn(["payload","size"]))
 	}else{
@@ -77,7 +72,6 @@ const isDeterminantBarProgress = (data) => {
 }
 
 const getProgress = (data)=>{
-		
 	if(isFile(data)||true){
 		return (  Math.ceil(data.getIn(["progress"])) )+"%  ("+ getLoaded(data) +" de "+getSize(data)+") ("+getSpeedDownload(data)+")"
 	}else{
@@ -86,7 +80,6 @@ const getProgress = (data)=>{
 }
 
 const hasError = (data)=>{
-		
 	return data.get("error")
 }
 
@@ -104,32 +97,30 @@ const getNameDownload=(data)=>{
 }
 
 const view=({data,history})=>{
-	
-
 		return (
 		<div elevation={0}>
 			<ListItem button onClick={()=>{
 				if(isMultipe(data)){return}
-		      	history.push("/SC/unidad#"+data.getIn(["path"]))
-		    }}>
-		       
-		        <ListItemText
-		          primary={getNameDownload(data)}
-		          secondary={!hasError(data) ? getProgress(data):"error al descargar" }
-		        />
-		        <ListItemSecondaryAction>
-		          <IconButton aria-label="Delete" 
-		          	onClick={_=>confirm(`Desea cancelar descarga de ${getNameDownload(data)}?`)&&DownloadManagerInstance.instance.cancelDownload(data.get("id"))}>
-		            <DeleteIcon />
-		          </IconButton>
-		        </ListItemSecondaryAction>
-	      	</ListItem>
-	      	{data.getIn(["progress"])<=100&&
-	      	<LinearProgress value={Math.floor(data.getIn(["progress"]))} variant={isDeterminantBarProgress(data)?"determinate":"query"}/>}
-	      	
+        history.push("/SC/unidad#"+data.getIn(["path"]))
+      }}>
+
+        <ListItemText
+          primary={getNameDownload(data)}
+          secondary={!hasError(data) ? getProgress(data):"error al descargar" }
+        />
+        <ListItemSecondaryAction>
+          <IconButton aria-label="Delete"
+            onClick={_=>confirm(`Desea cancelar descarga de ${getNameDownload(data)}?`)&&DownloadManagerInstance.instance.cancelDownload(data.get("id"))}>
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+      {data.getIn(["progress"])<=100&&
+        <LinearProgress value={Math.floor(data.getIn(["progress"]))} variant={isDeterminantBarProgress(data)?"determinate":"query"}/>}
+
 		</div>)
-		
-	
+
+
 }
 
 @connect((state,props)=>{
@@ -146,25 +137,33 @@ class DownloadViewer extends React.Component{
 		const {downloads,classes,count,history} = this.props;
 		return (
 		<div /*style={{height:this.props.h,overflow:"auto"}}*/ className={classes.root}>
-	            <Typography variant="title" className={classes.title}>
-	              Descarga 
-	            </Typography>
-	             {(count > 0) &&<Typography className={classes.title} variant="body2" gutterBottom>
-			         <span>Descargas en proceso <strong>{count}.</strong></span>
-			      </Typography>}
-			 <Grid item xs={12} md={12}>
-	            <div className={classes.demo}>
-	              <List dense={false}>
-	                {downloads.map(x=>view({data:x,history}))}
-	              </List>
-	            </div>
-	          </Grid>
-			
-			
+      <Typography variant="title" className={classes.title}>
+        Descarga
+      </Typography>
+      {(count > 0) &&
+        <Typography className={classes.title} variant="body2" gutterBottom>
+          <span>Descargas en proceso <strong>{count}.</strong></span>
+        </Typography>}
+      <Grid item xs={12} md={12}>
+        {count == 0&&
+          <Grid style={{height:"100%"}} container justify="center" alignItems="center">
+            <Grid item xs={6}>
+              <Typography variant="headline" gutterBottom>
+                No hay descargas en proceso.
+              </Typography>
+            </Grid>
+          </Grid>
+        }
+        <div className={classes.demo}>
+          <List dense={false}>
+            {downloads.map(x=>view({data:x,history}))}
+          </List>
+        </div>
+      </Grid>
+
+
 		</div>)
 	}
-
-
 }
 
 

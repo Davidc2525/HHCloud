@@ -7,7 +7,6 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 window.df = require("dateformat")
 import Auth,{auth,STATE} from "./elements/auth/index.js"
 import {STATES} from "./elements/auth/state.js"
-
 import { withRouter } from 'react-router-dom'
 
 import {
@@ -28,6 +27,7 @@ import {  browserHistory } from 'react-router';
 import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
 import Loadable from 'react-loadable';
 import red from '@material-ui/core/colors/red';
+import ApiInstance from "./elements/API/v1/Api.js";
 
 // import Button from '@material-ui/core/Button';
  const AuthArea = Loadable({

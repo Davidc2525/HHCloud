@@ -1,4 +1,3 @@
-//Profile.jsx
 import SendVerifyEmailDialog from "./SendVerifyEmailDialog.jsx"
 import ChangePassword from "./ChangePassword.jsx"
 import {STATES} from "../../elements/auth/state.js"
@@ -36,20 +35,6 @@ import Button from '@material-ui/core/Button';
 import {Map} from "immutable"
 
 
-/**index*/
-import SwipeableViews from 'react-swipeable-views';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
-import HelpIcon from '@material-ui/icons/Help';
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import ThumbUp from '@material-ui/icons/ThumbUp';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-
 const renderSelectField = ({
   input,
   label,
@@ -58,7 +43,7 @@ const renderSelectField = ({
   ...custom
 }) => (
   <FormControl /*className={classes.formControl}*/>
-    <Select
+    <Select      
       onChange={(event, index, value) => input.onChange(event.target.value)}
       inputProps={{
           name: 'gender',
@@ -132,7 +117,7 @@ const style = theme => ({
 @reduxForm({
   form:"profile"
 })
-class Profile extends React.Component {
+class Account extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -143,7 +128,6 @@ class Profile extends React.Component {
   _OpenDialogEmailVerifay(){
     this.setState({dialogEmailVerifyOpen:true})
   }
-
   _CloseDialogEmailVerifay(){
     this.setState({dialogEmailVerifyOpen:false})
   }
@@ -381,68 +365,4 @@ class Profile extends React.Component {
   }
 }
 
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-});
-@withStyles(styles,{withTheme:true})
-class Index extends React.Component {
-  state = {
-    value: 0,
-  };
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  handleChangeIndex = index => {
-    this.setState({ value: index });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { value } = this.state;
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={this.handleChange}
-            scrollable
-            scrollButtons="on"
-            indicatorColor="primary"
-            textColor="primary"
-          >
-            <Tab label="Datos" icon={<PersonPinIcon />} />
-            <Tab label="Contraseña" icon={<VisibilityOffIcon />} />
-
-          </Tabs>
-        </AppBar>
-        <SwipeableViews
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={this.state.value}
-          onChangeIndex={this.handleChangeIndex}
-        >
-          <TabContainer dir={theme.direction}><Profile/></TabContainer>
-          <TabContainer dir={theme.direction}><ChangePassword/></TabContainer>
-
-        </SwipeableViews>
-
-      </div>
-    );
-  }
-}
-
-export default Index
+export default Account;

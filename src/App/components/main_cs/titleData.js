@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -13,7 +14,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ReportIcon from '@material-ui/icons/Report';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import {connect} from "react-redux"
-import {Link} from "react-router-dom"
 import {withRouter} from "react-router"
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
@@ -55,6 +55,24 @@ const ButtonLink = withRouter(({ history ,...rest}) => (
   </Button>
 
 ));
+
+const MenuLink = ({ Aicon,label, to, exact=false }) => (
+  <Route
+    path={to}
+    exact={exact}
+    children={({ match }) => (
+      <ListItem disabled={match} button onClick={()=>{
+        store.dispatch(push(to))
+      }}>
+        <ListItemIcon>
+          <Aicon />
+        </ListItemIcon>
+        <ListItemText primary={label} />
+      </ListItem>
+
+    )}
+  />
+);
 
 /*
 dls = store.getState().get("downloads").get("downloads").toJS()
@@ -113,24 +131,26 @@ class SideVarContent extends React.Component{
         </ListItem>
 
         {/*inicio*/}
-        <ListItem button onClick={()=>{
+        <MenuLink exact to="/SC/" Aicon={DashboardIcon} label="Control"/>
+        {/*<ListItem button onClick={()=>{
           store.dispatch(push("/SC/"))
-        }}>
+          }}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Control" />
-        </ListItem>
+        </ListItem>*/}
 
         {/*Perfil*/}
-        <ListItem button onClick={()=>{
+        <MenuLink exact to="/SC/account" Aicon={AccountCircleIcon} label="Cuenta"/>
+        {  /*<ListItem button onClick={()=>{
           store.dispatch(push("/SC/account"))
-        }}>
+          }}>
           <ListItemIcon>
             <AccountCircleIcon />
           </ListItemIcon>
           <ListItemText primary="cuenta" />
-        </ListItem>
+        </ListItem>*/}
 
         {/*descargas*/}
         <ListItem button onClick={()=>{

@@ -325,7 +325,7 @@ class RecoverPassword extends React.Component{
 				    </form>
           </Slide>
 				</div>}
-        
+
 				{this.state.step==1&&<div>
 					<Slide direction="up" mountOnEnter unmountOnExit in={this.state.step==1}>
 

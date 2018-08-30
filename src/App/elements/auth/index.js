@@ -25,8 +25,6 @@ class Auth {
 						state: STATES[1]
 					}
 				});
-				this.onLogin(x);
-				
 			}else{
 				store.dispatch({
 					type: "AUTH_SET_STATE",
