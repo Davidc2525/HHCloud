@@ -4,10 +4,11 @@ const DOWNLOAD_STATE = "DOWNLOAD_STATE";
 const FETCHTED_PATH = "FETCHTED_PATH";
 const DELETEING_PATH = "DELETING_PATH";
 const DELETED_PATH = "DELETED_PATH";
+const ACTIVE_UPLOAD = "ACTIVE_UPLOAD"
 
 
 
-const fetchingPath = (path,withContent=false) => {
+const fetchingPath = (path:string,withContent=false) => {
 	return ({
 		type: FETCHING_PATH,
 		middle: MIDDLEWARE,
@@ -17,7 +18,7 @@ const fetchingPath = (path,withContent=false) => {
 	})
 }
 
-const fetchtedPath = (path, payload,status="loading") => {
+const fetchtedPath = (path:string, payload,status="loading") => {
 	return ({
 		path: path,
 		status:status,
@@ -31,7 +32,7 @@ const fetchtedPath = (path, payload,status="loading") => {
 
 /**/
 
-const markDownload=(path,status="none"/*none,downloading,downloaded,error*/)=>{
+const markDownload=(path:string,status="none"/*none,downloading,downloaded,error*/)=>{
 	console.warn("markDownload",path,status)
 	return ({
 		type:"MARK_DOWNLOAD",
@@ -44,7 +45,7 @@ const markDownload=(path,status="none"/*none,downloading,downloaded,error*/)=>{
 }
 
 /***/
-const deletingPath = (path, name) => {
+const deletingPath = (path:string, name) => {
 	return ({
 		type: DELETEING_PATH,
 		middle: MIDDLEWARE,
@@ -65,12 +66,16 @@ const deletedPath = (path,pathParent) => {
 	})
 }
 
+const activeUpload = active => ({type:ACTIVE_UPLOAD,payload:{active}})
+
 export {
+	activeUpload,
 	markDownload,
 	deletedPath,
 	fetchtedPath,
 	deletingPath,
 	fetchingPath,
+	ACTIVE_UPLOAD,
 	DELETEING_PATH,
 	DELETED_PATH,
 	MIDDLEWARE,

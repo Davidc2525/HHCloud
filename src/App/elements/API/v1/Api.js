@@ -6,16 +6,15 @@ import DeleteOperation from "./operations/DeleteOperation.js"
 import DownloadOperation from "./operations/DownloadOperation.js"
 //import {auth} from "../../auth/index.js";
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
-import apiUser, {
-	GetAccountStatusOperation,
-	GetUserOperation,
-	UpdateUserOperation,
-	CreateUserOperation,
-	SendVerifyEmailOperation,
-	SendRecoveryEmailOperation,
-	ChangePasswordOperation,
-	ChangePasswordByRecoverOperation
-} from "./user/index.js"
+
+import { ChangePasswordByRecoverOperation } from "./user/ChangePasswordByRecoverOperation";
+import { SendRecoveryEmailOperation } from "./user/SendRecoveryEmailOperation";
+import { SendVerifyEmailOperation } from "./user/SendVerifyEmailOperation";
+import { GetAccountStatusOperation } from "./user/GetAccountStatusOperation";
+import { CreateUserOperation } from "./user/CreateUserOperation";
+import { ChangePasswordOperation } from "./user/ChangePasswordOperation";
+import { GetUserOperation } from "./user/GetUserOperation";
+import { UpdateUserOperation } from "./user/UpdateUserOperation";
 import {
 	store
 } from "../../../redux/index.js";

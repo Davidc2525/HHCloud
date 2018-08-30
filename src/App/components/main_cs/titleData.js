@@ -1,28 +1,23 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import StarIcon from '@material-ui/icons/Star';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import SendIcon from '@material-ui/icons/Send';
-import MailIcon from '@material-ui/icons/Mail';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ReportIcon from '@material-ui/icons/Report';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import {connect} from "react-redux"
-import {withRouter} from "react-router"
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloudDownload from '@material-ui/icons/CloudDownload';
-import {store} from "../../redux/index.js"
-import {push} from "react-router-redux"
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Fade from '@material-ui/core/Fade';
-import filesize from "filesize"
+import CloudUpload from "@material-ui/icons/CloudUpload";
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import filesize from "filesize";
+import React from 'react';
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { Route } from "react-router-dom";
+import { push } from "react-router-redux";
+import { store } from "../../redux/index.js";
+import {UploadManagerInstance} from "../../elements/upload_manager/index.js"
 
 const style = theme => ({
   button: {
@@ -86,13 +81,21 @@ loaded = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.p
 */
 @connect((state,props)=>{
   var dl = state.get("downloads").get("downloads")
+  var up = state.get("uploads").get("uploads")
+  let countUps = up.count();
   var count = dl.count()
-  return {count,dl};
+  return {countUps,up,count,dl};
 })
 class SideVarContent extends React.Component{
 
 
-  getTotalProgress(){
+  getTotalProgressUpload(){
+    const total =  UploadManagerInstance.instance.getElementsUploadsCount()
+    const loaded = UploadManagerInstance.instance.getElementsUploadedCount()
+    return (loaded / total) * 100;
+  }
+
+  getTotalProgressDownload(){
 
       var dls = this.props.dl.toJS();
 
@@ -105,7 +108,7 @@ class SideVarContent extends React.Component{
       return (loaded / size) * 100;
   }
 
-  getTotalSpeedDownload() {
+  getTotalSpeedDownloadDownload() {
 
     var dls = this.props.dl;
 
@@ -119,7 +122,7 @@ class SideVarContent extends React.Component{
 
 
   render(){
-    const {location,history,count,classes} = this.props;
+    const {location,history,count,classes,countUps} = this.props;
     return (
 
       <div>
@@ -152,6 +155,7 @@ class SideVarContent extends React.Component{
           <ListItemText primary="cuenta" />
         </ListItem>*/}
 
+        <Divider />
         {/*descargas*/}
         <ListItem button onClick={()=>{
           store.dispatch(push("/SC/download"))
@@ -161,13 +165,28 @@ class SideVarContent extends React.Component{
           </ListItemIcon>
 
           {count>0?
-            <ListItemText primary="Descarga" secondary={`${count}, (${filesize(this.getTotalSpeedDownload())}/s)`} />
+            <ListItemText primary="Descarga" secondary={`${count}, (${filesize(this.getTotalSpeedDownloadDownload())}/s)`} />
           :
           <ListItemText primary="Descarga"  />
           }
         </ListItem>
-        {count>0&& <LinearProgress value={this.getTotalProgress()} variant="determinate"/>}
+        {count>0&& <LinearProgress value={this.getTotalProgressDownload()} variant="determinate"/>}
 
+        {/*Upload*/}
+        <ListItem button onClick={()=>{
+          store.dispatch(push("/SC/upload"))
+        }}>
+          <ListItemIcon>
+            <CloudUpload />
+          </ListItemIcon>
+
+          {countUps>0?
+            <ListItemText primary="Subida" secondary={`${countUps}, (${UploadManagerInstance.instance.getElementsUploadsCount()}, ${UploadManagerInstance.instance.getElementsUploadedCount()})`} />
+          :
+          <ListItemText primary="Subida"  />
+          }
+        </ListItem>
+        {countUps>0&& <LinearProgress value={this.getTotalProgressUpload()} variant="determinate"/>}
 
       </div>
       )
@@ -175,54 +194,4 @@ class SideVarContent extends React.Component{
 }
 export default (withRouter(withStyles(style)(SideVarContent)))
 
-export const mailFolderListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <InboxIcon />
-      </ListItemIcon>
-      <ListItemText primary="Descargas" secondary="1" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <StarIcon />
-      </ListItemIcon>
-      <ListItemText primary="Starred" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <SendIcon />
-      </ListItemIcon>
-      <ListItemText primary="Send mail" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <DraftsIcon />
-      </ListItemIcon>
-      <ListItemText primary="Drafts" />
-    </ListItem>
-  </div>
-);
 
-export const otherMailFolderListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <MailIcon />
-      </ListItemIcon>
-      <ListItemText primary="All mail" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <DeleteIcon />
-      </ListItemIcon>
-      <ListItemText primary="Trash" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ReportIcon />
-      </ListItemIcon>
-      <ListItemText primary="Spam" />
-    </ListItem>
-  </div>
-);

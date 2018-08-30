@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import filesize from "filesize"
 import numeral from "numeral"
+import { Map } from "immutable";
 
 const styles = theme => ({
   root: {
@@ -66,7 +67,7 @@ class MiDivider extends Component{
 
 
 @withStyles(styles,{withTheme:true})
-@connect((state,props)=>{
+@connect((state : Map, props)=>{
 	const user=state.getIn(["auth","dataUser","user"],null);
 	const summary=state.getIn(["auth","dataUser","contentSummary"],null);
 

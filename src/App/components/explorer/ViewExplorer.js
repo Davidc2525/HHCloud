@@ -1,71 +1,30 @@
-import React from "react"
-import {
-  push
-} from "react-router-redux";
-import {tryNormalize,parsePath} from "./Util.js"
-import {Map,List as ListI} from "immutable"
-import {connect} from "react-redux"
-import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
-import { withRouter } from 'react-router'
-import {store} from "../../redux/index.js"
-import {parse} from "query-string"
-import filesize from "filesize"
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import {deletingPath}from "./actions.js"
-import {dl,get} from "./middleware.js"
-import Fade from '@material-ui/core/Fade';
-import CircularProgress from '@material-ui/core/CircularProgress'
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Checkbox from '@material-ui/core/Checkbox';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import FormGroup from '@material-ui/core/FormGroup';
-import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
-
-import FolderIcon from '@material-ui/icons/Folder';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import FileDownload from '@material-ui/icons/FileDownload';
-import DeleteIcon from '@material-ui/icons/Delete';
-import {fetchingPath,MIDDLEWARE,FETCHING_PATH} from  "./actions.js"
-import { ContextMenu, MenuItem as MenuItemCM, ContextMenuTrigger ,connectMenu} from "react-contextmenu";
-import MenuItem from '@material-ui/core/MenuItem';
-import PropTypes from 'prop-types';
-
-import RenameDialog from "./RenameDialog.jsx"
-import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx"
-import MkdirDialog from "./MkdirDialog.jsx"
-
 import withWidth from '@material-ui/core/withWidth';
-import PahtSee1 from "../path_see/index.js"
-import PahtSee2 from "../path_see/index2.jsx"
-
-import {DownloadManagerInstance} from "../../elements/download_manager/index.js"
-import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller'
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
-import  VList from 'react-virtualized/dist/commonjs/List'
-
-import DirectoryList from "./DirectoryList.jsx"
-import DirectoryListVirtualize from "./DirectoryListVirtualize.jsx"
-import fileExtension from "file-extension"
-
+import fileExtension from "file-extension";
+import filesize from "filesize";
+import { Map } from "immutable";
 //import FileViewer from "../file_viewer"
-import mime from "mime-types"
+import mime from "mime-types";
+import React from "react";
 import Loadable from 'react-loadable';
+import { connect } from "react-redux";
+import { withRouter } from 'react-router';
+import { store } from "../../redux/index.js";
+import { fetchingPath } from "./actions.js";
+import DirectoryListVirtualize from "./DirectoryListVirtualize.jsx";
+import { dl } from "./middleware.js";
+import MkdirDialog from "./MkdirDialog.jsx";
+import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx";
+import RenameDialog from "./RenameDialog.jsx";
+import { parsePath, tryNormalize } from "./Util.js";
+
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={ props.retry }>Retry</button></div>;

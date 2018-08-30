@@ -30,6 +30,7 @@ import Slide from '@material-ui/core/Slide';
 import {RecoverPassword} from "./RecoverPassword.jsx"
 
 import { bindKeyboard } from 'react-swipeable-views-utils';
+import { Map } from "immutable";
 
 const validate = values => {
   // IMPORTANT: values is an Immutable.Map here!

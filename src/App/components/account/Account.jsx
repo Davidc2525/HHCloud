@@ -1,5 +1,5 @@
+// @ts-check
 import SendVerifyEmailDialog from "./SendVerifyEmailDialog.jsx"
-import ChangePassword from "./ChangePassword.jsx"
 import {STATES} from "../../elements/auth/state.js"
 import React from "react";
 import {connect} from "react-redux"
@@ -103,9 +103,9 @@ const style = theme => ({
 	},
 })
 
-
+// @ts-ignore
 @withStyles(style,{withTheme:true})
-@connect( (state,props)=>{
+@connect( (state : Map, props)=>{
   const stateLogin = state.getIn(["auth","state"],null);
   const user = state.getIn(["auth","dataUser","user"],null);
 
@@ -125,6 +125,7 @@ class Account extends React.Component {
       dialogEmailVerifyOpen:false,
     }
   }
+  
   _OpenDialogEmailVerifay(){
     this.setState({dialogEmailVerifyOpen:true})
   }
@@ -201,7 +202,7 @@ class Account extends React.Component {
               <Grid item xs={3}>
                 <div>
                   <FormControlLabel
-                    labelPlacement="start"
+                    //labelPlacement="start"
                     control={
                       <Switch checked={this.state.edit} onChange={_=>{this.setState(p=>({edit:!p.edit}))}}/>
                     }

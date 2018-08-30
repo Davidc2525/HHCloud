@@ -3,6 +3,7 @@ import {
 	fromJS
 } from "immutable"
 import {
+	ACTIVE_UPLOAD,
 	FETCHTED_PATH,
 	DOWNLOAD_STATE
 } from "./actions.js"
@@ -461,7 +462,7 @@ export default (state = new Map(), action) => {
 
 
 		/**Upload*/
-		case "ACTIVE_UPLOAD":
+		case ACTIVE_UPLOAD:
 			var newState = state;
 
 			newState = newState.setIn(["upload","active"],action.payload.active)

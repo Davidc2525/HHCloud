@@ -1,6 +1,6 @@
+// @ts-check
 import React from "react";
 import Typography from '@material-ui/core/Typography';
-import ChangePassword from "./ChangePassword.jsx"
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,6 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 import Account from "./Account.jsx"
+import ChangePassword from "./ChangePassword.jsx"
 
 
 function TabContainer(props) {
@@ -26,7 +27,8 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
   },
 });
-@withStyles(styles,{withTheme:true})
+//@ts-ignore
+@withStyles(styles, { withTheme: true })
 class Index extends React.Component {
   state = {
     value: 0,
@@ -43,7 +45,6 @@ class Index extends React.Component {
   render() {
     const { classes } = this.props;
     const { value } = this.state;
-	store.dispatch(push)
     return (
       <div className={classes.root}>
         <AppBar position="static" color="default">
@@ -61,12 +62,12 @@ class Index extends React.Component {
           </Tabs>
         </AppBar>
         <SwipeableViews
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+          //axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
           index={this.state.value}
           onChangeIndex={this.handleChangeIndex}
         >
-          <TabContainer dir={theme.direction}><Account/></TabContainer>
-          <TabContainer dir={theme.direction}><ChangePassword/></TabContainer>
+          <TabContainer><Account /></TabContainer>
+          <TabContainer><ChangePassword /></TabContainer>
 
         </SwipeableViews>
 

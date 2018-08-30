@@ -24,6 +24,7 @@ class DownloadManager {
 		})
 	}
 
+	/**Agregar una descarga*/
 	addDownload(item=null){
 		var path = null;
 		var multiple = false;

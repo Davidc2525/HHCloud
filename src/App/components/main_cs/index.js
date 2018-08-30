@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
-import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
+import {  otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
 import { BrowserRouter as Router, Route, Link,Redirect,Switch,push} from "react-router-dom";
 import Chip from '@material-ui/core/Chip';
@@ -55,6 +55,13 @@ const  Account = Loadable({
 const  Index = Loadable({
     loader: () =>
       import ("../index/index.js"),
+  loading: Loading
+});
+
+
+const  UploadView = Loadable({
+    loader: () =>
+      import ("../upload_view/UploadView.jsx"),
   loading: Loading
 });
 
@@ -170,8 +177,7 @@ class ResponsiveDrawer extends React.Component {
 
         <Divider />
         <List><SideVarContent/></List>
-        <Divider />
-        <List>{otherMailFolderListItems}</List>
+        
         {/*<div id="footer" className={classes.footer} >
           <div className={classes.footer}>
           <Grid className={classes.rootGrid} container justify="center" >
@@ -262,6 +268,7 @@ class ResponsiveDrawer extends React.Component {
             */}
             <Route exact path="/SC" component={Index}/>
             <Route exact path="/SC/download" component={DownloadViewer}/>
+            <Route exact path="/SC/upload" component={UploadView}/>
             <Route exact path="/SC/account" component={Account2}/>
 
             <Route  component={()=><div>Andas perdido?</div>}/>

@@ -49,13 +49,11 @@ import stateExplorer from "../components/explorer/state.js"
 import reducersExplorer from "../components/explorer/reducers.js"
 import middlewareExplorer from "../components/explorer/middleware.js"
 
-
 /**download manager*/
 import stateAuth from "../elements/auth/state.js"
 import reducersAuth from "../elements/auth/reducers.js"
 import middlewareAuth from "../elements/auth/middleware.js"
 //console.info(stateDownloadManager,reducersDownloadManager)
-
 
 /**download manager*/
 import stateDownloadManager from "../elements/download_manager/state.js"
@@ -63,7 +61,10 @@ import reducersDownloadManager from "../elements/download_manager/reducers.js"
 import middlewareDownloadManager from "../elements/download_manager/middleware.js"
 //console.info(stateDownloadManager,reducersDownloadManager)
 
-
+/**upload manager */
+import stateUploadManager from "../elements/upload_manager/state.js";
+import reducersUploadManger from "../elements/upload_manager/reducers.js";
+import middlewareUploadManager from "../elements/upload_manager/middleware.js";
 
 /**Estado incial de app*/
 const initialState = /*fromJS(initStateTest);*/fromJS({
@@ -73,7 +74,8 @@ const initialState = /*fromJS(initStateTest);*/fromJS({
 	},
 	auth: stateAuth,
 	explorer: stateExplorer,
-	downloads: stateDownloadManager
+	downloads: stateDownloadManager,
+	uploads:stateUploadManager,
 });
 
 /**Reducers para cada estado*/
@@ -92,6 +94,7 @@ const reducers = combineReducers({
 	auth: reducersAuth,
 	explorer: reducersExplorer,
 	downloads: reducersDownloadManager,
+	uploads:reducersUploadManger,
 })
 
 /**Dev tools*/
@@ -101,7 +104,13 @@ const composeEnhancers = composeWithDevTools({
 
 /**Crear store*/
 const store = createStore(reducers, initialState, composeEnhancers(
-	applyMiddleware(dynamicMiddlewares, middlewareExplorer,middlewareDownloadManager,middlewareAuth,middleware),
+	applyMiddleware(
+		dynamicMiddlewares,
+		middlewareExplorer,
+		middlewareDownloadManager,
+		middlewareUploadManager,
+		middlewareAuth,
+		middleware),
 ));
 
 ononline=_=>{

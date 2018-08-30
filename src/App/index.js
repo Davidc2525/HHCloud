@@ -1,5 +1,6 @@
 import {store,history} from "./redux/index.js"
 import DownloadManager from "./elements/download_manager/index.js"
+import UploadManagerInstance from "./elements/upload_manager/index"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';

@@ -1,99 +1,52 @@
-import React from "react"
-
-window.r = React
-import {
-  push
-} from "react-router-redux";
-import ApiInstance from "../../elements/API/v1/Api.js"
-/**/
-import OrderSelect from "./OrderSelect.jsx"
+//@ts-check
+import Chip from '@material-ui/core/Chip';
 import Fade from '@material-ui/core/Fade';
+import Hidden from '@material-ui/core/Hidden';
+import Button from "@material-ui/core/Button"
+import IconButton from '@material-ui/core/IconButton';
+//import IconButton from '@material-ui/core/IconButton';
+import { withStyles, withTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 //import Button from '@material-ui/core/Button';
+import Grid from "@material-ui/core/Grid"
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-import DeleteForever from '@material-ui/icons/DeleteForever';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import CloudDownload from '@material-ui/icons/CloudDownload';
-import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
-import Refresh from '@material-ui/icons/Refresh';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import SelectAll from '@material-ui/icons/SelectAll';
+import withWidth from '@material-ui/core/withWidth';
+import Zoom from '@material-ui/core/Zoom';
 import ArrowBack from '@material-ui/icons/ArrowBack';
-import TextField from '@material-ui/core/TextField';
-import _ from "lodash"
-import SearchBar from 'material-ui-search-bar'
-import Hidden from '@material-ui/core/Hidden';
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import CloudDownload from '@material-ui/icons/CloudDownload';
+import CloudUpload from '@material-ui/icons/CloudUpload';
+import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
+import DeleteForever from '@material-ui/icons/DeleteForever';
 import FilterNone from '@material-ui/icons/FilterNone';
 import FlipToFront from '@material-ui/icons/FlipToFront';
-import Chip from '@material-ui/core/Chip';
-import Zoom from '@material-ui/core/Zoom';
-import {getParent,parsePath,tryNormalize,isRoot} from"./Util.js"
-//import IconButton from '@material-ui/core/IconButton';
-import { withTheme } from '@material-ui/core/styles';
+import Refresh from '@material-ui/icons/Refresh';
+import SelectAll from '@material-ui/icons/SelectAll';
+import filesize from "filesize";
 /**/
-
-import {List as ListI,fromJS} from "immutable"
-import {connect} from "react-redux"
-import { BrowserRouter as Router, Route, Link,Redirect,Switch } from "react-router-dom";
-import { withRouter } from 'react-router'
-import {store} from "../../redux/index.js"
-import {parse} from "query-string"
-import filesize from "filesize"
-import { withStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-
-import Typography from '@material-ui/core/Typography';
-import {deletingPath}from "./actions.js"
-import {dl,get} from "./middleware.js"
-import CircularProgress from '@material-ui/core/CircularProgress'
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Checkbox from '@material-ui/core/Checkbox';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import FormGroup from '@material-ui/core/FormGroup';
-import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
-
-import FolderIcon from '@material-ui/icons/Folder';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import FileDownload from '@material-ui/icons/FileDownload';
-import DeleteIcon from '@material-ui/icons/Delete';
-import {fetchingPath,MIDDLEWARE,FETCHING_PATH} from  "./actions.js"
-import { ContextMenu, MenuItem as MenuItemCM, ContextMenuTrigger ,connectMenu} from "react-contextmenu";
-import MenuItem from '@material-ui/core/MenuItem';
-import PropTypes from 'prop-types';
-
-import RenameDialog from "./RenameDialog.jsx"
-import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx"
-
-import withWidth from '@material-ui/core/withWidth';
-import PahtSee1 from "../path_see/index.js"
-import PahtSee2 from "../path_see/index2.jsx"
-
-import {DownloadManagerInstance} from "../../elements/download_manager/index.js"
-import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller'
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
-import  VList from 'react-virtualized/dist/commonjs/List'
-
-import fileExtension from "file-extension"
-
-//import FileViewer from "../file_viewer"
-import mime from "mime-types"
-
+import { fromJS, List as ListI } from "immutable";
+import _ from "lodash";
+import SearchBar from 'material-ui-search-bar';
+import React from "react";
+import {findDOMNode} from "react-dom";
 //import ViewExplorer from "./ViewExplorer.js"
-import Dropzone from 'react-dropzone'
+import Dropzone from 'react-dropzone';
 import Loadable from 'react-loadable';
+import { connect } from "react-redux";
+import { Route } from "react-router-dom";
+import { push } from "react-router-redux";
+import ApiInstance from "../../elements/API/v1/Api.js";
+import { DownloadManagerInstance } from "../../elements/download_manager/index.js";
+import {UploadManagerInstance} from "../../elements/upload_manager/index.js"
+import { store } from "../../redux/index.js";
+import PahtSee2 from "../path_see/index2.jsx";
+import { fetchingPath ,activeUpload} from "./actions.js";
+/**/
+import OrderSelect from "./OrderSelect.jsx";
+import { getParent, isRoot, parsePath, tryNormalize } from "./Util.js";
+import { ItemUpload } from '../../elements/upload_manager/ItemUpload.js';
+
+window.r = React
 
 function Loading(props) {
   if (props.error) {
@@ -106,7 +59,16 @@ const  ViewExplorer = Loadable({
     loader: () =>
       import ('./ViewExplorer.js'),
     loading: Loading
-  });
+	});
+	
+
+const toFileList = (files :FileList):File[]=>{
+	let fileList:File[] = [];
+	for(let x = 0;x<files.length;x++){
+		fileList.push(files.item(x));
+	}
+	return fileList;
+}
 
 const styles = theme => ({
   headerHelper:{
@@ -168,17 +130,26 @@ const styles = theme => ({
   pos: {
     marginBottom: 12,
   },
-  toolbar: theme.mixins.toolbar,
+	toolbar: theme.mixins.toolbar,
+	button: {
+    margin: theme.spacing.unit,
+  },
+  input: {
+    display: 'none',
+  },
 });
 
 
+
+
 //@withRouter
+//@ts-ignore
 @withTheme()
 @withStyles(styles)
 @withWidth()
 @connect(state=>{
 	var upload = state.getIn(["explorer","upload"]);
-	var path = tryNormalize(parsePath(state.getIn(["router"]).hash));
+	var path = tryNormalize(parsePath(state.getIn(["router"]).location.hash));
 	var online = state.getIn(["app","online"])
 	var currentType = state.getIn(["explorer","currentType"]);
 	var toolBar = state.getIn(["explorer","toolBar"]);
@@ -256,11 +227,10 @@ class Explorer extends React.Component{
 		evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 	}
 	 onDrop(files) {
-	 	console.log(files)
-	    this.setState({
-	      files
-	    });
-	  }
+	 	console.log(this.props.path,files)
+	    this.setState(p=>({files:[...p.files,...files]}));
+		}
+		
 	render() {
 		const {classes,width,upload,currentType}= this.props
 
@@ -283,21 +253,80 @@ class Explorer extends React.Component{
 
 				{!uploadActive&&<ViewExplorer/>}
 				{uploadActive&&
-          <section>
-            <div className="dropzone">
-              <Dropzone multiple inputProps={{webkitdirectory:true ,directory:true, multiple:true}} onDrop={this.onDrop.bind(this)}>
-                <p>Try dropping some files here, or click to select files to upload.</p>
-              </Dropzone>
-            </div>
-            <aside>
-              <h2>Dropped files</h2>
-              <ul>
-                {
-                  this.state.files.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                }
-              </ul>
-            </aside>
-          </section>
+					<Fade in={uploadActive}>
+						
+						<div className={classes.root}>
+							<Grid container>
+								<Grid item style={{display:"flex"}} justify="center" xs={6}>
+									
+										<input
+											accept="*/*"
+											className={classes.input}
+											id="contained-button-file"
+											multiple
+											onChange={event=>{
+												let files = toFileList(event.target.files);
+												console.log(files)
+												this.setState(p=>({files:[...p.files,...files]}));
+											}}
+											type="file"
+										/>
+										<label htmlFor="contained-button-file">
+											<Button variant="contained" component="span" className={classes.button}>
+												Archivos
+											</Button>
+										</label>
+									
+								</Grid>
+							
+								<Grid item style={{display:"flex"}} justify="center" alignContent="center" alignItems="center" xs={6}>
+									<div>
+										<input
+											className={classes.input}
+											id="contained-button-folder"
+											multiple
+											webkitdirectory="true"
+											onChange={event=>{
+												let files = toFileList(event.target.files);
+												console.log(files)
+												this.setState(p=>({files:[...p.files,...files]}));
+											}}
+											type="file"
+										/>
+										<label htmlFor="contained-button-folder">
+											<Button variant="contained" component="span" className={classes.button}>
+												Carpeta
+											</Button>
+										</label>
+									</div>
+								</Grid>
+
+								<Grid item style={{display:"flex"}} justify="center" alignContent="center" alignItems="center" xs={12}>
+									<Button type="button" onClick={_=>{
+											let item = new ItemUpload(this.props.path,this.state.files);
+											UploadManagerInstance.instance.addUpload(item);
+											console.log(item,UploadManagerInstance.instance)
+											this.setState(p=>({files:[]}));
+										}}>
+											Subir
+									</Button>
+								</Grid>
+
+
+								<Grid item style={{display:"flex"}} justify="center" alignContent="center" alignItems="center" xs={12}>
+									<aside>
+										<h2>Dropped files</h2>
+										<ul>
+											{
+												this.state.files.map((f:File) => <li key={f.name}>{f.webkitRelativePath}/{f.name} - {f.size} bytes</li>)
+											}
+										</ul>
+									</aside>
+								</Grid>
+							</Grid>
+						</div>
+						
+					</Fade>
 				}
 			</div>
 		);
@@ -345,6 +374,7 @@ const stylesToolBar = theme => ({
 
 
 /**Toolbar Pasar a modulo independiente*/
+//@ts-ignore
 @connect(state=>{
 	var upload = state.getIn(["explorer","upload"]);
 	var router = state.getIn(["router"]);
@@ -410,7 +440,7 @@ class ToolBar extends React.Component {
 
 		if(data.action == "upload"){
 			var preState = this.props.upload.get("active")
-				store.dispatch({type:"ACTIVE_UPLOAD",payload:{active:!preState}})
+				store.dispatch(activeUpload(!preState))
 		}
 		if (data.action == "delete") {
 			store.dispatch({
