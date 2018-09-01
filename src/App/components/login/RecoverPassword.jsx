@@ -1,31 +1,18 @@
 //RecoverPassword.jsx
-import React from "react";
-import {connect} from "react-redux"
-import {
-  push
-} from "react-router-redux";
-import {store} from "../../redux/index.js"
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import TextField from '@material-ui/core/TextField';
-import classNames from 'classnames';
-import green from '@material-ui/core/colors/green';
 import Button from '@material-ui/core/Button';
-import Switch from '@material-ui/core/Switch';
-import Slide from '@material-ui/core/Slide';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
+import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import SwipeableViews from 'react-swipeable-views';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import {Field, reduxForm} from 'redux-form/immutable'
-import submit,{submitRegister} from "./submit.js"
-import MaskedInput from 'react-text-mask';
+import Slide from '@material-ui/core/Slide';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
-import {SubmissionError} from 'redux-form/immutable'
+import Typography from '@material-ui/core/Typography';
+import React from "react";
+import { push } from "react-router-redux";
+import MaskedInput from 'react-text-mask';
+import { Field, reduxForm, SubmissionError } from 'redux-form/immutable';
 import api from "../../elements/API/v1/Api.js";
 function TextMaskCustom(props) {
   const { inputRef, ...other } = props;
@@ -425,4 +412,5 @@ class RecoverPassword extends React.Component{
 
 
 
-export {RecoverPassword}
+export { RecoverPassword };
+

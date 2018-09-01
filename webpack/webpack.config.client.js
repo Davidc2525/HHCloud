@@ -34,9 +34,9 @@ console.log(new webpack.optimize.SplitChunksPlugin())
 
 //npm i --save html-webpack-plugin extract-text-webpack-plugin babel-minify-webpack-plugin
 export default [{
-	name: "Pagina de SucreCloud App",
+	name: "Pagina de HHCloud App",
 	entry: {
-		client: "./src/client/SucreCloudIndex/index.js",
+		client: "./src/client/HHCloud/index.js",
 		c:["react","react-dom","lodash"],
 	},
 	output: {
@@ -147,7 +147,7 @@ export default [{
 	}),
 		new webpack.DefinePlugin({
 			SIDE: JSON.stringify("client"),
-			SERVICE_URL: JSON.stringify("http://orchi"),
+			SERVICE_URL: JSON.stringify("http://orchi2"),
 			SERVICE_PORT: JSON.stringify(8080),
 			'process.env': {
 				NODE_ENV: JSON.stringify(process.env.NODE_ENV)
@@ -158,7 +158,7 @@ export default [{
 		new HTMLWebpackPlugin({
 			filname: "../dist/SC/index.html",
 			title: 'Code Splitting',
-			template: "src/client/SucreCloudIndex/index.html"
+			template: "src/client/HHCloud/index.html"
 		}),
 		new webpack.optimize.SplitChunksPlugin({
 			cacheGroups: {

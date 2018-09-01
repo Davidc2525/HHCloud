@@ -1,3 +1,5 @@
+import { List } from "immutable";
+
 const MIDDLEWARE = "EXPLORER"
 const FETCHING_PATH = "FETCHING_PATH";
 const DOWNLOAD_STATE = "DOWNLOAD_STATE";
@@ -6,7 +8,25 @@ const DELETEING_PATH = "DELETING_PATH";
 const DELETED_PATH = "DELETED_PATH";
 const ACTIVE_UPLOAD = "ACTIVE_UPLOAD"
 
+const openDialogMkDir = _ => ({ 
+	type: "OPEN_MKDIR_DIALOG" 
+})
 
+const closeDialogMkDir = _ => ({
+	type: "CLOSE_MKDIR_DIALOG"
+})
+
+const filterToolBar = (value: string) => ({
+	 type: "FILTER_TOOLBAR", 
+	 payload: { filter: value }
+})
+
+const selectedModeToolbar = (active:boolean) => ({
+	type: 'SELECTED_MODE_TOOLBAR',
+	payload:{
+		selecteMode:active
+	}
+})
 
 const fetchingPath = (path:string,withContent=false) => {
 	return ({
@@ -50,9 +70,17 @@ const deletingPath = (path:string, name) => {
 		type: DELETEING_PATH,
 		middle: MIDDLEWARE,
 		path: path,
-		name: name
+		name: name,
+	})
+}
 
-
+const deletingPaths = (list:List) => {
+	return ({
+		type: "DELETING_PATHS",
+		middle: "EXPLORER",
+		payload: {
+			listPath: list
+		}
 	})
 }
 
@@ -62,15 +90,19 @@ const deletedPath = (path,pathParent) => {
 		pathParent: pathParent,
 		type: DELETED_PATH,
 		middle: "EXPLORER",
-
 	})
 }
 
 const activeUpload = active => ({type:ACTIVE_UPLOAD,payload:{active}})
 
 export {
+	filterToolBar,
+	openDialogMkDir,
+	closeDialogMkDir,
+	selectedModeToolbar,
 	activeUpload,
 	markDownload,
+	deletingPaths,
 	deletedPath,
 	fetchtedPath,
 	deletingPath,

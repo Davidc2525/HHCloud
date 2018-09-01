@@ -1,13 +1,13 @@
-
+//@
 import { Upload } from "./Upload";
-const ADD_UPLOAD = "ADD_UPLOAD";
-const END_UPLOAD = "END_UPLOAD";
-const UPDATE_UPLOAD = "UPDATE_UPLOAD";
-const UPLOAD_MANAGER = "UPLOAD_MANAGER"
+const ADD_UPLOAD    = "@UPLOAD_MANAGER/ADD_UPLOAD";
+const END_UPLOAD    = "@UPLOAD_MANAGER/END_UPLOAD";
+const UPDATE_UPLOAD = "@UPLOAD_MANAGER/UPDATE_UPLOAD";
+const UPLOAD_MANAGER = "@UPLOAD_MANAGER/UPLOAD_MANAGER"
 
 const addUpload = (item: Upload) => ({
     type: ADD_UPLOAD,
-    middle: "UPLOAD_MANAGER",
+    middle: UPLOAD_MANAGER,
     upId: item.getId(),
     path: item.getPath(),
     up: item
@@ -15,7 +15,7 @@ const addUpload = (item: Upload) => ({
 
 const endUpload = (item: Upload) => ({
     type: END_UPLOAD,
-    middle: "UPLOAD_MANAGER",
+    middle: UPLOAD_MANAGER,
     upId: item.getId(),
     up:item
 })
@@ -23,7 +23,7 @@ const endUpload = (item: Upload) => ({
 
 const updateUpload = (item: Upload) => ({
     type: UPDATE_UPLOAD,
-    middle: "UPLOAD_MANAGER",
+    middle: UPLOAD_MANAGER,
     upId: item.getId(),
     up:item
 })

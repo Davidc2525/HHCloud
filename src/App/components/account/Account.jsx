@@ -1,4 +1,4 @@
-// @ts-check
+
 import SendVerifyEmailDialog from "./SendVerifyEmailDialog.jsx"
 import {STATES} from "../../elements/auth/state.js"
 import React from "react";

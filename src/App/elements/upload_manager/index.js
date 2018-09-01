@@ -6,7 +6,8 @@ import { ItemUpload } from "./ItemUpload.js";
 import { Upload } from "./Upload.js";
 
 class UploadManager {
-	uploads = {};
+	uploads: { [x: string]: Upload } = {};
+
 	constructor(){
 		console.warn("UploadManager",this)
 	}
@@ -16,19 +17,19 @@ class UploadManager {
 	/**Total de archivos a subir*/
 	getElementsUploadsCount():number{
 		return Object.keys(this.uploads)
-		.map(key=>this.uploads[key])
+		.map((key:string)=>this.uploads[key])
 		.map((item:Upload)=>item.getFiles().length)
 		.reduce((acumulator:number,current:number)=>{return acumulator+current},0)
 	}
 	/**total de archivos subidos */
 	getElementsUploadedCount():number{
 		return Object.keys(this.uploads)
-		.map(key=>this.uploads[key])
-		.map((item:Upload)=>item.getUploades())
+		.map((key:string)=>this.uploads[key])
+		.map((item:Upload)=>item.getUploaded().length)
 		.reduce((acumulator:number,current:number)=>{return acumulator+current},0)
 	}
 
-	getUploads():Object{
+	getUploads(): { [x: string]: Upload } {
 		return this.uploads;
 	}
 	getUpload(id:string):Upload{

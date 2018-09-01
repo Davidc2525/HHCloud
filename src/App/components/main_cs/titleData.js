@@ -1,4 +1,4 @@
-
+//@ts-check
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import LinearProgress from '@material-ui/core/LinearProgress';
@@ -16,8 +16,8 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Route } from "react-router-dom";
 import { push } from "react-router-redux";
+import { UploadManagerInstance } from "../../elements/upload_manager/index.js";
 import { store } from "../../redux/index.js";
-import {UploadManagerInstance} from "../../elements/upload_manager/index.js"
 
 const style = theme => ({
   button: {
@@ -90,8 +90,8 @@ class SideVarContent extends React.Component{
 
 
   getTotalProgressUpload(){
-    const total =  UploadManagerInstance.instance.getElementsUploadsCount()
-    const loaded = UploadManagerInstance.instance.getElementsUploadedCount()
+    const total =  UploadManagerInstance.instance.getElementsUploadsCount();
+    const loaded = UploadManagerInstance.instance.getElementsUploadedCount();
     return (loaded / total) * 100;
   }
 

@@ -130,8 +130,6 @@ const styles = theme => ({
 
 })
 class ViewExplorer extends React.Component {
-
-
  
 	constructor(props) {
 
@@ -188,12 +186,11 @@ class ViewExplorer extends React.Component {
 					 	{this.props.path.get("status")=="loading" &&
 				 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
 				 	 			<Grid item>
-
 				 	 			 	<Typography color="textSecondary" variant="subheading" >
-					           			{this.props.path.get("path")}
-					         		</Typography>
-					          	</Grid>
-					          	<br/>
+					           	{this.props.path.get("path")}
+					        </Typography>
+					    	</Grid>
+					      <br/>
 				 	 			<Grid item><CircularProgress /></Grid>
 				 	 		</Grid>	
 				 		}
@@ -214,8 +211,8 @@ class ViewExplorer extends React.Component {
 							<div>
 								{!this.props.path.get("file")&&
 									<div id="folder">
-					          			{/*<DirectoryList data={this.props.path} history={this.props.history} classes={classes}  /> */}   
-					          			<DirectoryListVirtualize data={this.props.path} datalist={this.props.path} history={this.props.history} classes={classes}  />     
+											{/*<DirectoryList data={this.props.path} history={this.props.history} classes={classes}  /> */}   
+											<DirectoryListVirtualize data={this.props.path} datalist={this.props.path} history={this.props.history} classes={classes}  />     
 									</div>
 								}
 
@@ -225,7 +222,6 @@ class ViewExplorer extends React.Component {
 											{<FileViewer item={this.props.path} />}
 											{/*store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	*/}
 											
-
 											<div>{fileExtension(this.props.path.get("path"))}</div>
 											<div>{mime.contentType(this.props.path.getIn(["payload","name"]))/**de data a payload*/}</div>
 											<strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["payload","size"]))}

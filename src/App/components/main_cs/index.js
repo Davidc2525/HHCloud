@@ -12,9 +12,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
-import {  otherMailFolderListItems } from './titleData.js';
+import { otherMailFolderListItems } from './titleData.js';
 import SideVarContent from './titleData.js';
-import { BrowserRouter as Router, Route, Link,Redirect,Switch,push} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect, Switch, push } from "react-router-dom";
 import Chip from '@material-ui/core/Chip';
 import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
@@ -29,39 +29,39 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 /**/
 
-//import Exprorer from "../explorer/Explorer.jsx"
+import Exprorer2 from "../explorer/Explorer.jsx"
 
 import Account2 from "../account/index.jsx"
 import Loadable from 'react-loadable';
 function Loading(props) {
   if (props.error) {
-    return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
+    return <div>Error! <button onClick={props.retry}>Retry</button></div>;
   } else {
-    return <div><img src={logo}/></div>;
+    return <div><img src={logo} /></div>;
   }
 }
-const  Exprorer = Loadable({
-    loader: () =>
-      import ('../explorer/Explorer.jsx'),
-    loading: Loading
-  });
+const Exprorer = Loadable({
+  loader: () =>
+    import('../explorer/Explorer.jsx'),
+  loading: Loading
+});
 
-const  Account = Loadable({
-    loader: () =>
-      import ('../account/index.jsx'),
-    loading: Loading
-  });
+const Account = Loadable({
+  loader: () =>
+    import('../account/index.jsx'),
+  loading: Loading
+});
 
-const  Index = Loadable({
-    loader: () =>
-      import ("../index/index.js"),
+const Index = Loadable({
+  loader: () =>
+    import("../index/index.js"),
   loading: Loading
 });
 
 
-const  UploadView = Loadable({
-    loader: () =>
-      import ("../upload_view/UploadView.jsx"),
+const UploadView = Loadable({
+  loader: () =>
+    import("../upload_view/UploadView.jsx"),
   loading: Loading
 });
 
@@ -75,10 +75,10 @@ const styles = theme => ({
     //flexDirection:"column",
     position: 'relative',
     display: 'flex',
-    height:"auto",
+    height: "auto",
     width: '100%',
   },
-   button: {
+  button: {
     margin: theme.spacing.unit,
   },
   appBar: {
@@ -95,7 +95,7 @@ const styles = theme => ({
   },
   toolbar: theme.mixins.toolbar,
   drawerPaper: {
-  	//backgroundColor:"grey",
+    //backgroundColor:"grey",
     width: drawerWidth,
     [theme.breakpoints.up('md')]: {
       position: 'fixed',
@@ -105,7 +105,7 @@ const styles = theme => ({
     boxSizing: "border-box",
 
     //height: "100%",
-    width:"100%",
+    width: "100%",
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
 
@@ -115,13 +115,13 @@ const styles = theme => ({
     },
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing.unit * 0,
-      marginLeft:drawerWidth+"px"
+      marginLeft: drawerWidth + "px"
     },
     footer: {
       flexGrow: 1,
 
     },
-    rootGrid:{flexGrow:1,width:"100%",margin:"none"},
+    rootGrid: { flexGrow: 1, width: "100%", margin: "none" },
     paper: {
       padding: theme.spacing.unit * 2,
       textAlign: 'center',
@@ -132,19 +132,19 @@ const styles = theme => ({
   },
 });
 
-const getBeforePath = (path,index)=>{
+const getBeforePath = (path, index) => {
   const preRuta = path.split("=")[1].split("\/")
-  console.warn(path,index,preRuta)
-  return preRuta.slice(0,index+1)
+  console.warn(path, index, preRuta)
+  return preRuta.slice(0, index + 1)
 }
 
 
 const ButtonLink = withRouter(({ history }) => (
   <Button
-   onClick={() => { history.push('/SC/unidad#/') }}
-   variant="extendedFab" color="primary" aria-label="delete" >
+    onClick={() => { history.push('/SC/unidad#/') }}
+    variant="extendedFab" color="primary" aria-label="delete" >
 
-    <NavigationIcon  />
+    <NavigationIcon />
     Mi Unidad
   </Button>
 
@@ -153,7 +153,7 @@ const ButtonLink = withRouter(({ history }) => (
 @withStyles(styles, { withTheme: true })
 class ResponsiveDrawer extends React.Component {
   state = {
-    width:0,height:0,
+    width: 0, height: 0,
     mobileOpen: false,
   };
 
@@ -161,7 +161,7 @@ class ResponsiveDrawer extends React.Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  debounced = _.debounce((width,height)=>{ this.setState(s=>({width,height:(height-64)})) }, 800, { 'maxWait': 1000 });
+  debounced = _.debounce((width, height) => { this.setState(s => ({ width, height: (height - 64) })) }, 800, { 'maxWait': 1000 });
 
   render() {
     const { classes, theme } = this.props;
@@ -169,15 +169,15 @@ class ResponsiveDrawer extends React.Component {
     const drawerContent = (
       <div id="nc">
         <div className={classes.toolbar} >
-          <img width="110px" style={{marginLeft:"60px"}} src={logo}/>
+          <img width="110px" style={{ marginLeft: "60px" }} src={logo} />
         </div>
         <Divider />
 
 
 
         <Divider />
-        <List><SideVarContent/></List>
-        
+        <List><SideVarContent /></List>
+
         {/*<div id="footer" className={classes.footer} >
           <div className={classes.footer}>
           <Grid className={classes.rootGrid} container justify="center" >
@@ -215,7 +215,7 @@ class ResponsiveDrawer extends React.Component {
 
     return (
       <div className={classes.root}>
-      	<Nav handleDrawerToggle={this.handleDrawerToggle.bind(this)}/>
+        <Nav handleDrawerToggle={this.handleDrawerToggle.bind(this)} />
         <Hidden mdUp>
           <SwipeableDrawer
 
@@ -261,17 +261,17 @@ class ResponsiveDrawer extends React.Component {
 
           <Switch>
 
-            <Route path="/SC/unidad" component={Exprorer}/>
+            <Route path="/SC/unidad" component={Exprorer2} />
 
             {/*esta rruta es para ese componente
               en components/nuevo_cs
             */}
-            <Route exact path="/SC" component={Index}/>
-            <Route exact path="/SC/download" component={DownloadViewer}/>
-            <Route exact path="/SC/upload" component={UploadView}/>
-            <Route exact path="/SC/account" component={Account2}/>
+            <Route exact path="/SC" component={Index} />
+            <Route exact path="/SC/download" component={DownloadViewer} />
+            <Route exact path="/SC/upload" component={UploadView} />
+            <Route exact path="/SC/account" component={Account2} />
 
-            <Route  component={()=><div>Andas perdido?</div>}/>
+            <Route component={() => <div>Andas perdido?</div>} />
           </Switch>
 
 

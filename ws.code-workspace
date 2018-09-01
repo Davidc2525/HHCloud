@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "HHCloud"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"node_modules": true,
+			"dist": true,
+			".idea": true,
+		},
+		"javascript.implicitProjectConfig.experimentalDecorators": true,
+		"editor.tabSize": 4,
+		"editor.formatOnPaste": true,
+		"editor.autoIndent": true,
+		"javascript.format.enable": true,
+		"javascript.autoClosingTags": true,
+		//"javascript.nameSuggestions": true,
+		"javascript.implicitProjectConfig.checkJs": false,
+		"javascript.preferences.importModuleSpecifier": "auto",
+	}
+}

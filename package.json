@@ -1,7 +1,7 @@
 {
   "name": "hh-cloud",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicacion para sistema de almacenamiento en la nube HHCloudBackend.",
   "scripts": {
     "start-client": "NODE_ENV=development BABEL_ENV=development node -r babel-register node_modules/.bin/webpack-dev-server --color --progress --mode=development  --display-modules  --config webpack/webpack.config.client.js",
     "build-client": "NODE_ENV=production BABEL_ENV=production node -r babel-register node_modules/.bin/webpack --progress --mode=production --color --display-modules --config webpack/webpack.config.client.js",
@@ -10,7 +10,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "orchi"
+    "orchi",
+    "HHCloud",
+    "Cloud",
+    "Storage",
+    "almacenamiento",
+    "nube",
+    "open source"
   ],
   "author": "David Colmenares",
   "license": "ISC",

@@ -8,7 +8,5 @@ import WellcomePage from "../../App/components_to_page_index/wellcomePage/index.
 //console.error(nc)
 
 OfflinePluginRuntime.install();
-console.log(OfflinePluginRuntime);
-
 
 reactDom.render(<WellcomePage/>,document.getElementById("app"));

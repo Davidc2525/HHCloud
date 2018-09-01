@@ -25,7 +25,7 @@ class Api {
 
 	constructor() {
 
-		store.subscribe(x=>this.getUserId())
+		//store.subscribe(x=>this.getUserId())
 
 		this.hostService = SERVICE_URL;//"http://orchi";
 		this.portService = SERVICE_PORT; //8080;
@@ -37,7 +37,7 @@ class Api {
 		this.urlService.port = this.portService
 
 		this.operations = {}
-		this.getUserId();
+		//this.getUserId();
 		this.registerOperation("list", ListOperation)
 		this.registerOperation("status", GetStatusOperation)
 		this.registerOperation("rename", RenameOperation)
