@@ -153,7 +153,7 @@ export default (state = new Map(), action) => {
 
 			return newState
 
-			case "SET_PATHS_MOVE_OR_COPY_DIALOG":
+		case "SET_PATHS_MOVE_OR_COPY_DIALOG":
 			var newState = state;
 			var paths = newState.getIn(["moveOrCopyDialog","paths"])
 				paths = paths.set(action.payload.path, fromJS(action.payload.paths))					
@@ -161,7 +161,29 @@ export default (state = new Map(), action) => {
 
 			return newState
 
+		case "DELETE_PATH_MOVED_MOVE_OR_COPY_DIALOG":
+			var newState = state;
+			var parentPath = getParent(action.payload.path)
+			var targetName = getName(action.payload.path)
+			
+			var parent = newState.getIn(["paths", parentPath], false);
 
+			if (parent) {
+				/**lista de elementos en ese parent*/
+				var parentData = parent.get("payload", false);
+				if (parentData) {
+
+					let item = parentData.find(x=>x.get("name")==targetName)
+					let itemIndex = parentData.indexOf(item)
+					if (itemIndex!=-1){
+						parentData = parentData.remove(itemIndex)
+						parent = parent.set("payload", parentData);
+						newState = newState.setIn(["paths", parentPath], parent)
+					}
+
+				}
+			}
+			return newState
 
 		/**dialogo de mover o copiar*/
 

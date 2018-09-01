@@ -2,7 +2,7 @@
 import { Map,fromJS } from "immutable";
 import {ADD_UPLOAD,END_UPLOAD,UPDATE_UPLOAD} from "./action"
 
-export default (state : Map = Map(), action) => {
+export default (state: Map = Map(), action) => {
 
 	switch (action.type) {
 

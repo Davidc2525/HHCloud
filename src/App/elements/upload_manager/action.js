@@ -5,6 +5,7 @@ const END_UPLOAD    = "@UPLOAD_MANAGER/END_UPLOAD";
 const UPDATE_UPLOAD = "@UPLOAD_MANAGER/UPDATE_UPLOAD";
 const UPLOAD_MANAGER = "@UPLOAD_MANAGER/UPLOAD_MANAGER"
 
+
 const addUpload = (item: Upload) => ({
     type: ADD_UPLOAD,
     middle: UPLOAD_MANAGER,

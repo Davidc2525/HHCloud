@@ -5,8 +5,13 @@ import { addUpload,endUpload,updateUpload } from "./action.js";
 import { ItemUpload } from "./ItemUpload.js";
 import { Upload } from "./Upload.js";
 
+interface Uploads {
+	[id: string]: Upload
+};
+
+
 class UploadManager {
-	uploads: { [x: string]: Upload } = {};
+	uploads:Uploads = {};
 
 	constructor(){
 		console.warn("UploadManager",this)
@@ -29,7 +34,7 @@ class UploadManager {
 		.reduce((acumulator:number,current:number)=>{return acumulator+current},0)
 	}
 
-	getUploads(): { [x: string]: Upload } {
+	getUploads(): Uploads {
 		return this.uploads;
 	}
 	getUpload(id:string):Upload{

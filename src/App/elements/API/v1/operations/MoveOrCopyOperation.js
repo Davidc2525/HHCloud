@@ -56,6 +56,9 @@ class MoveOrCopyOperation {
 				.then(x => {
 					this.timeend = new Date().getTime()
 					if (x.status == "ok") {
+						if (this.intervalUpdate != null) {
+							clearInterval(this.intervalUpdate);
+						}
 						this.thenCB({ ...x,
 							time: this.timeend - this.timestart
 						})
@@ -66,7 +69,9 @@ class MoveOrCopyOperation {
 					}
 				})
 				.catch(x => {
-
+					if(this.intervalUpdate!=null){
+						clearInterval(this.intervalUpdate); 
+					}
 					this.catchCB({
 						status: "error",
 						...x
@@ -82,7 +87,7 @@ class MoveOrCopyOperation {
 					thenCB: (x) => {
 						this.dstSize = x.payload.size;
 					},
-					catchCB: this.catchCB
+					catchCB: x => { clearInterval(this.intervalUpdate); this.catchCB(x)}
 				})
 
 				if (this.dstSize == this.srcSize) {

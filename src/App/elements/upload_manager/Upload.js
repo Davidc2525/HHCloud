@@ -22,7 +22,7 @@ var up = (path, f) => {
 		body: (fd)
 	}
 
-	return fetch(ApiInstance.instance.urlService+"uploader", options)
+	return fetch(ApiInstance.instance.urlService + "uploader", options)
 
 }
 /** 
@@ -31,14 +31,14 @@ var up = (path, f) => {
  * la rruta donde se comenzo a subir.
  */
 class Upload {
-	id:string;
-	path:string;
-	files:Array<File>;
-	type:string;
-	filesUploaded:Arrat<File>;
-	currentFile:File;
-	filesUploadeError: Array<File>;
-	name:string;
+	id: string;
+	path: string;
+	files: Array<File>;
+	type: string;
+	filesUploaded:Array<File>;
+	currentFile: File;
+	filesUploadeError:Array<File>;
+	name: string;
 
 	constructor(item: ItemUpload) {
 		this.id = uniqid();
@@ -50,38 +50,38 @@ class Upload {
 		this.currentFile = null;
 
 
-		if(this.files.length>0){
-			let name:string;
-			let file:File = this.files[0];
-			
-			if(this.getType()=="folder"){
+		if (this.files.length > 0) {
+			let name: string;
+			let file: File = this.files[0];
+
+			if (this.getType() == "folder") {
 				if (file.webkitRelativePath != null && file.webkitRelativePath != "") {
 					name = file.webkitRelativePath.split("/")[0];
 				} else {
 					name = `Subir ${this.files.length} archivos`
 				}
-			}else{
+			} else {
 				name = `Subir ${this.files.length} archivos`
 			}
-			
+
 			this.name = name;
-			 
+
 		}
 
 	}
-	
+
 	async processUpload() {
 		for (let x = 0; x < this.files.length; x++) {
 			let file = this.files[x];
 			this.setCurrentFile(file);
-			await up(this.path,file)
-			.then(response=>{
-				this.incrementUploaded(file);
-			})
-			.catch(x=>{
-				this.incrementUploadedWithError(file);
-			})
-			
+			await up(this.path, file)
+				.then(response => {
+					this.incrementUploaded(file);
+				})
+				.catch(x => {
+					this.incrementUploadedWithError(file);
+				})
+
 		}
 		UploadManagerInstance.instance.endUpload(this);
 
@@ -93,7 +93,7 @@ class Upload {
 	/**
 	 * Obtener nombre de la subida
 	 */
-	getName(): string{return this.name;}
+	getName(): string { return this.name; }
 	/**
 	 * obtener rruta donde se subiran los archivos de esta instancia de subida.
 	 */
@@ -110,23 +110,23 @@ class Upload {
 	 * obtener cantidad de archivos ya subidos.
 	 */
 	getUploaded(): Array<File> { return this.filesUploaded; }
-	
+
 	/**
 	 * incrementar la cantidad de archivos subidos.
 	 */
-	incrementUploaded(file:File) {
+	incrementUploaded(file: File) {
 		this.filesUploaded.push(file);
 		UploadManagerInstance.instance.updateUpload(this);
 	}
 	/**
 	 * Obtener archivo actual subiendo
 	 */
-	getCurrentFile():File{return this.currentFile;}
+	getCurrentFile(): File { return this.currentFile; }
 
 	/**
 	 * setear archivo actual a subir
 	 */
-	setCurrentFile(file : File){
+	setCurrentFile(file: File) {
 		this.currentFile = file;
 		UploadManagerInstance.instance.updateUpload(this);
 	}
@@ -134,7 +134,7 @@ class Upload {
 	/**
 	 * Incrementar archivos con error al subir
 	 */
-	incrementUploadedWithError(file:File){
+	incrementUploadedWithError(file: File) {
 		this.filesUploadeError.push(file);
 		UploadManagerInstance.instance.updateUpload(this);
 	}
@@ -142,7 +142,7 @@ class Upload {
 	/**
 	 * Obtener archivos con error al subir 
 	 */
-	getUploadedFilesWithError():Array<File>{
+	getUploadedFilesWithError(): Array<File> {
 		return this.filesUploadeError;
 	}
 

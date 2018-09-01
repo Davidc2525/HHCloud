@@ -1,5 +1,6 @@
 import React from 'react';
 import ApiInstance from "../../elements/API/v1/Api.js"
+import {fetchingPath} from "./actions"
 import {getParent,mergePath} from "./Util.js"
 
 import {Map,List as ListI,fromJS} from "immutable"
@@ -24,7 +25,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
 import Slide from '@material-ui/core/Slide';
 import {store} from "../../redux/index.js"
 import {connect} from "react-redux";
@@ -151,17 +151,25 @@ class MoveOrCopyDialog extends React.Component {
   }
 
   onOperation(){
-
+    const { path,op } = this.props;
+    const { pathSelectedToMoveOrCopy } = this.state;
     this.setState({inProgress:true,cantEdit:false})
     ApiInstance.instance.callOperation(this.props.op,{
-        path:this.props.path,
-        dstPath:this.state.pathSelectedToMoveOrCopy,
+        path:path,
+        dstPath: pathSelectedToMoveOrCopy,
         onProgress:(_,progress)=>{this.setState({progress})},
         //onReady
         thenCB:(payload)=>{
             
-          console.warn(payload)
+          console.warn("onOperation", this.props, op,payload)
           store.dispatch({type:"CLOSE_MOVE_OR_COPY_DIALOG"})
+          
+          if(op=="move"){
+            store.dispatch({ type: "DELETE_PATH_MOVED_MOVE_OR_COPY_DIALOG", payload: { path: path}})
+          }
+
+          //store.dispatch(fetchingPath(getParent(this.props.path)))
+          store.dispatch(fetchingPath(getParent( pathSelectedToMoveOrCopy )))
           this.setState(({inProgress:false,cantEdit:true,paths:new Map(),currentPath:"/",pathSelectedToMoveOrCopy:null}))
         },
         catchCB:(payload)=>{
@@ -176,8 +184,8 @@ class MoveOrCopyDialog extends React.Component {
       <div>
        
         <Dialog
-          disableBackdropClick={!this.state.inProgress}
-          disableEscapeKeyDown={!this.state.inProgress}
+          disableBackdropClick={this.state.inProgress}
+          disableEscapeKeyDown={this.state.inProgress}
           fullScreen={fullScreen}
           //style={{minWidth:"500px"}}
           open={this.props.open}
@@ -205,13 +213,14 @@ class MoveOrCopyDialog extends React.Component {
 
           <Grid  container justify="center" alignItems="center">
             {(!this.state.inProgress  && !this.state.fetchingPath && this.state.status=="ok")&&
-              <Grid item xs><ListPath 
-                loadPaths={this.loadPaths.bind(this)}
-                currentPath={this.state.currentPath}
-                paths={this.state.paths}
-                setCurretPath={this.setCurretPath.bind(this)}
-                pathSelect={this.pathSelect.bind(this)}
-              />
+              <Grid item xs>
+                <ListPath 
+                  loadPaths={this.loadPaths.bind(this)}
+                  currentPath={this.state.currentPath}
+                  paths={this.state.paths}
+                  setCurretPath={this.setCurretPath.bind(this)}
+                  pathSelect={this.pathSelect.bind(this)}
+                />
               </Grid>
               }
               {
