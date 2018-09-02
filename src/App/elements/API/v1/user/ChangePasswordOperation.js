@@ -1,7 +1,7 @@
 import apiUserInstance from "./index";
 
 class ChangePasswordOperation {
-    constructor({ id, currentPassword, password, thenCB = response => { }, catchCB = response => { } }) {
+    constructor({ id, currentPassword, password, thenCB = response => { }, catchCB = response => { } } = {}) {
         apiUserInstance
             .instance
             .changePassword(id, currentPassword, password)

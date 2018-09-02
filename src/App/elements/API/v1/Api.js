@@ -15,6 +15,8 @@ import { CreateUserOperation } from "./user/CreateUserOperation";
 import { ChangePasswordOperation } from "./user/ChangePasswordOperation";
 import { GetUserOperation } from "./user/GetUserOperation";
 import { UpdateUserOperation } from "./user/UpdateUserOperation";
+import { SignInOperation } from "./user/SignInOperation";
+import { SignOutOperation } from "./user/SignOutPeration";
 import {
 	store
 } from "../../../redux/index.js";
@@ -47,6 +49,8 @@ class Api {
 		this.registerOperation("delete", DeleteOperation)
 		this.registerOperation("download", DownloadOperation)
 		this.registerOperation("accountstatus", GetAccountStatusOperation)
+		this.registerOperation("login", SignInOperation)
+		this.registerOperation("logout", SignOutOperation)
 		this.registerOperation("getuser", GetUserOperation)
 		this.registerOperation("createuser", CreateUserOperation)
 		this.registerOperation("updateuser", UpdateUserOperation)
@@ -87,8 +91,8 @@ class Api {
      fetch({apiArg},api = API_DEFAULT){
 
         return new Promise((resolve,reject)=>{
-
-                var arg = { ...apiArg,uid:this.userid}
+				var method = 'POST';
+                var arg:Object = { ...apiArg,uid:this.userid}
 		        var fd = new FormData();
 
 		        fd.append("args", JSON.stringify(arg,null,2))
@@ -96,9 +100,17 @@ class Api {
 
 
 		        var xhr = new XMLHttpRequest();
-
-		        xhr.open('POST', this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
-		         //xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+				if(arg.hasOwnProperty("method")){
+					method = arg.method;
+					delete arg.method;
+				}
+				method = method.toUpperCase();
+				if(method=="POST"){
+					xhr.open(method, this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
+				}else if(method=="GET"){
+					xhr.open(method, this.urlService+api+`?op=${arg.op}&args=${(JSON.stringify(arg))}`, true);
+			   }
+				//xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
                 //xhr.setRequestHeader('Content-type', 'application/json');
                 //xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
 		        xhr.withCredentials = true;
@@ -138,7 +150,11 @@ class Api {
 					}
 				};
 
-		        xhr.send((fd));
+		        if(method=="POST"){
+					xhr.send(fd);
+				}else{
+					xhr.send();
+				}
 
         })
 

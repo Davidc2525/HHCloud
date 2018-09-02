@@ -1,7 +1,7 @@
 import {apiUserInstance} from "./index";
 
 class GetUserOperation {
-	constructor({ user, by = "id", thenCB = user => { }, catchCB = x => { } }) {
+	constructor({ user, by = "id", thenCB = user => { }, catchCB = x => { } } = {}) {
 		apiUserInstance
 			.instance
 			.getUser(user, by)

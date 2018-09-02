@@ -1,6 +1,6 @@
 import apiUserInstance from "./index";
 class GetAccountStatusOperation {
-	constructor({ thenCB = accountstatus => { }, catchCB = x => { } }) {
+	constructor({ thenCB = accountstatus => { }, catchCB = x => { } } = {}) {
 		apiUserInstance
 			.instance
 			.getAccountStatus()

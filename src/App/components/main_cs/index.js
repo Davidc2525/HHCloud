@@ -1,38 +1,24 @@
-import React from 'react';
-import ReactResizeDetector from 'react-resize-detector';
-import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
+import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Hidden from '@material-ui/core/Hidden';
-import Divider from '@material-ui/core/Divider';
-import MenuIcon from '@material-ui/icons/Menu';
-import { otherMailFolderListItems } from './titleData.js';
-import SideVarContent from './titleData.js';
-import { BrowserRouter as Router, Route, Link, Redirect, Switch, push } from "react-router-dom";
-import Chip from '@material-ui/core/Chip';
-import Nav from "../nav_cs/index.js"
 import NavigationIcon from '@material-ui/icons/Navigation';
-import Button from '@material-ui/core/Button';
-import { withRouter } from 'react-router'
-import _ from "lodash"
-import logo from "../../../media/img/logop.png"
+import _ from "lodash";
+import PropTypes from 'prop-types';
+import React from 'react';
 //import Index from "../index/index.js"
-import DownloadViewer from "../download_viewer/index.js"
-import PahtSee from "../path_see/index.js"
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+//import DownloadViewer from "../download_viewer/index.js"
 /**/
-
-import Exprorer2 from "../explorer/Explorer.jsx"
-
-import Account2 from "../account/index.jsx"
+//import Exprorer2 from "../explorer/Explorer.jsx"
+//import Account2 from "../account/index.jsx"
 import Loadable from 'react-loadable';
+import { withRouter } from 'react-router';
+import { Route, Switch } from "react-router-dom";
+import logo from "../../../media/img/logop.png";
+import Nav from "../nav_cs/index.js";
+import SideVarContent from './titleData.js';
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={props.retry}>Retry</button></div>;
@@ -62,6 +48,12 @@ const Index = Loadable({
 const UploadView = Loadable({
   loader: () =>
     import("../upload_view/UploadView.jsx"),
+  loading: Loading
+});
+
+const DownloadViewer = Loadable({
+  loader: () =>
+    import("../download_viewer/index.js"),
   loading: Loading
 });
 
@@ -261,7 +253,7 @@ class ResponsiveDrawer extends React.Component {
 
           <Switch>
 
-            <Route path="/SC/unidad" component={Exprorer2} />
+            <Route path="/SC/unidad" component={Exprorer} />
 
             {/*esta rruta es para ese componente
               en components/nuevo_cs
@@ -269,7 +261,7 @@ class ResponsiveDrawer extends React.Component {
             <Route exact path="/SC" component={Index} />
             <Route exact path="/SC/download" component={DownloadViewer} />
             <Route exact path="/SC/upload" component={UploadView} />
-            <Route exact path="/SC/account" component={Account2} />
+            <Route exact path="/SC/account" component={Account} />
 
             <Route component={() => <div>Andas perdido?</div>} />
           </Switch>

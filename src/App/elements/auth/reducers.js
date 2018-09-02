@@ -1,12 +1,16 @@
 import {
 	Map,
 	fromJS
-} from "immutable"
+} from "immutable";
+import initState,{STATES} from "./state.js"
 
 
 export default (state = new Map(), action) => {
 	//console.warn(state)
 	switch (action.type) {
+		case "CLEAR_STATE":			
+			let iState = { ...initState, state: STATES["2"] };
+			return fromJS(iState);
 		case "AUTH_SET_STATE":
 			return state.set("state", action.payload.state)
 		case "AUTH_SETLOGIN":

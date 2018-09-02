@@ -1,4 +1,5 @@
 import {store,history} from "./redux/index.js"
+import Auth,{auth,STATE} from "./elements/auth/index.js"
 import DownloadManager from "./elements/download_manager/index.js"
 import UploadManagerInstance from "./elements/upload_manager/index"
 import React from "react"
@@ -6,7 +7,6 @@ import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 window.df = require("dateformat")
-import Auth,{auth,STATE} from "./elements/auth/index.js"
 import {STATES} from "./elements/auth/state.js"
 import { withRouter } from 'react-router-dom'
 
@@ -19,7 +19,7 @@ import {
 //import style from "./css/main.css"
 //import Nav from "./components/Nav/index.js"
 
-import Home from "./components/main_cs/index.js"
+//import Home from "./components/main_cs/index.js"
 
 
  //import('semantic-ui-css/semantic.min.css');
@@ -98,7 +98,7 @@ const light = createMuiTheme({
 
 const Main =()=>(
     <MuiThemeProvider theme={true?light:dark}>
-     <Route component={Home}/>
+     <Route component={Home2}/>
     </MuiThemeProvider>
 
 )
@@ -106,7 +106,7 @@ const Main =()=>(
 const AuthAreaThemed = _ => (
   <MuiThemeProvider theme={true?light:dark}>
      <Route component={AuthArea}/>
-    </MuiThemeProvider>
+  </MuiThemeProvider>
 )
 
 

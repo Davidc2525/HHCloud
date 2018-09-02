@@ -1,6 +1,6 @@
 import apiUserInstance from "./index";
 class ChangePasswordByRecoverOperation {
-	constructor({ email, token, password, thenCB = response => { }, catchCB = response => { } }) {
+	constructor({ email, token, password, thenCB = response => { }, catchCB = response => { } } = {}) {
 		apiUserInstance
 			.instance
 			.changePasswordByRecover(email, token, password)

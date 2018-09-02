@@ -1,12 +1,59 @@
 import ApiInstance from "../Api.js"
 import User from "./User.js";
 import AccountStatus from "./AccountStatus.js"
+import { AuthObject } from "../../../auth/AuthObject.js";
 
 const API = "user";
 class ApiUser {
 
 	constructor() {
 		window.au = this;
+	}
+
+	signOut() {
+		return ApiInstance.instance.fetch({
+			apiArg: {
+				op: "logout",
+				method: "GET",
+			}
+		}, "auth")
+			.then(x => {
+
+				return new Promise((res, rej) => {
+					if (x.status=="ok") {
+						
+						res(x)
+					} else {
+						rej(x)
+					}
+
+				})
+
+			});
+	}
+
+	signIn(email: string = "", password: string = "", remember: boolean = false): Promise<AuthObject> {
+		return ApiInstance.instance.fetch({
+			apiArg: {
+				username: email,
+				password,
+				remember,
+				op: "login",
+				method: "GET",
+			}
+		}, "auth")
+			.then(x => new AuthObject(x)).then(x => {
+
+				return new Promise((res, rej) => {
+					if ((x.auth || x.exist)) {
+						res(x)
+					} else {
+						rej(x)
+					}
+
+				})
+
+			});
 	}
 
 	sendVerifyEmail(email = "") {

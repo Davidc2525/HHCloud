@@ -6,7 +6,12 @@ const DOWNLOAD_STATE = "DOWNLOAD_STATE";
 const FETCHTED_PATH = "FETCHTED_PATH";
 const DELETEING_PATH = "DELETING_PATH";
 const DELETED_PATH = "DELETED_PATH";
+const CLEAR_STATE = "CLEAR_STATE";
 const ACTIVE_UPLOAD = "ACTIVE_UPLOAD"
+
+const clearState = ({
+	type: CLEAR_STATE 
+})
 
 const openDialogMkDir = _ => ({ 
 	type: "OPEN_MKDIR_DIALOG" 
@@ -107,6 +112,8 @@ export {
 	fetchtedPath,
 	deletingPath,
 	fetchingPath,
+	clearState,
+	CLEAR_STATE,
 	ACTIVE_UPLOAD,
 	DELETEING_PATH,
 	DELETED_PATH,

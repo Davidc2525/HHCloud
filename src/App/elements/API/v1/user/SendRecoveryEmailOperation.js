@@ -1,7 +1,7 @@
 import apiUserInstance from "./index";
 
 class SendRecoveryEmailOperation {
-	constructor({ email, thenCB = response => { }, catchCB = response => { } }) {
+	constructor({ email, thenCB = response => { }, catchCB = response => { } } = {}) {
 		apiUserInstance
 			.instance
 			.sendRecoveryEmail(email)

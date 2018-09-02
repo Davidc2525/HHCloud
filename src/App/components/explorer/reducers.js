@@ -3,11 +3,12 @@ import {
 	fromJS
 } from "immutable"
 import {
+	CLEAR_STATE,
 	ACTIVE_UPLOAD,
 	FETCHTED_PATH,
 	DOWNLOAD_STATE
 } from "./actions.js"
-
+import initState from "./state.js"
 import {getParent,getName} from "./Util.js"
 
 /**
@@ -45,6 +46,9 @@ const setPropertyInChildreDiretory = (state,pathParent,pathChild, name, value) =
 export default (state = new Map(), action) => {
 
 	switch (action.type) {
+		case CLEAR_STATE:			
+			return initState;
+			
 		case "FETCHING_PATH":
 			
 			var newState = state.setIn(["paths", action.path], fromJS({

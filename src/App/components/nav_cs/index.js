@@ -11,7 +11,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import {connect} from "react-redux"
-
+import { push } from "react-router-redux";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -19,7 +19,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 //import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
-
+import { auth } from "../../elements/auth/index"
 const drawerWidth = 240;
 
 const styles = theme => (window.theme=theme,{
@@ -98,6 +98,25 @@ class ResponsiveDrawer extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  handleEvent = (event,action) => {
+     switch(action.type){
+       case "gohome":
+        this.props.dispatch(push("/SC/"))
+       break;
+       case "gounity":
+        this.props.dispatch(push("/SC/unidad#/"))
+       break;
+       case "goaccount":
+         this.props.dispatch(push("/SC/account"))
+       break;
+       case "closesession":
+         auth.Auth.signOut()
+       break;
+
+       default:
+       break;
+     }
+  }
   render() {
     const { classes, theme,currentType} = this.props;
     const { anchorEl } = this.state;
@@ -157,8 +176,10 @@ class ResponsiveDrawer extends React.Component {
                  open={open}
                  onClose={this.handleClose}
                >
-                 <MenuItem onClick={this.handleClose}>Inicio</MenuItem>
-                 <MenuItem onClick={this.handleClose}>{displayName}</MenuItem>
+                 <MenuItem onClick={event=>this.handleEvent(event,{type:"gohome"})}>Inicio</MenuItem>
+                 <MenuItem onClick={event=>this.handleEvent(event,{type:"gounity"})}>Mi unidad</MenuItem>
+                 <MenuItem onClick={event=>this.handleEvent(event,{type:"goaccount"})}>{displayName}</MenuItem>
+                 <MenuItem onClick={event=>this.handleEvent(event,{type:"closesession"})}>Cerrar session</MenuItem>
                 </Menu>
 
 

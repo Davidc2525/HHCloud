@@ -9,6 +9,7 @@ import {STATES} from "./state.js"
 import {
 	store
 } from "../../redux/index.js"
+import { AuthObject } from "./AuthObject";
 
 
 class Auth {
@@ -18,7 +19,7 @@ class Auth {
 		console.warn(store);
 
 		this.signIn().then(x => {
-			if (x.login) {
+			if ((x.login)) {
 				store.dispatch({
 					type: "AUTH_SET_STATE",
 					payload: {
@@ -50,6 +51,7 @@ class Auth {
 
 	setStateNoLogin(){
 		this.setState(STATES[2]);
+		store.dispatch({type:"CLEAR_STATE"});
 	}
 
 	setState(newState){
@@ -59,10 +61,6 @@ class Auth {
 				state: newState
 			}
 		});
-	}
-
-	signUp(user, pass) {
-
 	}
 
 	onLogin(x) {
@@ -86,88 +84,34 @@ class Auth {
 
 
 	signOut() {
-		return fetch(`${location.origin}/api/logout`, {
-			credentials: "include"
-		}).then(x => x.json()).then(x => console.warn(x))
+		return new Promise((resolve, reject) => {
+			ApiInstance.instance.callOperation("logout", {
+				thenCB: x => {
+					this.setStateNoLogin()
+					resolve(x);
+				},
+				catchCB: x => {
+					this.setStateNoLogin()
+					reject(x)
+				}
+			})
+		})
 	}
 
 	signIn(username, password, remember) {
-		return new Promise((resolve, reject) => {
-
-				var arg = {op:"login",username,password,remember}
-				//var fd = new FormData();
-
-				//fd.append("args", JSON.stringify(arg, null, 2))
-				var args = "?args="+JSON.stringify(arg, null, 2)
-				var xhr = new XMLHttpRequest();
-
-				xhr.open("get", ApiInstance.instance.urlService+`auth?op=login&args=${(JSON.stringify(arg))}` , true);
-				//xhr.setRequestHeader('Content-type', 'application/json');
-				xhr.withCredentials = true;
-				xhr.responseType = 'json';
-
-
-				xhr.onprogress = (event) => {
-
-				};
-
-				xhr.onerror = (event) => {
-					console.warn(xhr)
-					reject({
-						status:"error",
-						error: "connection_error",
-						msg: "Error al tratar de conectar, revisa tu conexion."
-					})
-				}
-
-				xhr.onload = event => {
-					resolve(xhr.response)
-				};
-
-				xhr.send();
-
+		return new Promise( (resolve,reject) => {
+			ApiInstance.instance.callOperation("login", {
+				email:username,
+				password,
+				remember,
+				thenCB: accountstatus => {
+					this.onLogin(accountstatus);	
+					resolve(accountstatus);
+				},
+				catchCB: x => reject(x)
 			})
-			.then(x => new AuthObject(x)).then(x => {
-
-				return new Promise((res, rej) => {
-					if ((x.auth || x.exist)) {
-						this.onLogin(x)
-						res(x)
-					} else {
-						rej(x)
-					}
-
-				})
-
-			});
+		} );
 	}
-}
-
-
-class AuthObject {
-
-	constructor({
-		sesid,
-		userid,
-		auth,
-		exist,
-		msg,
-		username,
-		password
-	}) {
-		this.login = false;
-		this.userid = userid;
-		this.sesid = sesid;
-		this.auth = auth;
-		this.exist = exist;
-		this.msg = msg;
-		this.username = username;
-		this.password = password;
-		if (this.auth || this.exist) {
-			this.login = true;
-		}
-	}
-
 }
 
 const auth = {

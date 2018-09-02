@@ -88,3 +88,4 @@ class UploaderSelect  extends React.Component{
 }
 
 export {UploaderSelect}
+export default UploaderSelect
