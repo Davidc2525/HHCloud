@@ -53,7 +53,7 @@ export default [{
 	},
 	devServer: {
 		host: "localhost",
-		port: 9090,
+		port: 80,
 		compress:true,
 		clientLogLevel: 'info',
 		//lazy: true,

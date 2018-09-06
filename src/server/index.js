@@ -33,6 +33,6 @@ app.get('/*', (req, res) => {
 app.get('/SC/*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../dist/SC', 'index.html'));
 });
-app.listen(9090,function(){
-    console.log("HHCloud client start in port", 9090);
+app.listen(80,function(){
+    console.log("HHCloud client start in port", 80);
 })
