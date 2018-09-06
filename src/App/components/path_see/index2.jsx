@@ -9,75 +9,75 @@ import Typography from '@material-ui/core/Typography';
 import {connect} from "react-redux"
 import {parsePath,tryNormalize} from "../explorer/Util.js"
 import {
-  push
+	push
 } from "react-router-redux";
 function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
+	return (
+		<Typography component="div" style={{ padding: 8 * 3 }}>
+			{props.children}
+		</Typography>
+	);
 }
 
 TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
+	children: PropTypes.node.isRequired,
 };
 const styles2 = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-  tabRoot2: {
-    boxShadow:"none",
-   // borderBottom: '1px solid #e8e8e8',
-  },
-  tabsIndicator: {
-    backgroundColor: '#1890ff',
-  },
+	root: {
+		flexGrow: 1,
+		backgroundColor: theme.palette.background.paper,
+	},
+	tabRoot2: {
+		boxShadow:"none",
+	 // borderBottom: '1px solid #e8e8e8',
+	},
+	tabsIndicator: {
+		backgroundColor: '#1890ff',
+	},
 
-  tabRoot: {
-    textTransform: 'initial',
-    minWidth: 50,
-    fontWeight: theme.typography.fontWeightRegular,
-    marginRight: theme.spacing.unit * 4,
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-    '&:hover': {
-      color: '#40a9ff',
-      opacity: 1,
-    },
-    '&$tabSelected': {
-      color: '#1890ff',
-      fontWeight: theme.typography.fontWeightMedium,
-    },
-    '&:focus': {
-      color: '#40a9ff',
-    },
-  },
-  tabSelected: {},
-  typography: {
-    padding: theme.spacing.unit * 3,
-  },
-  tabRoot2:{maxWidth:"none",textTransform:"none"},
-  tabHome:{ minWidth:"70px"}
+	tabRoot: {
+		textTransform: 'initial',
+		minWidth: 50,
+		fontWeight: theme.typography.fontWeightRegular,
+		marginRight: theme.spacing.unit * 4,
+		fontFamily: [
+			'-apple-system',
+			'BlinkMacSystemFont',
+			'"Segoe UI"',
+			'Roboto',
+			'"Helvetica Neue"',
+			'Arial',
+			'sans-serif',
+			'"Apple Color Emoji"',
+			'"Segoe UI Emoji"',
+			'"Segoe UI Symbol"',
+		].join(','),
+		'&:hover': {
+			color: '#40a9ff',
+			opacity: 1,
+		},
+		'&$tabSelected': {
+			color: '#1890ff',
+			fontWeight: theme.typography.fontWeightMedium,
+		},
+		'&:focus': {
+			color: '#40a9ff',
+		},
+	},
+	tabSelected: {},
+	typography: {
+		padding: theme.spacing.unit * 3,
+	},
+	tabRoot2:{maxWidth:"none",textTransform:"none"},
+	tabHome:{ minWidth:"70px"}
 });
 const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-  tabHome:{ minWidth:"70px"}
+	root: {
+		flexGrow: 1,
+		width: '100%',
+		backgroundColor: theme.palette.background.paper,
+	},
+	tabHome:{ minWidth:"70px"}
 
 });
 
@@ -88,7 +88,7 @@ const styles = theme => ({
 	return {filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
 })
 class PathSee extends React.Component {
-  	
+		
 	constructor(props) {
 		super(props)
 		console.warn("PathSee", props)
@@ -135,11 +135,16 @@ class PathSee extends React.Component {
 	parsePath(path) {
 
 		var paths = tryNormalize(parsePath(path)).split("\/").slice(1).filter(x => x != "").map((x, i, p) => {
-
-			return {
-				path:  "/"+p.slice(0, i + 1).join("/"),
-				title: x
+			var encodePath = x;
+			try{
+				encodePath = decodeURIComponent(encodePath);
+			}catch(e){
+				console.error(e)
 			}
+			return {
+					path:  "/"+p.slice(0, i + 1).join("/"),
+					title: encodePath
+				}
 
 		})
 		return paths
@@ -148,46 +153,46 @@ class PathSee extends React.Component {
 	getHiddens(paths) {
 		return "/" + paths.slice(0, (paths.length / 2)).map(x => x.title).join("/")
 	}
-  render() {
-  	const {location,history,classes} = this.props;
-	const {hash} = location;
+	render() {
+		const {location,history,classes} = this.props;
+		const {hash} = location;
 	
 	
 	
-   
-    const { value } = this.state;
-    const {isSelecteMode} = this.props
-    return (
-      <div id="PathSee-2" className={classes.root}>
-        <AppBar style={{boxShadow:"none"}}  position="static" color="default">
-          <Tabs          	  
-            value={value}
-            onChange={this.handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            scrollable
-            scrollButtons="off"
-          >
-          
-          <Tab disabled={isSelecteMode} className={classes.tabHome} icon={<CloudCircleIcon/>} />
-          {this.state.paths.map((x,i)=>
-          	<Tab 
-			key={i.toString()}
-          	disabled={isSelecteMode}
-          	disableRipple
-          	//classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-          	className={classes.tabRoot2} label={x.title} />)}
-            
-            
-          </Tabs>
-        </AppBar>
-      </div>
-    );
-  }
+	 
+		const { value } = this.state;
+		const {isSelecteMode} = this.props
+		return (
+			<div id="PathSee-2" className={classes.root}>
+				<AppBar style={{boxShadow:"none"}}  position="static" color="default">
+					<Tabs          	  
+						value={value}
+						onChange={this.handleChange}
+						indicatorColor="primary"
+						textColor="primary"
+						scrollable
+						scrollButtons="off"
+					>
+					
+					<Tab disabled={isSelecteMode} className={classes.tabHome} icon={<CloudCircleIcon/>} />
+					{this.state.paths.map((x,i)=>
+						<Tab 
+						key={i.toString()}
+						disabled={isSelecteMode}
+						disableRipple
+						//classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+						className={classes.tabRoot2} label={x.title} />)}
+						
+						
+					</Tabs>
+				</AppBar>
+			</div>
+		);
+	}
 }
 
 PathSee.propTypes = {
-  classes: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles2)(PathSee);

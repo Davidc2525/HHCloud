@@ -6,7 +6,10 @@ import { ItemUpload } from "./ItemUpload"
 import { UploadManagerInstance } from "./index"
 import ApiInstance from "../API/v1/Api.js"
 var up = (path, f) => {
-	var fd = new FormData()
+	var fd = new FormData();
+	try{
+		//path = encodeURIComponent(decodeURIComponent(path))
+	}catch(e){console.error(e)}
 	fd.append("args", JSON.stringify({ path, op: "put" }))
 	fd.append("op", "put")
 	fd.append("f", (f))
@@ -39,6 +42,7 @@ class Upload {
 	currentFile: File;
 	filesUploadeError:Array<File>;
 	name: string;
+	canceled: boolean;
 
 	constructor(item: ItemUpload) {
 		this.id = uniqid();
@@ -48,6 +52,7 @@ class Upload {
 		this.filesUploaded = [];
 		this.filesUploadeError = [];
 		this.currentFile = null;
+		this.canceled = false;
 
 
 		if (this.files.length > 0) {
@@ -72,11 +77,26 @@ class Upload {
 
 	async processUpload() {
 		for (let x = 0; x < this.files.length; x++) {
+			if(this.canceled){
+				UploadManagerInstance.instance.endUpload(this);
+				return;
+			}
 			let file = this.files[x];
 			this.setCurrentFile(file);
 			await up(this.path, file)
-				.then(response => {
-					this.incrementUploaded(file);
+				.then(response => response.json())
+				.then(rJson => {
+					if(rJson.status!="ok"){
+						if(rJson.error == "quota_exceeded"){
+							alert(rJson.msg)
+							this.cancelUpload();
+							return;
+						}
+						console.error(rJson.msg)
+						this.incrementUploadedWithError(file)
+					}else{
+						this.incrementUploaded(file);
+					}
 				})
 				.catch(x => {
 					this.incrementUploadedWithError(file);
@@ -84,7 +104,6 @@ class Upload {
 
 		}
 		UploadManagerInstance.instance.endUpload(this);
-
 	}
 	/**
 	 * obtener id de la instancia de subida.
@@ -144,6 +163,12 @@ class Upload {
 	 */
 	getUploadedFilesWithError(): Array<File> {
 		return this.filesUploadeError;
+	}
+	/**
+	 * Cancelar operacion de subida
+	 */
+	cancelUpload(){
+		this.canceled = true;
 	}
 
 	/**

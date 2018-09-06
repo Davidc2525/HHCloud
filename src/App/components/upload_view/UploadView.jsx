@@ -65,7 +65,7 @@ class UploadView extends Component {
                     />
                     <ListItemSecondaryAction>
                         <IconButton aria-label="Delete"
-                            onClick={_ => confirm(`Desea cancelar descarga de ?`)}>
+                            onClick={_ => confirm(`Desea detener la subida de archivos?`) && up.cancelUpload()}>
                             <DeleteIcon />
                         </IconButton>
                     </ListItemSecondaryAction>

@@ -1,5 +1,6 @@
 import ApiInstance from "../Api.js"
 import * as immutable from "immutable"
+import {encodePathsInArg} from "../Api.js"
 window.imm = immutable
 
 class DownloadOperation {
@@ -25,6 +26,7 @@ class DownloadOperation {
 		}
 
 		var fd = new FormData()
+		args = encodePathsInArg(args);
 		fd.append("args", JSON.stringify(args,null,2))
 		fd.append("op", args.op)
 

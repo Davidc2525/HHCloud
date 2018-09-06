@@ -356,6 +356,37 @@ export default (state = new Map(), action) => {
 				newState = newState.set("toolBar",toolbar)
 			return newState
 		
+		case "INVERT_SELECTION_TOOLBAR":
+			var newState = state;
+			var selecteds = newState.getIn(["selection","selecteds"]);
+			var selection = newState.get("selection");
+				selection = selection.set("selecteds",new Map())
+				newState = newState.set("selection",selection);
+			var newStateSelection = action.payload.selecteMode;
+			var items = action.payload.items;
+				items.forEach(item => {
+					var isSelected = item.get("selectioned");
+					isSelected = !isSelected;
+					var path=item.get("path");
+
+					if(isSelected){
+						selecteds = newState.getIn(["selection","selecteds"]);
+						selection = newState.get("selection");
+						selecteds = selecteds.set(path, item)
+						selection = selection.set("selecteds", selecteds);
+
+						newState = newState.set("selection", selection);
+					}
+
+					var parentPath = getParent(path);
+					var targetName = getName(path);
+
+					newState =  setPropertyInChildreDiretory(newState,parentPath,targetName,"selectioned",isSelected);
+
+				});
+			return newState
+
+		
 		case "SELECTED_MODE_TOOLBAR":
 			var newState = state;
 			var selecteds = newState.getIn(["selection","selecteds"]);
@@ -367,8 +398,6 @@ export default (state = new Map(), action) => {
 
 				selection = selection.set("isSelecteMode",newStateSelection);
 				newState = newState.set("selection",selection)
-
-
 
 				selecteds.forEach(item => {
 					var path=item.get("path");
@@ -400,6 +429,30 @@ export default (state = new Map(), action) => {
 							}
 						}*/
 				});
+			return newState
+
+		case "ADD_ITEMS_SELECTION":
+			var newState = state;
+			var selection = newState.get("selection")
+			var selecteds = selection.get("selecteds")
+			var items = action.payload.items;
+			var itemSelected = action.payload.itemSelected
+			if(itemSelected == null) itemSelected = false;
+
+			if (items != null) {
+				items.forEach(item => {
+					var path = item.get("path")
+					selecteds = selecteds.set(path, item)
+					selection = selection.set("selecteds", selecteds);
+
+					newState = newState.set("selection", selection);
+
+					var parentPath = getParent(path);
+					var targetName = getName(path);
+
+					newState = setPropertyInChildreDiretory(newState, parentPath, targetName, "selectioned", itemSelected);
+				});
+			}
 			return newState
 
 		case "ADD_ITEM_SELECTION":

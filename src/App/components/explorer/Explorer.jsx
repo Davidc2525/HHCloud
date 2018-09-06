@@ -22,6 +22,13 @@ import FilterNone from '@material-ui/icons/FilterNone';
 import FlipToFront from '@material-ui/icons/FlipToFront';
 import Refresh from '@material-ui/icons/Refresh';
 import SelectAll from '@material-ui/icons/SelectAll';
+
+import BlurCircular from '@material-ui/icons/BlurCircular';
+import BlurOff from '@material-ui/icons/BlurOff';
+import BlurOn from '@material-ui/icons/BlurOn';
+import Flip from '@material-ui/icons/Flip';
+
+
 import filesize from "filesize";
 /**/
 import { fromJS, List as ListI } from "immutable";
@@ -47,7 +54,7 @@ import OrderSelect from "./OrderSelect.jsx";
 import { getParent, isRoot, parsePath, tryNormalize } from "./Util.js";
 import { ItemUpload } from '../../elements/upload_manager/ItemUpload.js';
 import Popover from '@material-ui/core/Popover';
-
+window.icons = require("@material-ui/icons/")
 window.r = React
 
 function Loading(props) {
@@ -229,7 +236,7 @@ class Explorer extends React.Component{
 		evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 	}
 	 onDrop(files) {
-	 	console.log(this.props.path,files)
+		console.log(this.props.path,files)
 			this.setState(p=>({files:[...p.files,...files]}));
 		}
 		
@@ -253,13 +260,17 @@ class Explorer extends React.Component{
 				</div>
 				
 				<div style={{height:"100px"}} className={classes.toolbar} />
-
+				<div>
+					{false&&Object.keys(window.icons).map(x=>RenderIcon(x,window.icons[x]))}
+				</div>
 				<ViewExplorer/>
 				
 			</div>
 		);
 	}
 }
+
+const RenderIcon = (dn,Name) => <div><Name/><strong>{dn}</strong></div>
 
 export default Explorer
 /*<div onDragOver={this.handleDragOver.bind()} onDrop={this.handleFileSelect.bind(this)}>
@@ -304,7 +315,13 @@ const stylesToolBar = theme => ({
 /**Toolbar Pasar a modulo independiente*/
 //@ts-ignore
 @connect(state=>{
-	var path = tryNormalize(parsePath(state.getIn(["router"]).location.hash));
+	var hashPath = state.getIn(["router"]).location.hash;
+	try{
+		hashPath = decodeURIComponent(hashPath)
+	}catch(e){
+		console.error(e)
+	}
+	var path = tryNormalize(parsePath(hashPath));
 	var upload = state.getIn(["explorer","upload"]);
 	var router = state.getIn(["router"]);
 	var online = state.getIn(["app","online"])
@@ -312,7 +329,8 @@ const stylesToolBar = theme => ({
 	var toolBar = state.getIn(["explorer","toolBar"]);
 	var selection = state.getIn(["explorer","selection"]);
 	var selecteds = state.getIn(["explorer","selection","selecteds"]);
-	return {path,upload,online,filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
+	var payloadInPath = state.getIn(["explorer","paths",path,"payload"],null);
+	return {path,payloadInPath,upload,online,filter:toolBar.get("filter"),router,currentType,selecteds,isSelecteMode:selection.get("isSelecteMode")}
 })
 @withStyles(stylesToolBar,{withTheme:true})
 //@withRouter
@@ -343,6 +361,8 @@ class ToolBar extends React.Component {
 	onChangeSelectMode(){
 
 		//store.dispatch({type: 'SELECTED_MODE_TOOLBAR',payload:{selecteMode:!this.props.isSelecteMode}})
+		//store.dispatch({ type: "ADD_ITEMS_SELECTION", payload: { items:this.props.payloadInPath, itemSelected:false} })
+
 		store.dispatch(selectedModeToolbar(!this.props.isSelecteMode));
 
 	}
@@ -409,10 +429,20 @@ class ToolBar extends React.Component {
 			//this.onChangeSelectMode()
 		}
 
-		if(data.action == "copy"){
 
+		if(data.action == "invertselection"){
+			//store.dispatch(selectedModeToolbar(true));
+
+			store.dispatch({ type: "INVERT_SELECTION_TOOLBAR", payload: { items:this.props.payloadInPath } })
 		}
-		if(data.action == "move"){
+
+		if(data.action == "deselectall"){
+			store.dispatch(selectedModeToolbar(true));
+		}
+
+		if(data.action == "selectall"){
+
+			store.dispatch({ type: "ADD_ITEMS_SELECTION", payload: { items:this.props.payloadInPath, itemSelected:true} })
 
 		}
 
@@ -421,10 +451,10 @@ class ToolBar extends React.Component {
 	createAtionButton(action,CompIcon,title,disabled=false){
 		return (
 			<Tooltip title={title}>
-		 		<IconButton disabled={disabled} color="primary" onClick={(e)=>this.handleAction(e,{action:action})} component="span">
+				<IconButton disabled={disabled} color="primary" onClick={(e)=>this.handleAction(e,{action:action})} component="span">
 					<CompIcon/>
 				</IconButton>
- 			</Tooltip>
+			</Tooltip>
 		)
 	}
 	handleClickAway = () => {
@@ -469,6 +499,7 @@ class ToolBar extends React.Component {
 							 {
 								 currentType == "folder" &&
 								 [
+								 this.createAtionButton("selectemode", SelectAll, "Hacer seleccion"),
 								 this.createAtionButton("mkdir", CreateNewFolder, "Crear nueva carpeta"),
 								 <span>
 								
@@ -487,11 +518,10 @@ class ToolBar extends React.Component {
 												 horizontal: 'center',
 											 }}
 										 >
-										 	<UploaderSelect/>
+											<UploaderSelect/>
 										 </Popover>
 									
 									</span>,
-								 this.createAtionButton("selectemode", SelectAll, "Hacer seleccion")
 								 ]
 							 }
 						 </div>
@@ -527,13 +557,16 @@ class ToolBar extends React.Component {
 
 											 <div className={classes.root + " " + classes.actionIcos}>
 
-												 {
-													 [
-													 this.createAtionButton("selectemode", ArrowBack, "Atras"),
-													 this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
-													 this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
-													 ]
-												 }
+													{
+														[
+															this.createAtionButton("selectemode", ArrowBack, "Atras"),
+															this.createAtionButton("selectall", BlurOn, "Seleccionar todo"),
+															this.createAtionButton("deselectall", BlurOff, "No seleccionar ninguno", !anySelecte),
+															this.createAtionButton("invertselection", Flip, "Invertir seleccion", !anySelecte),
+															this.createAtionButton("delete", DeleteForever, "Eliminar seleccionados", !anySelecte),
+															this.createAtionButton("download", CloudDownload, "Descargar seleccionados", !anySelecte),
+														]
+													}
 
 												 {false&&<IconButton onClick={(e)=>this.handleAction(e,{action:"copy"})} disabled={!anySelecte} color="primary" component="span">
 													 <FilterNone />

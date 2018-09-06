@@ -97,7 +97,7 @@ const styles = theme => ({
 	var currentType = state.getIn(["explorer","currentType"]);
 	var p = props.location.hash;
 	var currentPath = tryNormalize(parsePath(p))//;p.substring(p.indexOf("#")+1);//props.location.hash.split("#")[1];//parse(props.location.search).path
-		currentPath = decodeURI(currentPath)
+	try{currentPath = decodeURIComponent(currentPath);}catch(e){console.error(e)}
 	let explorer = state.get("explorer");
 	let paths = explorer.get("paths");
 	//let path = paths.get(props.location.search)

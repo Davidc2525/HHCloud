@@ -95,6 +95,8 @@ class Api {
                 var arg:Object = { ...apiArg,uid:this.userid}
 		        var fd = new FormData();
 
+		       	arg = encodePathsInArg(arg);
+
 		        fd.append("args", JSON.stringify(arg,null,2))
 		        fd.append("op", arg.op)
 
@@ -193,6 +195,35 @@ class Api {
 	}
 }
 
+const encodePathsInArg  = (arg:Object):Object => {
+	let args = {...arg};
+	/*
+    path
+    paths Array
+    srcPath
+	dstPath
+	*/
+
+	try {
+		if (args.hasOwnProperty("path")) {
+			args["path"] = encodeURIComponent(decodeURIComponent(args["path"]))
+		}
+		if (args.hasOwnProperty("srcPath")) {
+			args["srcPath"] = encodeURIComponent(decodeURIComponent(args["srcPath"]))
+		}
+		if (args.hasOwnProperty("dstPath")) {
+			args["dstPath"] = encodeURIComponent(decodeURIComponent(args["dstPath"]))
+		}
+		if (args.hasOwnProperty("paths") && args["paths"] instanceof Array) {
+			args["paths"] = args["paths"].map(x => encodeURIComponent(decodeURIComponent(x)))
+		}
+	} catch (e) {
+		return arg;
+	}
+
+    return args;
+
+}
 
 const ApiInstance = {
 	instance: new Api()
@@ -200,6 +231,7 @@ const ApiInstance = {
 
 window.api = ApiInstance.instance
 export default ApiInstance;
+export {encodePathsInArg}
 
 //calls
 /*try {

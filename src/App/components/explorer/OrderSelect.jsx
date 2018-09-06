@@ -13,13 +13,22 @@ import {connect} from "react-redux"
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withStyles } from '@material-ui/core/styles';
 
-const options = {
-  'name':"Nombre",
-  'size':"Tamaño",
-  'modificationTime':"Modificacion",
-  'accessTime':"Accedido",
-  'mime':"Formato",
+const options = isSelecteMode => {
 
+	let ops = {
+		'name': "Nombre",
+		'size': "Tamaño",
+		'modificationTime': "Modificacion",
+		'accessTime': "Accedido",
+		'mime': "Formato",
+
+	}
+
+	if(false&&isSelecteMode){
+		ops = {...ops,selectioned:"Seleccion"}
+	}
+
+	return ops
 };
 
 const style = theme => ({
@@ -37,8 +46,8 @@ const style = theme => ({
 const ITEM_HEIGHT = 48;
 @connect((state,props)=>{
 	var toolBar = state.getIn(["explorer","toolBar"]);
-
-	return {toolBar}
+	var selection = state.getIn(["explorer","selection"]);
+	return {toolBar,selection}
 })
 @withStyles(style,{withTheme:true})
 @withMobileDialog()
@@ -66,8 +75,12 @@ class OrderSelect extends React.Component {
   render() {
     const { anchorEl } = this.state;
     const toolBar = this.props.toolBar;
+    const isSelecteMode = this.props.selection.get("isSelecteMode")
 
-	const opt = toolBar.get("sortBy")
+	let opt = toolBar.get("sortBy")
+	if(opt=="selectioned" && !isSelecteMode){
+		opt="name";
+	}
 	const order = toolBar.get("order")
     //const op = this.state.option
     const {fullScreen,classes} = this.props
@@ -75,7 +88,7 @@ class OrderSelect extends React.Component {
       <div className={classes.root}>
         {!fullScreen&&
         	<Button size="small" onClick={this.handleClick}>
-        		{options[opt]}
+        		{options(isSelecteMode)[opt]}
         	</Button>
         }
 
@@ -97,9 +110,9 @@ class OrderSelect extends React.Component {
             },
           }}
         >
-          {Object.keys(options).map(key => (
+          {Object.keys(options(isSelecteMode)).map(key => (
             <MenuItem key={key} selected={key === opt} onClick={_=>this.handleSelect(key)}>
-              {options[key]}
+              {options(isSelecteMode)[key]}
             </MenuItem>
           ))}
         </Menu>

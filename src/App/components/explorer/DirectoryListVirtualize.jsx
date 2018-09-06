@@ -42,6 +42,10 @@ import { store } from "../../redux/index.js";
 import { isAudioFile, isCodeFile, isImageFile, isPdfFile, isTextFile, isVideoFile } from "../file_viewer/maps.js";
 import { deletingPath } from "./actions.js";
 
+
+import CheckCircle from '@material-ui/icons/CheckCircle';
+import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
+
 const styles = theme => ({
 	headerHelper: {
 		height: "100px",
@@ -202,6 +206,13 @@ const ConnectedMenu = connectMenu("itemList")(withStyles(styles, { theme: true }
 	return { online: online, toolBar, filter: toolBar.get("filter"), isSelecteMode: selection.get("isSelecteMode") }
 })
 @withMobileDialog()
+@withStyles({
+	avatar: {
+		backgroundColor: "transparent",
+	}
+}, {
+	withTheme: true
+})
 class DirectoryListVirtualize extends React.Component {
 
 	constructor(props) {
@@ -313,6 +324,9 @@ class DirectoryListVirtualize extends React.Component {
 	sortBy(order, valueA, valueB) {
 
 		var sort = 0;
+		if(valueA == null ||  valueB == null){
+			return -1
+		}
 
 		if (valueA < valueB) {
 			sort = order ? -1 : 1
@@ -401,12 +415,23 @@ class DirectoryListVirtualize extends React.Component {
 							//history.push("/SC/unidad#"+item.get("path"))
 						}}
 						>
-							{isSelecteMode && <Checkbox checked={selectioned} onChange={
-								(e, c) => {
-									this.handleItemEvent(e, { item, action: "checkInList", checked: c })
-									return false
-								}
-							} />}
+							{
+								isSelecteMode &&
+								<ListItemAvatar>
+									<Avatar className={classes.avatar}>
+										<Checkbox 
+											icon={<RadioButtonUnchecked/>}
+											checkedIcon={<CheckCircle/>}
+											checked={selectioned} onChange={
+												(e, c) => {
+													this.handleItemEvent(e, { item, action: "checkInList", checked: c })
+													return false
+												}
+											}/>
+									</Avatar>
+								</ListItemAvatar>
+									
+							}
 
 							{/*Icon*/}
 							{/**File*/
