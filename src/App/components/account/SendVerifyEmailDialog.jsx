@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from "react-redux"
+import { connect } from "react-redux"
 import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -11,41 +11,58 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
 import SendIcon from '@material-ui/icons/Send';
-
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
+import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress"
+import green from '@material-ui/core/colors/green';
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
+@withMobileDialog()
 class SendVerifyEmailDialog extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error:false,
-      msg:""
+      sended: false,
+      sending: false,
+      error: false,
+      msg: ""
     }
   }
 
-  onSendVerifyEmail(){
-    const {open,close,send} = this.props;
+  onSendVerifyEmail() {
+    this.setState({ error: false, msg: "", sending: true });
+    const { open, close, send } = this.props;
     send()
-    .then(payload=>close())
-    .catch(x=>{
-      this.setState({error:true,msg:x.msg})
-    })
+      .then(payload => {
+        this.setState({ sending: false })
+        this.setState({ sended: true })
+        setTimeout(_ => {
+          this.onClose();
+        }, 2000)
+      })
+      .catch(x => {
+        this.setState({ sending: false })
+        this.setState({ error: true, msg: x.msg })
+      })
   }
-  onClose(){
-    this.setState({error:false,msg:""})
+  onClose() {
+    this.setState({ error: false, msg: "", sended: false, sending: false })
     this.props.close();
   }
-  render(){
-    const {isOpen,open,close,send} = this.props;
+  render() {
+    const { isOpen, open, close, send, fullScreen } = this.props;
+    const { sending, sended } = this.state;
     return (
       <div>
         <Dialog
+          fullScreen={fullScreen}
           open={isOpen}
           TransitionComponent={Transition}
-          keepMounted
-          onClose={_=>this.onClose()}
+          //keepMounted
+          onClose={_ => this.onClose()}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
@@ -54,20 +71,30 @@ class SendVerifyEmailDialog extends React.Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              Una vez hallas presionado el boton de enviar, se enviara un mensaje a tu correo, donde recibiras un enlace para poder verificar tu cuenta.
-              {this.state.error&&
-                <Typography variant="display1">{this.state.msg}</Typography>
-              }
+              <Grid justify="center" alignItems="center" container>
+                <Grid item>
+                  {sending && <CircularProgress color="primary" size={100} />}
+                  {!sending && <VerifiedUserIcon color={"primary"} style={{ fontSize: 100 }} />}
+                </Grid>
+
+                <Grid item style={{ marginTop: 30 }}>
+                  Una vez presionado el botón <strong>enviar</strong>, se enviara un mensaje a tu correo, donde recibirás un enlace para poder verificar tu cuenta.
+                  {this.state.error &&
+                    <Typography variant="display1">{this.state.msg}</Typography>
+                  }
+                </Grid>
+              </Grid>
+
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={_=>this.onClose()} color="primary">
-              Cancelar
+            <Button disabled={sending} onClick={_ => this.onClose()} color="primary">
+              {sended ? "Listo" : "Cancelar"}
             </Button>
-            <Button onClick={this.onSendVerifyEmail.bind(this)} color="primary">
+            {!sended && <Button disabled={sending || sended} onClick={this.onSendVerifyEmail.bind(this)} color="primary">
               Enviar
-              <SendIcon style={{marginLeft:10}}/>
-            </Button>
+              <SendIcon style={{ marginLeft: 10 }} />
+            </Button>}
           </DialogActions>
         </Dialog>
       </div>

@@ -116,25 +116,22 @@ class ChangePassword extends React.Component {
   _onSubmit(values){
     const id = this.props.user.get("id");
     return new Promise((resolve,reject)=>{
-
       ApiInstance.instance.callOperation("changepassword",{
         id,
-        currentPassword:values.get("currentPassword"),
-        password:values.get("password"),
-        thenCB:user => {
-          this.setState({edit:false})
-          resolve(user)
-
+        currentPassword: values.get("currentPassword"),
+        password: values.get("password"),
+        thenCB: user => {
+          resolve(user);
         },
-        catchCB:x=>{
+        catchCB: x => {
           reject(x);
         }
       })
-
     })
-    .then()
+    .then(x=>{
+      this.setState({ edit: false });
+    })
     .catch(x=>{
-
       throw new SubmissionError({
         _error: x.msg
       })
