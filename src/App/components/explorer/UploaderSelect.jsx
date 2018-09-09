@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { withStyles, withTheme } from '@material-ui/core/styles';
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import Typography from '@material-ui/core/Typography';
 import {UploadManagerInstance} from "../../elements/upload_manager/index.js";
 import {ItemUpload} from "../../elements/upload_manager/ItemUpload";
 import { getParent, isRoot, parsePath, tryNormalize } from "./Util.js";
@@ -17,12 +18,26 @@ const toFileList = (files: FileList): File[] => {
 
 
 const styles = theme => ({
+    root:{
+        padding:20,
+    },
     button: {
         margin: theme.spacing.unit,
     },
     input: {
         display: 'none',
     },
+    containerInput:{
+        cursor:"pointer",
+        margin:5,
+        background: "#e0e0e024",
+        borderRadius: theme.shape.borderRadius,
+        display: "flex",
+        padding: 20,
+        border: "1px",
+        borderStyle: "dashed",
+        borderColor: "grey",
+    }
 })
 
 @withStyles(styles,{withTheme:true})
@@ -55,10 +70,10 @@ class UploaderSelect  extends React.Component{
                         onChange={event=>this._onChangeInput(event,"file")}
                         type="file"
                     />
-                    <label htmlFor="contained-button-file">
-                        <Button variant="contained" component="span" className={classes.button}>
+                    <label className={classes.containerInput} htmlFor="contained-button-file">
+                        <Typography style={{margin:0}} variant="title" gutterBottom>
                             Archivos
-                        </Button>
+                        </Typography>
                     </label>
 
                 </Grid>
@@ -73,10 +88,10 @@ class UploaderSelect  extends React.Component{
                             onChange={event=>this._onChangeInput(event,"folder")}
                             type="file"
                         />
-                        <label htmlFor="contained-button-folder">
-                            <Button variant="contained" component="span" className={classes.button}>
-                                Carpeta
-                             </Button>
+                        <label className={classes.containerInput} htmlFor="contained-button-folder">
+                           <Typography style={{margin:0}} variant="title" gutterBottom>
+                            Carpeta
+                          </Typography>
                         </label>
                     </div>
                 </Grid>                

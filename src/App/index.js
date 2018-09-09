@@ -31,6 +31,7 @@ import red from '@material-ui/core/colors/red';
 import ApiInstance from "./elements/API/v1/Api.js";
 
 // import Button from '@material-ui/core/Button';
+import {Title} from "./components/title/index.js"
  const AuthArea = Loadable({
   loader: () => import('./components/login/index.jsx'),
  loading: Loading
@@ -117,6 +118,8 @@ class App extends React.Component{
   render(){
    const authState =  this.props.auth.get("state");
         return   (
+            <div>
+            <Title/>
             <Switch>
               <Route path="/SC/unidad" render={
                 ()=>{
@@ -150,6 +153,7 @@ class App extends React.Component{
                 }
               }/>
             </Switch>
+            </div>
       )
   }
 }

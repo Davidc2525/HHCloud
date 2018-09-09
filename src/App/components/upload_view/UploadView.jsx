@@ -84,7 +84,7 @@ class UploadView extends Component {
             
             <div /*style={{height:this.props.h,overflow:"auto"}}*/ className={classes.root}>
                 <Typography variant="title" className={classes.title}>
-                    Subidas
+                    Subiendo
                 </Typography>
                 {(count > 0) &&
                     <Typography className={classes.title} variant="body2" gutterBottom>

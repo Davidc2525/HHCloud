@@ -29,6 +29,7 @@ import {SubmissionError} from 'redux-form/immutable'
 import {RecoverPassword} from "./RecoverPassword.jsx"
 
 import { bindKeyboard } from 'react-swipeable-views-utils';
+import AfterRegisterDialog from "./AfterRegisterDialog.jsx"
 
 const BindKeyboardSwipeableViews = bindKeyboard(SwipeableViews);
 
@@ -190,10 +191,25 @@ const renderFieldChekbox = ({input, label, type, meta: {touched, error, warning}
 })
 @connect(_=>({}))
 class Register extends React.Component{
+	state = {
+		dialogRegisteredOpen:false,
+	}
 
+	_OpenDialogEmailVerifay() {
+		this.setState({
+			dialogRegisteredOpen: true
+		})
+	}
+	_CloseDialogEmailVerifay() {
+		this.setState({
+			dialogRegisteredOpen: false
+		})
+	}
+	
 	onSubmitRegister(values) {
 		return submitRegister(values)
 			.then(user => {
+				this.setState({dialogRegisteredOpen:true})
 				this.setIndex(0);
 				this.props.reset();
 			}).catch(x => {
@@ -213,8 +229,14 @@ class Register extends React.Component{
 		console.warn(this.props);
 		const {classes,handleSubmit,invalid, pristine, reset,error, anyTouched,submitting,submitSucceeded} = this.props;
 		const {index} = this.props;
+		const {dialogRegisteredOpen} = this.state
 		return (
 		<div>
+			<AfterRegisterDialog
+	          isOpen={dialogRegisteredOpen}
+	          open={this._OpenDialogEmailVerifay.bind(this)}
+	          close={this._CloseDialogEmailVerifay.bind(this)}
+	        />
 			<form autoComplete="on" onSubmit={handleSubmit(this.onSubmitRegister.bind(this))}>
         <Grid container direction="column" justify="flex-start" >
           <Grid item>

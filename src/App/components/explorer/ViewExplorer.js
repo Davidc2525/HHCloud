@@ -24,7 +24,7 @@ import MkdirDialog from "./MkdirDialog.jsx";
 import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx";
 import RenameDialog from "./RenameDialog.jsx";
 import { parsePath, tryNormalize } from "./Util.js";
-
+import SentimentDissatisfied from '@material-ui/icons/SentimentDissatisfied';
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
@@ -186,9 +186,9 @@ class ViewExplorer extends React.Component {
 					 	{this.props.path.get("status")=="loading" &&
 				 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
 				 	 			<Grid item>
-				 	 			 	<Typography color="textSecondary" variant="subheading" >
-					           	{this.props.path.get("path")}
-					        </Typography>
+				 	 			 	<Typography noWrap color="textSecondary" variant="title" >
+							           	{this.props.path.get("path")}
+							        </Typography>
 					    	</Grid>
 					      <br/>
 				 	 			<Grid item><CircularProgress /></Grid>
@@ -199,8 +199,20 @@ class ViewExplorer extends React.Component {
 				 			
 				 			<Grid style={{ height: "100%"}} direction="column" justify="center" alignItems="center" container>
 				 	 			<Grid item>
+				 	 			 	<SentimentDissatisfied color={"primary"} style={{ fontSize: 100 }} />
+					          	</Grid>
+
+					          	<Grid item>
+				 	 			 	<Typography variant="title" color="" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
+				            			Ups! parece que tengo un pequeño problema.
+				          			</Typography>
+
+					          	</Grid>
+
+					          	<Grid item>
 				 	 			 	<Typography variant="headline" component="h2" style={{cursor:"pointer"}}   noWrap={true} className={classes.title} >
-				            			error name: {this.props.path.get("error")}, mensaje: {this.props.path.get("msg") /**cambiar de errorMsg a msg*/}
+				            			{/*error name: {this.props.path.get("error")}, mensaje:*/}
+				            			{this.props.path.get("msg")}
 				          			</Typography>
 					          	</Grid>
 				 	 		</Grid>

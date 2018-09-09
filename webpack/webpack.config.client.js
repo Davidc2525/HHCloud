@@ -147,7 +147,7 @@ export default [{
 	}),
 		new webpack.DefinePlugin({
 			SIDE: JSON.stringify("client"),
-			SERVICE_URL: JSON.stringify("http://orchi"),
+			SERVICE_URL: JSON.stringify("http://localhost"),
 			SERVICE_PORT: JSON.stringify(8080),
 			'process.env': {
 				NODE_ENV: JSON.stringify(process.env.NODE_ENV)

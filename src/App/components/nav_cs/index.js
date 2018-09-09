@@ -13,10 +13,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {connect} from "react-redux"
 import { push } from "react-router-redux";
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Dashboard from '@material-ui/icons/Dashboard';
+import DataUsage from '@material-ui/icons/DataUsage';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
 //import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import { auth } from "../../elements/auth/index"
@@ -176,10 +180,30 @@ class ResponsiveDrawer extends React.Component {
                  open={open}
                  onClose={this.handleClose}
                >
-                 <MenuItem onClick={event=>this.handleEvent(event,{type:"gohome"})}>Inicio</MenuItem>
-                 <MenuItem onClick={event=>this.handleEvent(event,{type:"gounity"})}>Mi unidad</MenuItem>
-                 <MenuItem onClick={event=>this.handleEvent(event,{type:"goaccount"})}>{displayName}</MenuItem>
-                 <MenuItem onClick={event=>this.handleEvent(event,{type:"closesession"})}>Cerrar session</MenuItem>
+                <MenuItem onClick={event=>this.handleEvent(event,{type:"gohome"})}>
+                  <ListItemIcon className={classes.icon}>
+                    <Dashboard />
+                  </ListItemIcon>
+                  Inicio
+                </MenuItem>
+                <MenuItem onClick={event=>this.handleEvent(event,{type:"gounity"})}>
+                  <ListItemIcon className={classes.icon}>
+                    <DataUsage />
+                  </ListItemIcon>
+                  Mi unidad
+                </MenuItem>
+                <MenuItem onClick={event=>this.handleEvent(event,{type:"goaccount"})}>
+                  <ListItemIcon className={classes.icon}>
+                    <AccountCircle />
+                  </ListItemIcon>
+                  {displayName}
+                </MenuItem>
+                <MenuItem onClick={event=>this.handleEvent(event,{type:"closesession"})}>
+                  <ListItemIcon className={classes.icon}>
+                    <ExitToApp />
+                  </ListItemIcon>
+                  Cerrar session
+                </MenuItem>
                 </Menu>
 
 
