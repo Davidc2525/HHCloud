@@ -10,6 +10,6 @@ npm run build-client
 
 node src/server/index.js
 
-http://localhost:9090
+http://localhost
 
 
