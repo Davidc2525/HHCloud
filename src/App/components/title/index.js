@@ -16,7 +16,6 @@ class Title extends React.Component{
 render(){
 		const {uc,dc,location} = this.props
 		const {hash} = location;
-        console.warn(this.props)
         return   (
             <span id="title">
 	            <Switch>

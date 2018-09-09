@@ -5,7 +5,9 @@ import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CloudOff from '@material-ui/icons/CloudOff';
 import IconButton from '@material-ui/core/IconButton';
 import Hidden from '@material-ui/core/Hidden';
 import Divider from '@material-ui/core/Divider';
@@ -22,6 +24,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import Menu from '@material-ui/core/Menu';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 //import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import { auth } from "../../elements/auth/index"
 const drawerWidth = 240;
@@ -124,6 +128,9 @@ class ResponsiveDrawer extends React.Component {
   render() {
     const { classes, theme,currentType} = this.props;
     const { anchorEl } = this.state;
+    const appName = this.props.app.get("name");
+    const isOnline = this.props.app.get("online")
+
     const open = Boolean(anchorEl);
     const auth = this.props.auth;
     const dataUser = auth.getIn(["dataUser","user"],null);
@@ -150,14 +157,34 @@ class ResponsiveDrawer extends React.Component {
              </IconButton>
 
              <div className={classes.flex}>
-               <Typography variant="title" color="inherit"  noWrap>
-                 {this.props.app.get("name")}
-               </Typography>
+               <Grid container spacing={8}>
+                 <Grid item>
+                  <Typography variant="title" color="inherit"  noWrap>
+                   {appName}
+                  </Typography>
+                 </Grid>
+
+                 {
+                  !isOnline&&
+                   <Grid item style={{padding:0}}>  
+
+                    <Chip
+                      avatar={
+                        <Avatar>
+                          <CloudOff/>     
+                        </Avatar>
+                      }
+                      label="Sin conexion"
+                      //onClick={handleClick}
+                      //onDelete={handleDelete}
+                      //className={classes.chip}
+                    />
+                   </Grid>
+                  }
+               </Grid>
              </div>
 
              <div>
-
-
                <IconButton
                  aria-owns={open ? 'menu-appbar' : null}
                  aria-haspopup="true"
