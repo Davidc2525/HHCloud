@@ -1,15 +1,20 @@
-# HHCloud applicacion web
+HHCloud applicacion web
+=======================
 
-git clone https://github.com/Davidc2525/HHCloud.git
+```
+$ git clone https://github.com/Davidc2525/HHCloud.git
 
-cd HHCloud
+$ cd HHCloud
 
-npm install
+$ npm install
 
-npm run build-client
+$ npm run build-client
 
-node src/server/index.js
+$ node src/server/index.js
 
-http://localhost
+en tu navegador -> http://localhost
+```
 
-
+Imagen de presentacion
+======================
+![Imagen de presentacion](pimg.png)
