@@ -14,9 +14,8 @@ class ApiUser {
 		return ApiInstance.instance.fetch({
 			apiArg: {
 				op: "logout",
-				method: "GET",
 			}
-		}, "auth")
+		}, "auth","GET")
 			.then(x => {
 
 				return new Promise((res, rej) => {
@@ -39,9 +38,8 @@ class ApiUser {
 				password,
 				remember,
 				op: "login",
-				method: "GET",
 			}
-		}, "auth")
+		}, "auth","GET")
 			.then(x => new AuthObject(x)).then(x => {
 
 				return new Promise((res, rej) => {

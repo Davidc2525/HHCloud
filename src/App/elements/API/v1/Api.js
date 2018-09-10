@@ -22,6 +22,7 @@ import {
 } from "../../../redux/index.js";
 
 const API_DEFAULT = "fs";
+const API_DEFAULT_METHOD = "POST";
 class Api {
 
 
@@ -88,10 +89,9 @@ class Api {
 		this.operations[name] = Operation;
 	}
 
-     fetch({apiArg},api = API_DEFAULT){
+     fetch({apiArg},api = API_DEFAULT, method = API_DEFAULT_METHOD){
 
         return new Promise((resolve,reject)=>{
-				var method = 'POST';
                 var arg:Object = { ...apiArg,uid:this.userid}
 		        var fd = new FormData();
 
@@ -102,10 +102,7 @@ class Api {
 
 
 		        var xhr = new XMLHttpRequest();
-				if(arg.hasOwnProperty("method")){
-					method = arg.method;
-					delete arg.method;
-				}
+				
 				method = method.toUpperCase();
 				if(method=="POST"){
 					xhr.open(method, this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);

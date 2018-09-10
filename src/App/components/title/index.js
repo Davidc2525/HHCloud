@@ -13,7 +13,10 @@ import { connect } from "react-redux";
  	return { uc:uploads.count(),dc: downloads.count() }
 })
 class Title extends React.Component{
-render(){
+	setTitleApp(title:string="HHCloud"){
+		this.props.dispatch({type:"APP_SET_TITLE",payload:{title}})
+	}
+	render(){
 		const {uc,dc,location} = this.props
 		const {hash} = location;
         return   (
@@ -22,6 +25,7 @@ render(){
 	              <Route exact path="/SC/" render={
 	                ({location})=>{
 	                	document.title=`Control`
+	                	this.setTitleApp(document.title)
 	                	return <span/>
 	                }
 	              }/>
@@ -34,6 +38,7 @@ render(){
 	                		loc = decodeURIComponent(loc)
 	                	}catch(e){console.error(e)}
 	                	document.title=`Unidad: ${loc}`
+	                	this.setTitleApp("Mi unidad")
 	                	return <span/>
 	                }
 	              }/>
@@ -42,6 +47,7 @@ render(){
 	                 _=>{
 	                 	console.log(_)
 	                	document.title="Cuenta"
+	                	this.setTitleApp(document.title)
 	                	return <span/>
 	                }
 	              }/>
@@ -54,6 +60,7 @@ render(){
 	                 	}else{
 	                		document.title="Descargando"
 	                 	}
+	                 	this.setTitleApp(document.title)
 	                	return <span/>
 	                }
 	              }/>
@@ -65,7 +72,7 @@ render(){
 	                 	}else{
 	                 		document.title="Subiendo"
 	                 	}
-	                	
+	                 	this.setTitleApp(document.title)	                	
 	                	return <span/>
 	                }
 	              }/>
@@ -87,7 +94,7 @@ render(){
 									document.title = `Recuperar contraseña`
 								}
 							}
-
+							this.setTitleApp(document.title)
 							return <span/>
 						}
 					
@@ -97,6 +104,7 @@ render(){
 	              <Route render={
 	                _=>{
 	                	document.title="HHCloud"
+	                	this.setTitleApp(document.title)
 	                	return <span/>
 	                }
 	              }/>

@@ -70,7 +70,8 @@ import middlewareUploadManager from "../elements/upload_manager/middleware.js";
 const initialState = /*fromJS(initStateTest);*/fromJS({
 	app: {
 		online:true,
-		name: "HHCloud"
+		name: "HHCloud",
+		title: "HHCloud"
 	},
 	auth: stateAuth,
 	explorer: stateExplorer,
@@ -86,6 +87,13 @@ const reducers = combineReducers({
 		if(action.type=="APP_CONNECTION"){
 			var newState = state;
 				newState = state.setIn(["online"],action.payload.online);
+
+			return newState;
+		}
+
+		if(action.type=="APP_SET_TITLE"){
+			var newState = state;
+				newState = state.setIn(["title"],action.payload.title);
 
 			return newState;
 		}

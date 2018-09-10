@@ -129,7 +129,8 @@ class ResponsiveDrawer extends React.Component {
     const { classes, theme,currentType} = this.props;
     const { anchorEl } = this.state;
     const appName = this.props.app.get("name");
-    const isOnline = this.props.app.get("online")
+    const isOnline = this.props.app.get("online");
+    const title = this.props.app.get("title");
 
     const open = Boolean(anchorEl);
     const auth = this.props.auth;
@@ -158,11 +159,11 @@ class ResponsiveDrawer extends React.Component {
 
              <div className={classes.flex}>
                <Grid container spacing={8}>
-                 <Grid item>
-                  <Typography variant="title" color="inherit"  noWrap>
-                   {appName}
-                  </Typography>
-                 </Grid>
+              { <Grid item>
+                <Typography variant="title" color="inherit"  noWrap>
+                 {title}
+                </Typography>
+               </Grid>}
 
                  {
                   !isOnline&&

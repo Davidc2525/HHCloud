@@ -5,6 +5,9 @@ import List from '@material-ui/core/List';
 import { withStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import NavigationIcon from '@material-ui/icons/Navigation';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import _ from "lodash";
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -19,6 +22,7 @@ import { Route, Switch } from "react-router-dom";
 import logo from "../../../media/img/logop.png";
 import Nav from "../nav_cs/index.js";
 import SideVarContent from './titleData.js';
+
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={props.retry}>Retry</button></div>;
@@ -86,6 +90,16 @@ const styles = theme => ({
     },
   },
   toolbar: theme.mixins.toolbar,
+  toolbarContent:{
+    ...theme.mixins.toolbar,
+    display: "flex",
+    flexGrow: "1",
+    minHeight: "56px",
+    alignItems: "flexStart",
+    paddingLeft: "24px",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
   drawerPaper: {
     //backgroundColor:"grey",
     width: drawerWidth,
@@ -161,16 +175,21 @@ class ResponsiveDrawer extends React.Component {
     const drawerContent = (
       <div id="nc">
         <div className={classes.toolbar} >
-          <img width="110px" style={{ marginLeft: "60px" }} src={logo} />
+          {/*<img width="110px" style={{ marginLeft: "60px" }} src={logo} />*/}
+          <Grid container alignItems={"flex-start"} justify="center" className={classes.toolbarContent}>
+            <Grid item>
+              <div><Typography color="textSecondary" variant="title">HHCloud</Typography></div>
+            </Grid>
+            <Grid item>
+              <div><Typography color="textSecondary" variant="body2">Tu nube</Typography></div>
+            </Grid>
+          </Grid>
+
         </div>
-        <Divider />
-
-
-
         <Divider />
         <List><SideVarContent /></List>
 
-        {/*<div id="footer" className={classes.footer} >
+        {/**<div id="footer" className={classes.footer} >
           <div className={classes.footer}>
           <Grid className={classes.rootGrid} container justify="center" >
 
@@ -200,7 +219,7 @@ class ResponsiveDrawer extends React.Component {
 
           </Grid>
           </div>
-        </div>*/}
+        </div>**/}
 
       </div>
     );
