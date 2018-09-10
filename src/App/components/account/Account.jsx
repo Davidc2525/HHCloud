@@ -43,7 +43,7 @@ const renderSelectField = ({
   ...custom
 }) => (
   <FormControl /*className={classes.formControl}*/>
-    <Select      
+    <Select
       onChange={(event, index, value) => input.onChange(event.target.value)}
       inputProps={{
           name: 'gender',
@@ -125,7 +125,7 @@ class Account extends React.Component {
       dialogEmailVerifyOpen:false,
     }
   }
-  
+
   _OpenDialogEmailVerifay(){
     this.setState({dialogEmailVerifyOpen:true})
   }
@@ -238,7 +238,7 @@ class Account extends React.Component {
                                 </Avatar>
                               )
                             }
-                            label={user.get("email")}
+                            label={user.get("email").capitalize(true)}
                           />
                         </Tooltip>
                       </Grid>
@@ -251,7 +251,7 @@ class Account extends React.Component {
                         <Typography>Nombre</Typography>
                       </Grid>
                       <Grid item xs={9}>
-                        {!edit&&<Typography variant="title">{user.get("firstName")}</Typography>}
+                        {!edit&&<Typography variant="title">{user.get("firstName").capitalize(true)}</Typography>}
                         {edit&&
                           <Field
                             name="firstName"
@@ -269,7 +269,7 @@ class Account extends React.Component {
                         <Typography>Apellido</Typography>
                       </Grid>
                       <Grid item xs={9}>
-                        {!edit&&<Typography variant="title">{user.get("lastName")}</Typography>}
+                        {!edit&&<Typography variant="title">{user.get("lastName").capitalize(true)}</Typography>}
                         {edit&&
                           <Field
                             name="lastName"

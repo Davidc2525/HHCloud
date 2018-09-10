@@ -139,6 +139,7 @@ class ResponsiveDrawer extends React.Component {
     if(dataUser!=null){
       displayName = dataUser.get("lastName")+" "+dataUser.get("firstName")
     }
+    displayName = displayName.capitalize(true);
 
     const position  = (currentType=="folder")?"fixed":"absolute"
 
@@ -167,12 +168,12 @@ class ResponsiveDrawer extends React.Component {
 
                  {
                   !isOnline&&
-                   <Grid item style={{padding:0}}>  
+                   <Grid item style={{padding:0}}>
 
                     <Chip
                       avatar={
                         <Avatar>
-                          <CloudOff/>     
+                          <CloudOff/>
                         </Avatar>
                       }
                       label="Sin conexion"

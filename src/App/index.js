@@ -10,6 +10,10 @@ window.df = require("dateformat")
 import {STATES} from "./elements/auth/state.js"
 import { withRouter } from 'react-router-dom'
 
+String.prototype.capitalize = function(lower = false) {
+    return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, x => x.toUpperCase() );
+};
+
 import {
   ConnectedRouter,
   routerReducer,

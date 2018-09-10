@@ -107,7 +107,7 @@ class Nuevo extends Component{
             <MiDivider title="Verifica tu cuenta"/>
             <Grid alignItems="center" container spacing={24}>
               <Grid item xs={12} >
-                <Typography variant="headline">No haz verificado tu cuenta, hazlo para que disfrutes de mas espacio de almacenamiento, hasta 15GB!</Typography>
+                <Typography variant="headline">No haz verificado tu cuenta, hazlo para que disfrutes de mas espacio de almacenamiento, hasta 30GB!</Typography>
                 <Typography>Hasta entonces, solo tendras disponible 1GB de espacio.</Typography>
                 <Typography>Ve a tu cuenta de correo y verifica tu cuenta, si aun no haz recibido el enlace, ve
                   <strong
