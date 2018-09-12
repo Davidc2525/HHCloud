@@ -135,6 +135,7 @@ class Upload {
 	 */
 	incrementUploaded(file: File) {
 		this.filesUploaded.push(file);
+		UploadManagerInstance.instance.incrementFileUploaded(this,file);
 		UploadManagerInstance.instance.updateUpload(this);
 	}
 	/**

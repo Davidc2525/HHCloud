@@ -1,7 +1,7 @@
 //index.js
 //@ts-check
 import { store } from "../../redux/index.js";
-import { addUpload,endUpload,updateUpload } from "./action.js";
+import { addUpload,endUpload,updateUpload,incrementFileUploaded } from "./action.js";
 import { ItemUpload } from "./ItemUpload.js";
 import { Upload } from "./Upload.js";
 
@@ -59,6 +59,10 @@ class UploadManager {
 	
 	updateUpload(item: Upload = null){
 		store.dispatch(updateUpload(item));
+	}
+
+	incrementFileUploaded(item: Upload = null, file: File = null){
+		store.dispatch(incrementFileUploaded(item,file))
 	}
 
 	endUpload(item: Upload = null){

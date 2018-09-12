@@ -40,16 +40,11 @@ class Auth {
 
 	setStateNoLogin(){
 		this.setState(STATES[2]);
-		store.dispatch({type:"CLEAR_STATE"});
+		store.dispatch(clearState());
 	}
 
 	setState(newState){
-		store.dispatch({
-			type: "AUTH_SET_STATE",
-			payload: {
-				state: newState
-			}
-		});
+		store.dispatch(setState(newState));
 	}
 
 	onLogin(x) {
@@ -58,14 +53,7 @@ class Auth {
 				id: x.userid
 			}),
 			thenCB: accountstatus => {
-				store.dispatch({
-					type: "AUTH_SETUSERDATA",
-					payload: {
-						userdata: { ...accountstatus.toObject(),
-							displayName: `${accountstatus.user.getLastName()} ${accountstatus.user.getFirstName()}`
-						}
-					}
-				})
+				store.dispatch(setUserData(accountstatus))
 			},
 			catchCB: x => console.warn(x)
 		})

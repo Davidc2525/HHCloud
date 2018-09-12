@@ -7,6 +7,7 @@ import {
 	CLEAR_STATE,
 	AUTH_SET_STATE,
 	AUTH_SETUSERDATA,
+	AUTH_SETUSERDATA_STORAGE,
 	clearState,
 	setState,
 	setUserData
@@ -24,7 +25,7 @@ export default (state = new Map(), action) => {
 			return state.set("isLogin", action.payload.isLogin)
 		case AUTH_SETUSERDATA:
 			return state.set("dataUser", fromJS(action.payload.userdata))
-		case "AUTH_SETUSERDATA_STORAGE":
+		case AUTH_SETUSERDATA_STORAGE:
 					return state.setIn(["dataUser","contentSummary"], fromJS(action.payload.contentSummary))
 		case "AUTH_SETUSERDATA_USER":
 				return state.setIn(["dataUser","user"], fromJS(action.payload.user))

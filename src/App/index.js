@@ -84,11 +84,11 @@ const dark = createMuiTheme({
 
 const light = createMuiTheme({
   palette: {
-    primary: {
-      main: '#40c4ff',
+     primary: {
+      main: '#1a2327',
     },
     secondary: {
-      main: '#009688',
+      main: '#515b5f',
     },
     type: 'light',
     unidadButtom:{
