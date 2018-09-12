@@ -16,62 +16,17 @@ import filesize from "filesize"
 import numeral from "numeral"
 import { Map } from "immutable";
 import CloudQueue from '@material-ui/icons/CloudQueue';
-const styles = theme => ({
+const styles = theme => (window.tt = theme,{
   root: {
    	padding:theme.spacing.unit * 0,
     flexGrow: 1,
   },
-   paper: {
-    padding: theme.spacing.unit * 2,
-    //textAlign: 'center',
-    color: theme.palette.text.secondary,
-  },
-  withCenterText:{
-
-  	textAlign: 'center',
-  },
-  spaceConsumed:{
-  	textAlign: 'center',
-  //	margin: "0 auto",
-    //width: "150px"
-  },
-  spaceConsumedTitleInner:{
-  	top: "60px",
-    position: "relative",
-   // left: "39px"
-  },
-  progressTop:{
-  	zIndex: 1,
-    /* left: 37%; */
-    position: "absolute",
-    width: "100px",
-    height: "100px",
-  },
-  progressButton:{
-  	color:"rgb(242, 242, 242)"
-  },
+  
   iconContent:{
-  	[theme.breakpoints.up("md")]:{
-  		paddingLeft: theme.spacing.unit*3, paddingRight: theme.spacing.unit*3
-  	},
-  	paddingLeft: theme.spacing.unit*2, paddingRight: theme.spacing.unit*2
+  	...tt.mixins.gutters()
   	
   }
 });
-
-@withStyles(styles,{withTheme:true})
-class MiDivider extends Component{
-	render(){
-		const {title} = this.props
-		return (
-			<div style={{margin:"20px"}}>
-				<Typography variant="title">{title}</Typography>
-				<Divider  />
-
-			</div>
-		)
-	}
-}
 
 
 @withStyles(styles,{withTheme:true})
@@ -108,33 +63,30 @@ class MiniControl extends Component{
 
 		return (
 
-		<div className={classes.root}>
-		    
-
-        <Grid container style={{paddingTop:10}}>
-          <Grid item xs={3} className={classes.iconContent}>
-          	<CloudQueue color={"action"}/>
-          </Grid>
-          <Grid item xs={9} >
-             <Grid container style={{paddingRight:20}}>
-             	<Grid item xs={12} style={{ marginBottom: 5}}>
-             		<Typography variant="body2">Almacenamiento</Typography>
-             	</Grid>
-             	<Grid item xs={12} style={{ marginBottom: 5}}>
-	            	<div>
-	                	<LinearProgress  variant="determinate" value={this._toView(summary)}/>
-	              	</div>
-             	</Grid>
-             	<Grid item xs={12}>
-             		<Typography variant="caption">{`${filesize(summary.length)} de ${filesize(summary.spaceQuota)} usado`}</Typography>
-             	</Grid>
-             </Grid>
-          </Grid>
-
-        </Grid>
+			<div className={classes.root}>
+		        <Grid container style={{paddingTop:10}}>
+		          <Grid item xs={3} className={classes.iconContent}>
+		          	<CloudQueue color={"action"}/>
+		          </Grid>
+		          <Grid item xs={9} >
+		             <Grid container style={{paddingRight:20}}>
+		             	<Grid item xs={12} style={{ marginBottom: 5}}>
+		             		<Typography variant="body2">Almacenamiento</Typography>
+		             	</Grid>
+		             	<Grid item xs={12} style={{ marginBottom: 5}}>
+			            	<div>
+			                	<LinearProgress  variant="determinate" value={this._toView(summary)}/>
+			              	</div>
+		             	</Grid>
+		             	<Grid item xs={12}>
+		             		<Typography variant="caption">{`${filesize(summary.length)} de ${filesize(summary.spaceQuota)} usado`}</Typography>
+		             	</Grid>
+		             </Grid>
+		          </Grid>
+		        </Grid>
 			</div>
 
-			)
+		)
 	}
 }
 
