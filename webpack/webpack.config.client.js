@@ -38,6 +38,7 @@ export default [{
 	entry: {
 		client: "./src/client/HHCloud/index.js",
 		c:["react","react-dom","lodash"],
+		conf:["./webpack/constanst.js"]
 	},
 	output: {
 		globalObject: "this",
@@ -147,8 +148,6 @@ export default [{
 	}),
 		new webpack.DefinePlugin({
 			SIDE: JSON.stringify("client"),
-			SERVICE_URL: JSON.stringify("http://localhost"),
-			SERVICE_PORT: JSON.stringify(8080),
 			'process.env': {
 				NODE_ENV: JSON.stringify(process.env.NODE_ENV)
 			}

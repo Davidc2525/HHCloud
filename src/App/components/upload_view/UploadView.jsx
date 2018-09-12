@@ -46,6 +46,15 @@ class UploadView extends Component {
         super(props);
     }
 
+    _currentFileProgressUpload(file:File,round = false){
+        let progress = 0;
+        if(file.hasOwnProperty("progress")){
+            progress = file.progress
+        }
+
+        return round ? Math.round(progress) :  progress;
+    }
+
     _renderUps(id: string): JSX.Element {
         let up = UploadManagerInstance.instance.getUpload(id);
         if(up==null){
@@ -53,6 +62,7 @@ class UploadView extends Component {
         }
 
         let files = up.getFiles();
+        let currentFile = up.getCurrentFile();
         return (
             <div>
                 <ListItem button onClick={() => {                    
@@ -61,7 +71,7 @@ class UploadView extends Component {
 
                     <ListItemText
                         primary={`${up.getName()}, ${toType(up.getType())}`}
-                        secondary={`(${files.length}, ${up.getUploaded().length}, ${up.getUploadedFilesWithError().length}), ${up.getCurrentFile().name} `}
+                        secondary={`(T ${files.length}, U ${up.getUploaded().length}, E ${up.getUploadedFilesWithError().length}), ${up.getCurrentFile().name} `}
                     />
                     <ListItemSecondaryAction>
                         <IconButton aria-label="Delete"
@@ -71,7 +81,7 @@ class UploadView extends Component {
                     </ListItemSecondaryAction>
                 </ListItem>
                 {true &&
-                    <LinearProgress value={(up.getUploaded().length/files.length )*100} variant={"determinate"} />}
+                    <LinearProgress value={this._currentFileProgressUpload(currentFile,false)}  valueBuffer={(up.getUploaded().length/files.length )*100} variant={"buffer"} />}
 
             </div>
         )

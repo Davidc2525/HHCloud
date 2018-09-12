@@ -21,7 +21,7 @@ import { SignOutOperation } from "./user/SignOutPeration";
 import {
 	store
 } from "../../../redux/index.js";
-
+import {constanst} from  "../../../../../webpack/constanst.js"
 const API_DEFAULT = "fs";
 const API_DEFAULT_METHOD = "POST";
 class Api {
@@ -31,8 +31,8 @@ class Api {
 
 		//store.subscribe(x=>this.getUserId())
 
-		this.hostService = SERVICE_URL;//"http://orchi";
-		this.portService = SERVICE_PORT; //8080;
+		this.hostService = constanst.SERVICE_URL;//"http://orchi";
+		this.portService = constanst.SERVICE_PORT; //8080;
 		this.versionService = "v1"
 		this.pathService = "/api/"
 
@@ -46,13 +46,17 @@ class Api {
 		this.registerOperation("status", GetStatusOperation)
 		this.registerOperation("rename", RenameOperation)
 		this.registerOperation("mkdir", MkDirOperation)
-		this.registerOperation("copy", copy())
-		this.registerOperation("move", move())
-		this.registerOperation("delete", DeleteOperation, {after: _ => {
-				
+		this.registerOperation("copy", copy(), {after: (reponse,args) => {
 			setTimeout(_=>{
 				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
-			},2000)
+			},1000)
+
+		}});
+		this.registerOperation("move", move())
+		this.registerOperation("delete", DeleteOperation, {after: (reponse,args) => {
+			setTimeout(_=>{
+				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
+			},1000)
 
 		}});
 		this.registerOperation("download", DownloadOperation)
@@ -87,19 +91,30 @@ class Api {
 		if (op == null) {
 			throw `operaion no ${name} existe`
 		} else {
-			op["before"](args);
+			op["before"](args);			
+			if(args.hasOwnProperty("thenCB")){
+				const thenCBArg = args["thenCB"];
+				const after = op["after"];
+				/**Sustituimos la funciona thenCB original por una que permita 
+				 * ejecutar dicha funcion y la funcion "after" 
+				 * funciona a jecutar luego de ejecutar la operacion y devuelva la llamada a thenCB
+				 */
+				args["thenCB"] = _ => {					
+					thenCBArg(_);
+					after(_,args);
+				}
+			}
 			let opObject = new op["op"](args);
-			op["after"](args);
 			return opObject;
 		}
 
 	}
 
-	registerOperation(name, Operation, feactures={}) {
+	registerOperation(name, Operation, {before = _=>{},after = _=>{}} = {}) {
 		this.operations[name] = {};
 		this.operations[name]["op"] = Operation;
-		this.operations[name]["before"] = feactures.before != null ? feactures.before : _=>{} ;
-		this.operations[name]["after"] = feactures.after != null ? feactures.after : _=>{};
+		this.operations[name]["before"] = before
+		this.operations[name]["after"] = after
 	}
 
      fetch({apiArg},api = API_DEFAULT, method = API_DEFAULT_METHOD){

@@ -1,6 +1,8 @@
 //Upload.js
 //@ts-check
+
 import 'babel-polyfill';
+import _ from "lodash"
 import uniqid from "uniqid";
 import { ItemUpload } from "./ItemUpload"
 import { UploadManagerInstance } from "./index"
@@ -28,6 +30,45 @@ var up = (path, f) => {
 	return fetch(ApiInstance.instance.urlService + "uploader", options)
 
 }
+
+var up2 = (path, f,onprogress=_=>{}) => {
+	return new Promise((resolve, reject) => {
+
+		var fd = new FormData();
+		try {
+			//path = encodeURIComponent(decodeURIComponent(path))
+		} catch (e) {
+			console.error(e)
+		}
+		fd.append("args", JSON.stringify({
+			path,
+			op: "put"
+		}));
+		fd.append("op", "put");
+		fd.append("f", (f));
+
+		const xhr = new XMLHttpRequest();
+		xhr.upload.onprogress = _ => {onprogress(_,f)};
+		xhr.withCredentials = true;
+		xhr.responseType = 'json';
+		xhr.open('POST', ApiInstance.instance.urlService + "uploader", true);
+		xhr.setRequestHeader('X-PINGOTHER', 'pingpong');
+		xhr.onload = event => {
+			console.log(xhr.response)
+			resolve(xhr.response)	
+		}
+
+		xhr.onerror =  event => {
+			reject(xhr.response)	
+		}
+		
+		xhr.send(fd);
+
+
+	});
+}
+
+
 /** 
  * Upload, contiene informacion de una instancia de subida, 
  * id, archivos, cantidad subidos,
@@ -83,8 +124,8 @@ class Upload {
 			}
 			let file = this.files[x];
 			this.setCurrentFile(file);
-			await up(this.path, file)
-				.then(response => response.json())
+			await up2(this.path, file,this.onProgressDebounce)
+				//.then(response => response.json())
 				.then(rJson => {
 					if(rJson.status!="ok"){
 						if(rJson.error == "quota_exceeded"){
@@ -105,6 +146,26 @@ class Upload {
 		}
 		UploadManagerInstance.instance.endUpload(this);
 	}
+
+	onProgressDebounce = _.debounce((event, f) => {
+		this.onProgress(event, f)
+	}, 200, {
+		'maxWait': 200
+	})
+
+	onProgress(event, f) {
+
+		console.warn(event)
+		if (event.lengthComputable) {
+			console.warn(f.name, (event.loaded / event.total) * 100)
+			f.progress = (event.loaded / event.total) * 100;
+			this.setCurrentFile(f)
+			//UploadManagerInstance.instance.updateUpload(this);
+		}
+
+	}
+
+
 	/**
 	 * obtener id de la instancia de subida.
 	 */

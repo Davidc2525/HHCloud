@@ -156,7 +156,7 @@ const ButtonLink = withRouter(({ history }) => (
 
 ));
 
-@withStyles(styles, { withTheme: true })
+//@withStyles(styles, { withTheme: true })
 class ResponsiveDrawer extends React.Component {
   state = {
     width: 0, height: 0,
@@ -187,7 +187,7 @@ class ResponsiveDrawer extends React.Component {
 
         </div>
         <Divider />
-        <List><SideVarContent /></List>
+        <List style={{paddingBottom:0}} component="nav"><SideVarContent /></List>
         <Divider />
         <MiniControl/>
 
@@ -300,4 +300,4 @@ ResponsiveDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default ResponsiveDrawer
+export default withStyles(styles,{withTheme:true})(ResponsiveDrawer);

@@ -18,6 +18,7 @@ import { Route } from "react-router-dom";
 import { push } from "react-router-redux";
 import { UploadManagerInstance } from "../../elements/upload_manager/index.js";
 import { store } from "../../redux/index.js";
+import PropTypes from 'prop-types';
 
 const style = theme => ({
   button: {
@@ -56,7 +57,7 @@ const MenuLink = ({ Aicon,label, to, exact=false }) => (
     path={to}
     exact={exact}
     children={({ match }) => (
-      <ListItem disabled={match} button onClick={()=>{
+      <ListItem selected={match!=null} button onClick={()=>{
         store.dispatch(push(to))
       }}>
         <ListItemIcon>
@@ -68,6 +69,8 @@ const MenuLink = ({ Aicon,label, to, exact=false }) => (
     )}
   />
 );
+
+
 
 /*
 dls = store.getState().get("downloads").get("downloads").toJS()
@@ -192,6 +195,11 @@ class SideVarContent extends React.Component{
       )
   }
 }
-export default (withRouter(withStyles(style)(SideVarContent)))
+SideVarContent.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default (withRouter(withStyles(style,{withTheme:true})(SideVarContent)))
 
 
