@@ -17,4 +17,4 @@ en tu navegador -> http://localhost
 
 Imagen de presentacion
 ======================
-![Imagen de presentacion](pimg.png)
+![Imagen de presentacion](pimg2.png)
