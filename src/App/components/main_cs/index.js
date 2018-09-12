@@ -22,7 +22,7 @@ import { Route, Switch } from "react-router-dom";
 import logo from "../../../media/img/logop.png";
 import Nav from "../nav_cs/index.js";
 import SideVarContent from './titleData.js';
-
+import MiniControl from "../index/MiniControl.jsx"
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={props.retry}>Retry</button></div>;
@@ -188,6 +188,8 @@ class ResponsiveDrawer extends React.Component {
         </div>
         <Divider />
         <List><SideVarContent /></List>
+        <Divider />
+        <MiniControl/>
 
         {/**<div id="footer" className={classes.footer} >
           <div className={classes.footer}>

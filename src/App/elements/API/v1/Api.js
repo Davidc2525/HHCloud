@@ -4,7 +4,8 @@ import RenameOperation from "./operations/RenameOperation.js"
 import MkDirOperation from "./operations/MkDirOperation.js"
 import DeleteOperation from "./operations/DeleteOperation.js"
 import DownloadOperation from "./operations/DownloadOperation.js"
-//import {auth} from "../../auth/index.js";
+//import {Auth} from "../../auth/index.js";
+import {setUserData} from "../../auth/actions.js";
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
 
 import { ChangePasswordByRecoverOperation } from "./user/ChangePasswordByRecoverOperation";
@@ -47,7 +48,13 @@ class Api {
 		this.registerOperation("mkdir", MkDirOperation)
 		this.registerOperation("copy", copy())
 		this.registerOperation("move", move())
-		this.registerOperation("delete", DeleteOperation)
+		this.registerOperation("delete", DeleteOperation, {after: _ => {
+				
+			setTimeout(_=>{
+				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
+			},2000)
+
+		}});
 		this.registerOperation("download", DownloadOperation)
 		this.registerOperation("accountstatus", GetAccountStatusOperation)
 		this.registerOperation("login", SignInOperation)
@@ -66,7 +73,7 @@ class Api {
 		//return
 		const auth = store.getState().get("auth");
 
-		const dataUser = auth.get("dataUser", null);
+		const dataUser = auth.getIn(["dataUser","user"], null);
 		var displayName = "";
 		if (dataUser != null) {
 			this.userid = dataUser.get("id")
@@ -80,13 +87,19 @@ class Api {
 		if (op == null) {
 			throw `operaion no ${name} existe`
 		} else {
-			return new op(args);
+			op["before"](args);
+			let opObject = new op["op"](args);
+			op["after"](args);
+			return opObject;
 		}
 
 	}
 
-	registerOperation(name, Operation) {
-		this.operations[name] = Operation;
+	registerOperation(name, Operation, feactures={}) {
+		this.operations[name] = {};
+		this.operations[name]["op"] = Operation;
+		this.operations[name]["before"] = feactures.before != null ? feactures.before : _=>{} ;
+		this.operations[name]["after"] = feactures.after != null ? feactures.after : _=>{};
 	}
 
      fetch({apiArg},api = API_DEFAULT, method = API_DEFAULT_METHOD){

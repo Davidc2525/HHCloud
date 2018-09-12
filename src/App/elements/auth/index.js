@@ -10,7 +10,11 @@ import {
 	store
 } from "../../redux/index.js"
 import { AuthObject } from "./AuthObject";
-
+import {
+	clearState,
+	setState,
+	setUserData
+} from "./actions.js"
 
 class Auth {
 
@@ -20,27 +24,12 @@ class Auth {
 
 		this.signIn().then(x => {
 			if ((x.login)) {
-				store.dispatch({
-					type: "AUTH_SET_STATE",
-					payload: {
-						state: STATES[1]
-					}
-				});
+				store.dispatch(setState(STATES[1]));
 			}else{
-				store.dispatch({
-					type: "AUTH_SET_STATE",
-					payload: {
-						state: STATES[2]
-					}
-				});
+				store.dispatch(setState(STATES[2]));
 			}
 		}).catch(x => {
-			store.dispatch({
-				type: "AUTH_SET_STATE",
-				payload: {
-					state: STATES[2]
-				}
-			});
+			store.dispatch(setState(STATES[2]));
 		})
 
 	}
@@ -104,9 +93,9 @@ class Auth {
 				email:username,
 				password,
 				remember,
-				thenCB: accountstatus => {
-					this.onLogin(accountstatus);	
-					resolve(accountstatus);
+				thenCB: authobject => {
+					this.onLogin(authobject);	
+					resolve(authobject);
 				},
 				catchCB: x => reject(x)
 			})
