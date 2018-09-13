@@ -37,8 +37,7 @@ import {
 
 
 const history = (createHistory());
-window.h = history
-window.p=push
+
 const middleware = routerMiddleware(history);
 //const mrm = s=>n=>ax=>(console.log(ax),middleware(ax)(n)(ax))
 
@@ -143,7 +142,7 @@ function injectAsyncReducer(store, name, asyncReducer) {
 	store.asyncReducers[name] = asyncReducer;
 	store.replaceReducer(createReducer(store.asyncReducers));
 }
-window.injectAsyncReducer = injectAsyncReducer
+
 window.store = store
 
 //injectAsyncReducer(store,"nc",(state = Map({name:"reducer nuevo"}),action)=>{console.warn(state,action);return state})

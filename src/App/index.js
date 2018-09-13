@@ -6,7 +6,7 @@ import React from "react"
 import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-window.df = require("dateformat")
+
 import {STATES} from "./elements/auth/state.js"
 import { withRouter } from 'react-router-dom'
 

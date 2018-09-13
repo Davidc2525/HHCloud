@@ -19,9 +19,6 @@ import {
 class Auth {
 
 	constructor(props) {
-		window.Auth = this
-		console.warn(store);
-
 		this.signIn().then(x => {
 			if ((x.login)) {
 				store.dispatch(setState(STATES[1]));
@@ -76,18 +73,25 @@ class Auth {
 	}
 
 	signIn(username, password, remember) {
-		return new Promise( (resolve,reject) => {
+		return new Promise((resolve, reject) => {
 			ApiInstance.instance.callOperation("login", {
-				email:username,
+				email: username,
 				password,
 				remember,
 				thenCB: authobject => {
-					this.onLogin(authobject);	
+					this.onLogin(authobject);
+					if (remember) {
+						ApiInstance.instance.callOperation("login", {
+							email: "",
+							password: "",
+							remember
+						});
+					}
 					resolve(authobject);
 				},
 				catchCB: x => reject(x)
 			})
-		} );
+		});
 	}
 }
 

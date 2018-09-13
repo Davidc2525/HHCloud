@@ -254,7 +254,7 @@ const ApiInstance = {
 	instance: new Api()
 }
 
-window.api = ApiInstance.instance
+//window.api = ApiInstance.instance
 export default ApiInstance;
 export {encodePathsInArg}
 

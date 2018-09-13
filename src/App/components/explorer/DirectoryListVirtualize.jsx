@@ -224,7 +224,7 @@ class DirectoryListVirtualize extends React.Component {
 			sortBy: "name",
 			order: true //true = asc, false = desc
 		}
-		window.fs = this
+		//window.fs = this
 
 		store.dispatch({ type: "CURRENT_TYPE_EXPLORER", payload: { type: "folder" } })
 	}
@@ -615,7 +615,7 @@ class ErrorBoundary extends React.Component {
 	constructor(props) {
 
 		super(props);
-		window.eb = this
+		//window.eb = this
 		this.state = { hasError: false };
 	}
 

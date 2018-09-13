@@ -54,8 +54,8 @@ import OrderSelect from "./OrderSelect.jsx";
 import { getParent, isRoot, parsePath, tryNormalize } from "./Util.js";
 import { ItemUpload } from '../../elements/upload_manager/ItemUpload.js';
 import Popover from '@material-ui/core/Popover';
-window.icons = require("@material-ui/icons/")
-window.r = React
+
+const icoms = require("@material-ui/icons");
 
 function Loading(props) {
 	if (props.error) {
@@ -169,7 +169,7 @@ const styles = theme => ({
 class Explorer extends React.Component{
 	constructor(props){
 		super(props);
-		window.ex = this
+		//window.ex = this
 		this.state = {items:[],files: []}
 
 		this.tmpItems = new ListI();
@@ -261,7 +261,7 @@ class Explorer extends React.Component{
 				
 				<div style={{height:"100px"}} className={classes.toolbar} />
 				<div>
-					{false&&Object.keys(window.icons).map(x=>RenderIcon(x,window.icons[x]))}
+					{false&&Object.keys(icons).map(x=>RenderIcon(x,icons[x]))}
 				</div>
 				<ViewExplorer/>
 				
@@ -341,7 +341,7 @@ class ToolBar extends React.Component {
 		this.state = {
 			anchorEl: null,
 		}
-		window.tb = this
+		//window.tb = this
 	}
 
 

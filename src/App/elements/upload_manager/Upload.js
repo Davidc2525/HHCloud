@@ -7,31 +7,9 @@ import uniqid from "uniqid";
 import { ItemUpload } from "./ItemUpload"
 import { UploadManagerInstance } from "./index"
 import ApiInstance from "../API/v1/Api.js"
-var up = (path, f) => {
-	var fd = new FormData();
-	try{
-		//path = encodeURIComponent(decodeURIComponent(path))
-	}catch(e){console.error(e)}
-	fd.append("args", JSON.stringify({ path, op: "put" }))
-	fd.append("op", "put")
-	fd.append("f", (f))
-	var options = {
-		method: 'POST',
-		mode: 'cors',
-		credentials: 'include',
-		headers: {
 
-			'Accept': 'application/json',
-			//'Content-Type': 'application/x-www-form-urlencoded'
-		},
-		body: (fd)
-	}
 
-	return fetch(ApiInstance.instance.urlService + "uploader", options)
-
-}
-
-var up2 = (path, f,onprogress=_=>{}) => {
+const up2 = (path, f,onprogress=_=>{}) => {
 	return new Promise((resolve, reject) => {
 
 		var fd = new FormData();
@@ -149,22 +127,19 @@ class Upload {
 
 	onProgressDebounce = _.debounce((event, f) => {
 		this.onProgress(event, f)
-	}, 200, {
-		'maxWait': 200
+	}, 300, {
+		'maxWait': 300
 	})
 
 	onProgress(event, f) {
-
-		console.warn(event)
 		if (event.lengthComputable) {
-			console.warn(f.name, (event.loaded / event.total) * 100)
+			//console.warn(f.name, (event.loaded / event.total) * 100)
 			f.progress = (event.loaded / event.total) * 100;
 			this.setCurrentFile(f)
 			//UploadManagerInstance.instance.updateUpload(this);
 		}
 
 	}
-
 
 	/**
 	 * obtener id de la instancia de subida.
