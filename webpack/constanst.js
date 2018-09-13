@@ -1,6 +1,6 @@
 const constanst = {
 	SIDE: ("client"),
-	SERVICE_URL: ("http://orchi2"),
+	SERVICE_URL: ("http://localhost"),
 	SERVICE_PORT: (8080),
 }
 
