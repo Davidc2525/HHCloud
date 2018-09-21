@@ -252,9 +252,9 @@ class Login extends React.Component{
 					password: "Clave incorrecta.",
 					_error: x.msg
 				})
-			}else if(x.error){
+			}else{
 				throw new SubmissionError({
-					_error: x.errorMsg
+					_error: x.msg
 				})
 			}
 

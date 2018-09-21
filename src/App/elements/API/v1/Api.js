@@ -91,15 +91,15 @@ class Api {
 		if (op == null) {
 			throw `operaion no ${name} existe`
 		} else {
-			op["before"](args);			
+			op["before"](args);
 			if(args.hasOwnProperty("thenCB")){
 				const thenCBArg = args["thenCB"];
 				const after = op["after"];
-				/**Sustituimos la funciona thenCB original por una que permita 
-				 * ejecutar dicha funcion y la funcion "after" 
+				/**Sustituimos la funciona thenCB original por una que permita
+				 * ejecutar dicha funcion y la funcion "after"
 				 * funciona a jecutar luego de ejecutar la operacion y devuelva la llamada a thenCB
 				 */
-				args["thenCB"] = _ => {					
+				args["thenCB"] = _ => {
 					thenCBArg(_);
 					after(_,args);
 				}
@@ -130,7 +130,7 @@ class Api {
 
 
 		        var xhr = new XMLHttpRequest();
-				
+
 				method = method.toUpperCase();
 				if(method=="POST"){
 					xhr.open(method, this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
@@ -166,6 +166,13 @@ class Api {
 					if (response.status === "error") {
 						if (response.error == "session") {
 							reject(response)
+							auth.Auth.setStateNoLogin();
+							return;
+						}
+
+						if(response.error == "user_unavailable"){
+						    alert(response.msg)
+						    reject(response)
 							auth.Auth.setStateNoLogin();
 							return;
 						}
