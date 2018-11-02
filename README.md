@@ -23,3 +23,9 @@ Vista previa
 =
 ![Previa 2](p/p2.png)
 =
+![Previa 3](p/p3.png)
+=
+![Previa 4](p/p4.png)
+=
+![Previa 5](p/p5.png)
+=
