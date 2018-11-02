@@ -27,10 +27,6 @@ const styles2 = theme => ({
 		flexGrow: 1,
 		backgroundColor: theme.palette.background.paper,
 	},
-	tabRoot2: {
-		boxShadow:"none",
-	 // borderBottom: '1px solid #e8e8e8',
-	},
 	tabsIndicator: {
 		backgroundColor: '#1890ff',
 	},
@@ -68,7 +64,7 @@ const styles2 = theme => ({
 	typography: {
 		padding: theme.spacing.unit * 3,
 	},
-	tabRoot2:{maxWidth:"none",textTransform:"none"},
+	tabRoot2:{minWidth:100,maxWidth:1000,textTransform:"none"},
 	tabHome:{ minWidth:"70px"}
 });
 const styles = theme => ({
@@ -88,9 +84,10 @@ const styles = theme => ({
 	return {filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
 })
 class PathSee extends React.Component {
-		
+
 	constructor(props) {
 		super(props)
+		window.h=props.history
 		console.warn("PathSee", props)
 
 		const ps = this.parsePath(this.getPath(props))
@@ -102,16 +99,16 @@ class PathSee extends React.Component {
 		//this.update(this.state.paths.length,false)
 	}
 
-	update(value = 0,withPust=true) {
+	update(value = 0, withPust = true) {
+
+		var newLocation = locationToObject();
 		if (value == 0) {
+			newLocation.hash = "#/"
 
-
-			withPust&&this.props.history.push("/SC/unidad#/")
+			withPust && this.props.history.push(newLocation)
 		} else {
-
-
-			withPust&&this.props.history.push("/SC/unidad#" + this.state.paths[value - 1].path)
-
+			newLocation.hash = this.state.paths[value - 1].path
+			withPust && this.props.history.push(newLocation)
 		}
 	}
 	handleChange = (event, value) => {
@@ -194,5 +191,15 @@ class PathSee extends React.Component {
 PathSee.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
+
+const locationToObject = _ => {
+	var obj = {};
+	var ignore = ["replace", "reload", "assign", "ancestorOrigins"];
+	Object.keys(location).filter(x => !ignore.includes(x)).forEach(x => {
+		obj[x] = location[x];
+	})
+	obj.toString = _ => obj.href;
+	return obj;
+}
 
 export default withStyles(styles2)(PathSee);

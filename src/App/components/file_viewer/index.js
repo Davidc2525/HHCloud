@@ -75,6 +75,28 @@ class FileViewer extends Component{
 	    return dData.split(":").map(x=>parseInt(("0x" + x))).map(x=>String.fromCharCode([x])).join("")
 	}
 
+	createUrl = _ =>{
+		var url;
+		const {isShare} = this.props;
+		if(isShare){
+			const owner = this.encodeData(this.props.item.get("owner"));
+			const spath = this.encodeData(this.props.item.get("spath"));
+			const subpath = this.encodeData(this.props.item.get("subpath"));
+		
+			url = `${ApiInstance.instance.urlService}opener?type=s&owner=${owner}&spath=${spath}`;
+
+			if(!subpath==null||!subpath==""){
+				url=url+`&subpath=${subpath}`;
+			}
+		}else{
+			const item = this.props.item.get("payload")
+			const path = this.encodeData(item.get("path"))
+
+			url = `${ApiInstance.instance.urlService}opener?path=${path}`
+		}
+		return url;
+	}
+
 	componentDidMount() {
 		//return
 		const item = this.props.item.get("payload")
@@ -82,7 +104,7 @@ class FileViewer extends Component{
 		const name = item.get("name")
 		const fe = fileextension(path)
 		if (isTextFile(name)) {
-			var openerPath = `${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`;
+			var openerPath = this.createUrl();
 			fetch(openerPath, {
 				credentials: "include"
 			}).then(r => r.text()).then(contentText => {
@@ -96,7 +118,7 @@ class FileViewer extends Component{
 		if (isCodeFile(name)) {
 
 			try {
-				var openerPath = `${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`;
+				var openerPath = this.createUrl();
 				fetch(openerPath, {
 					credentials: "include"
 				}).then(r => r.text()).then(contentText => {
@@ -119,7 +141,7 @@ class FileViewer extends Component{
 
 			try {
 
-					this.setState(_=>({typeMedia:"image",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
+					this.setState(_=>({typeMedia:"image",contentValue:this.createUrl()}))
 					return;
 					new RenderImage()
 					.renderAsPromise(item)
@@ -139,7 +161,7 @@ class FileViewer extends Component{
 			try {
 
 
-				this.setState(_=>({typeMedia:"video",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
+				this.setState(_=>({typeMedia:"video",contentValue:this.createUrl()}))
 				return
 				new RenderVideo()
 					.renderAsPromise(item)
@@ -157,7 +179,7 @@ class FileViewer extends Component{
 		}
 
 		if(isAudioFile(name)){
-			this.setState(_=>({typeMedia:"audio",contentValue:`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`}))
+			this.setState(_=>({typeMedia:"audio",contentValue:this.createUrl()}))
 				return
 				
 		}
@@ -167,7 +189,7 @@ class FileViewer extends Component{
 			try {
 				this.setState(_ => ({
 							typeMedia: "pdf",
-							contentValue: `${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`
+							contentValue: this.createUrl()
 						}))
 				
 				return
@@ -189,7 +211,7 @@ class FileViewer extends Component{
 		if (isDoc(name)) {
 
 			try {
-				fetch(`${ApiInstance.instance.urlService}opener?uid=${ApiInstance.instance.userid}&path=${this.encodeData(item.get("path"))}`,{credentials:"include"})
+				fetch(this.createUrl(),{credentials:"include"})
 					.then(x => x.blob()).then(x => {
 
 						this.setState(_ => ({

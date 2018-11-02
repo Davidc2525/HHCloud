@@ -54,6 +54,7 @@ const exts = {
 	"py": ["prism", "python"],
 	"htaccess": ["plaint", "txt"],
 	"makefile": ["prism", "makefile"],
+	"erl": ["prism", "erlang"],
 	"java": ["prism", "java"],
 	"sql": ["prism", "sql"],
 	"cql": ["prism", "sql"],

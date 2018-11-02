@@ -121,6 +121,22 @@ class ApiUser {
 			});
 	}
 
+	searchUser(query) {
+		return ApiInstance.instance.fetch({
+			apiArg: {
+				query,
+				op: "search"
+			}
+		}, API)
+			.then(x => {
+				if (x.status == "ok") {
+					return Promise.resolve((x.payload))
+				} else {
+					return Promise.reject(x)
+				}
+			});
+	}
+
 	getUser(user, by = "id") {
 		return ApiInstance.instance.fetch({
 			apiArg: {

@@ -1,21 +1,18 @@
-import React from 'react';
-import { connect } from "react-redux"
-import CreateNewFolder from '@material-ui/icons/CreateNewFolder';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from "@material-ui/core/Grid";
 import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
-import SendIcon from '@material-ui/icons/Send';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import SendIcon from '@material-ui/icons/Send';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress"
-import green from '@material-ui/core/colors/green';
+import React from 'react';
+
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }

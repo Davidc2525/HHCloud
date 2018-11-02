@@ -3,6 +3,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
+import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -16,6 +17,7 @@ import CloudDownload from '@material-ui/icons/CloudDownload';
 import CodeIcon from '@material-ui/icons/Code';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import Edit from '@material-ui/icons/Edit';
+import People from '@material-ui/icons/People';
 import FileDownload from '@material-ui/icons/FileDownload';
 import FilterNone from '@material-ui/icons/FilterNone';
 import FlipToFront from '@material-ui/icons/FlipToFront';
@@ -42,11 +44,22 @@ import { store } from "../../redux/index.js";
 import { isAudioFile, isCodeFile, isImageFile, isPdfFile, isTextFile, isVideoFile } from "../file_viewer/maps.js";
 import { deletingPath } from "./actions.js";
 
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import RadioButtonUnchecked from '@material-ui/icons/RadioButtonUnchecked';
 
+
+import {
+	ACTIONS
+} from "../dialogs_share/actions.js";
+
+import {mapActions} from "../dialogs_share/utils.js"
 const styles = theme => ({
+	button: {
+    margin: theme.spacing.unit,
+  },
 	headerHelper: {
 		height: "100px",
 		width: "-moz-available",
@@ -111,6 +124,7 @@ function collect(props) {
 const DynamicMenu = (props) => {
 	const { id, trigger, classes } = props;
 	const isFile = trigger ? trigger.item.get("file") : false
+	const isShare = trigger ? trigger.item.get("shared") : false;
 
 	const handleItemClick = trigger ? trigger.onItemClick : null;
 
@@ -121,14 +135,14 @@ const DynamicMenu = (props) => {
 
 				{trigger && !trigger.disabled &&
 					<div>
-						<List >
+						<List dense={true}>
 
 							<MenuItemCM onClick={handleItemClick} data={{ action: 'open' }}>
 								<ListItem button >
 									<Avatar>
 										<InputIcon />
 									</Avatar>
-									<ListItemText primary={isFile ? "Abrir" : "Entrar"} />
+									<ListItemText primaryTypographyProps={{varian:"title"}} primary={isFile ? "Abrir" : "Entrar"} />
 								</ListItem>
 							</MenuItemCM>
 
@@ -137,16 +151,56 @@ const DynamicMenu = (props) => {
 									<Avatar>
 										<Edit />
 									</Avatar>
-									<ListItemText primary="Cambiar nombre" />
+									<ListItemText primaryTypographyProps={{varian:"title"}} primary="Cambiar nombre" />
 								</ListItem>
 							</MenuItemCM>
+
+							{!isShare&&
+									<MenuItemCM onClick={handleItemClick} data={{ action: "share" }}>
+									<ListItem button >
+										<Avatar>
+											<People />
+										</Avatar>
+										<ListItemText primaryTypographyProps={{varian:"title"}} primary={ "Compartir"} />
+									</ListItem>
+								</MenuItemCM>
+							}
+
+
+							{isShare&&
+								<ListItem button >
+										<Avatar>
+											<People />
+										</Avatar>
+										
+										<Grid container justify="center" style={{width:150}}>
+											<Grid item xs={12} style={{textAlign:"center"}}>
+												<ListItemText primaryTypographyProps={{varian:"body2"}} primary={ "Compartir"} />						
+											</Grid>
+											<Grid item xs={6} style={{justifyContent: "center",    alignItems: "center",  display: "flex"}}>
+												<MenuItemCM onClick={handleItemClick} data={{ action: "share-edit" }}>
+														<Button variant="outlined" size="small" color="primary" style={{marginLeft:25}} className={classes.button}>
+										         	Editar
+										        </Button>														
+									      </MenuItemCM>										
+											</Grid>
+											<Grid item xs={6} style={{justifyContent: "center",  display: "flex"}}>
+												<MenuItemCM onClick={handleItemClick} data={{ action: "share-delete" }}>
+													<IconButton title="Dejar de compartir" className={classes.button} aria-label="Delete">
+											        <DeleteIcon />
+											      </IconButton>
+									      </MenuItemCM>											
+											</Grid>
+										</Grid>
+								</ListItem>
+							}
 
 							<MenuItemCM onClick={handleItemClick} data={{ action: 'copy' }}>
 								<ListItem button >
 									<Avatar>
 										<FilterNone />
 									</Avatar>
-									<ListItemText primary="Copiar en" />
+									<ListItemText primaryTypographyProps={{varian:"title"}} primary="Copiar en" />
 								</ListItem>
 							</MenuItemCM>
 
@@ -155,7 +209,7 @@ const DynamicMenu = (props) => {
 									<Avatar>
 										<FlipToFront />
 									</Avatar>
-									<ListItemText primary="Mover a" />
+									<ListItemText primaryTypographyProps={{varian:"title"}} primary="Mover a" />
 								</ListItem>
 							</MenuItemCM>
 
@@ -165,7 +219,7 @@ const DynamicMenu = (props) => {
 									<Avatar>
 										<DeleteForever />
 									</Avatar>
-									<ListItemText primary="Eliminar" />
+									<ListItemText primaryTypographyProps={{varian:"title"}} primary="Eliminar" />
 								</ListItem>
 							</MenuItemCM>
 
@@ -174,7 +228,7 @@ const DynamicMenu = (props) => {
 									<Avatar>
 										<CloudDownload />
 									</Avatar>
-									<ListItemText primary="Descargar" />
+									<ListItemText primaryTypographyProps={{varian:"title"}} primary="Descargar" />
 								</ListItem>
 							</MenuItemCM>
 						</List>
@@ -204,7 +258,7 @@ const ConnectedMenu = connectMenu("itemList")(withStyles(styles, { theme: true }
 	var selection = state.getIn(["explorer", "selection"]);
 	var online = state.getIn(["app", "online"])
 	return { online: online, toolBar, filter: toolBar.get("filter"), isSelecteMode: selection.get("isSelecteMode") }
-})
+},mapActions(ACTIONS.CREATE_EDIT))
 @withMobileDialog()
 @withStyles({
 	avatar: {
@@ -305,6 +359,27 @@ class DirectoryListVirtualize extends React.Component {
 				nameFile: data.item.get("name"),
 				path: data.item.get("path")
 			})
+			//this.setState(s=>({renamedialog:true}))
+			return
+		}
+
+		if (data.action === 'share') {
+			var path = data.item.get("path")
+			this.props.OPEN({owner:"david",path})
+			//this.setState(s=>({renamedialog:true}))
+			return
+		}
+
+		if (data.action === 'share-edit') {
+			var path = data.item.get("path")
+			this.props.OPEN({owner:"david",path,dtype:"edit"})
+			//this.setState(s=>({renamedialog:true}))
+			return
+		}
+
+		if (data.action === 'share-delete') {
+			var path = data.item.get("path")
+			this.props.OPEN({owner:"david",path,dtype:"delete"})
 			//this.setState(s=>({renamedialog:true}))
 			return
 		}

@@ -32,6 +32,7 @@ class Auth {
 	}
 
 	setStateLogin(){
+		//store.dispatch(clearState());
 		this.setState(STATES[1]);
 	}
 
@@ -50,6 +51,7 @@ class Auth {
 				id: x.userid
 			}),
 			thenCB: accountstatus => {
+
 				store.dispatch(setUserData(accountstatus))
 			},
 			catchCB: x => console.warn(x)
@@ -79,6 +81,7 @@ class Auth {
 				password,
 				remember,
 				thenCB: authobject => {
+					store.dispatch(clearState());
 					this.onLogin(authobject);
 					if (remember) {
 						ApiInstance.instance.callOperation("login", {

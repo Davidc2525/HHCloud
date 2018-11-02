@@ -1,5 +1,6 @@
 
 import {markDownload} from "../../components/explorer/actions.js"
+import {ACTIONS as APP_ACTIONS} from "../../actions.js"
 
 export default store => next => action => {
 
@@ -11,8 +12,12 @@ export default store => next => action => {
 		if(action.type=="ADD_DOWNLOAD"){
 			console.log("csm")
 			if(!action.dl.multiple){
-				store.dispatch(markDownload(action.path,"downloading"))
+				store.dispatch(markDownload(action.path,"downloading"));
+				store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Descarga en proceso '${action.path}'`));
+			}else{
+				store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Descarga multiple en proceso.`));
 			}
+				
 			next(action)
 			return
 		}
@@ -21,6 +26,7 @@ export default store => next => action => {
 			if(!action.dl.multiple){
 				store.dispatch(markDownload(action.path,"none"))
 			}
+			store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Descarga removida '${action.path}'`));
 			next(action)
 			return
 		}
@@ -29,6 +35,7 @@ export default store => next => action => {
 			if(!action.dl.multiple){
 				store.dispatch(markDownload(action.path,"downloaded"))
 			}
+			store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Descarga finalizada '${action.path}'`));
 			setTimeout(()=>{
 				store.dispatch(markDownload(action.path,"none"))
 				
@@ -41,6 +48,7 @@ export default store => next => action => {
 			if(!action.dl.multiple){
 				store.dispatch(markDownload(action.path,"downloaderror"))
 			}
+			store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Error al descargar '${action.path}'`));
 			setTimeout(()=>{
 				store.dispatch(markDownload(action.path,"none"))
 				store.dispatch({

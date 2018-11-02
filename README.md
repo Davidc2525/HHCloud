@@ -8,7 +8,7 @@ __HHCloud__ te permite crear una nube de almacenamiento sumamente facil y rapido
 
 Instalacion y uso
 
-```
+```bash
 $ git clone https://github.com/Davidc2525/HHCloud.git
 $ cd HHCloud
 $ npm install
@@ -17,7 +17,9 @@ $ node src/server/index.js
 ```
 luego en tu navegador -> [http://localhost](http://localhost)
 
-Imagen de presentacion
-======================
-![Imagen de presentacion](pimg2.png)
-
+Vista previa
+=
+![Previa 1](p/p1.png)
+=
+![Previa 2](p/p2.png)
+=

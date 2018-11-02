@@ -123,6 +123,7 @@ export default store => next => action => {
 					path:action.path,
 					withContent:action.payload.withContent,//parametro para operacion "status", en caso de transferir operacion
 					thenCB:(payload)=>{
+						console.error(payload)
 						store.dispatch(fetchtedPath(action.path, payload,"loaded"))
 						//store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:payload.get("file")?"file":"folder"}})
 						

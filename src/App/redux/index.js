@@ -43,6 +43,26 @@ const middleware = routerMiddleware(history);
 
 import {reducer as formReducer} from 'redux-form/immutable'
 
+/**App*/
+import stateApp from "../state.js";
+import reducersApp from "../reducers.js"
+import middlewareApp from "../middleware.js"
+
+/**Dialogs share*/
+import stateDialogsShare from "../components/dialogs_share/state.js"
+import reducerDialogsShare from "../components/dialogs_share/reducer.js"
+import middlewareDialogsShare from "../components/dialogs_share/middleware.js"
+
+/**open share*/
+import stateSharedWithMe from "../components/share/state.js"
+import reducersSharedWithMe from "../components/share/reducers.js"
+import middlewareSharedWithMe from "../components/share/middleware.js"
+
+/**open share*/
+import stateOpenShare from "../components/open_share/state.js"
+import reducersOpenShare from "../components/open_share/reducers.js"
+import middlewareOpenShare from "../components/open_share/middleware.js"
+
 /**explorer*/
 import stateExplorer from "../components/explorer/state.js"
 import reducersExplorer from "../components/explorer/reducers.js"
@@ -65,14 +85,15 @@ import stateUploadManager from "../elements/upload_manager/state.js";
 import reducersUploadManger from "../elements/upload_manager/reducers.js";
 import middlewareUploadManager from "../elements/upload_manager/middleware.js";
 
+
+
 /**Estado incial de app*/
 const initialState = /*fromJS(initStateTest);*/fromJS({
-	app: {
-		online:true,
-		name: "HHCloud",
-		title: "HHCloud"
-	},
+	app: stateApp,
 	auth: stateAuth,
+	dialogs_share:stateDialogsShare,
+	shared_with_me: stateSharedWithMe,
+	open_share:stateOpenShare,
 	explorer: stateExplorer,
 	downloads: stateDownloadManager,
 	uploads:stateUploadManager,
@@ -82,23 +103,11 @@ const initialState = /*fromJS(initStateTest);*/fromJS({
 const reducers = combineReducers({
 	form:formReducer,
 	router: routerReducer,
-	app: (state = new Map(), action) => {
-		if(action.type=="APP_CONNECTION"){
-			var newState = state;
-				newState = state.setIn(["online"],action.payload.online);
-
-			return newState;
-		}
-
-		if(action.type=="APP_SET_TITLE"){
-			var newState = state;
-				newState = state.setIn(["title"],action.payload.title);
-
-			return newState;
-		}
-		return state;
-	},
+	app: reducersApp,
 	auth: reducersAuth,
+	dialogs_share: reducerDialogsShare,
+	shared_with_me:reducersSharedWithMe,
+	open_share:reducersOpenShare,
 	explorer: reducersExplorer,
 	downloads: reducersDownloadManager,
 	uploads:reducersUploadManger,
@@ -112,7 +121,11 @@ const composeEnhancers = composeWithDevTools({
 /**Crear store*/
 const store = createStore(reducers, initialState, composeEnhancers(
 	applyMiddleware(
+		middlewareDialogsShare,
+		middlewareApp,
 		dynamicMiddlewares,
+		middlewareSharedWithMe,
+		middlewareOpenShare,
 		middlewareExplorer,
 		middlewareDownloadManager,
 		middlewareUploadManager,

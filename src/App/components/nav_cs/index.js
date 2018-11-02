@@ -28,6 +28,8 @@ import Chip from '@material-ui/core/Chip';
 import Avatar from '@material-ui/core/Avatar';
 //import { mailFolderListItems, otherMailFolderListItems } from './titleData.js';
 import { auth } from "../../elements/auth/index"
+import { STATES } from "../../elements/auth/state"
+import {Login} from "../login/Login.jsx"
 const drawerWidth = 240;
 
 const styles = theme => (window.theme=theme,{
@@ -134,6 +136,7 @@ class ResponsiveDrawer extends React.Component {
 
     const open = Boolean(anchorEl);
     const auth = this.props.auth;
+    const isLogin = auth.get("state")==STATES[1];
     const dataUser = auth.getIn(["dataUser","user"],null);
     var displayName = "";
     if(dataUser!=null){
@@ -209,30 +212,36 @@ class ResponsiveDrawer extends React.Component {
                  open={open}
                  onClose={this.handleClose}
                >
-                <MenuItem onClick={event=>this.handleEvent(event,{type:"gohome"})}>
-                  <ListItemIcon className={classes.icon}>
-                    <Dashboard />
-                  </ListItemIcon>
-                  Inicio
-                </MenuItem>
-                <MenuItem onClick={event=>this.handleEvent(event,{type:"gounity"})}>
-                  <ListItemIcon className={classes.icon}>
-                    <DataUsage />
-                  </ListItemIcon>
-                  Mi unidad
-                </MenuItem>
-                <MenuItem onClick={event=>this.handleEvent(event,{type:"goaccount"})}>
-                  <ListItemIcon className={classes.icon}>
-                    <AccountCircle />
-                  </ListItemIcon>
-                  {displayName}
-                </MenuItem>
-                <MenuItem onClick={event=>this.handleEvent(event,{type:"closesession"})}>
-                  <ListItemIcon className={classes.icon}>
-                    <ExitToApp />
-                  </ListItemIcon>
-                  Cerrar session
-                </MenuItem>
+                {isLogin&&
+                  [                   
+                    <MenuItem onClick={event=>this.handleEvent(event,{type:"gohome"})}>
+                      <ListItemIcon className={classes.icon}>
+                        <Dashboard />
+                      </ListItemIcon>
+                      Inicio
+                    </MenuItem>,
+                    <MenuItem onClick={event=>this.handleEvent(event,{type:"gounity"})}>
+                      <ListItemIcon className={classes.icon}>
+                        <DataUsage />
+                      </ListItemIcon>
+                      Mi unidad
+                    </MenuItem>,
+                    <MenuItem onClick={event=>this.handleEvent(event,{type:"goaccount"})}>
+                      <ListItemIcon className={classes.icon}>
+                        <AccountCircle />
+                      </ListItemIcon>
+                      {displayName}
+                    </MenuItem>,
+                    <MenuItem onClick={event=>this.handleEvent(event,{type:"closesession"})}>
+                      <ListItemIcon className={classes.icon}>
+                        <ExitToApp />
+                      </ListItemIcon>
+                      Cerrar session
+                    </MenuItem>
+                 ]
+                }
+
+                {!isLogin&&<div style={{width:"330px",padding:"25px"}}><Login/></div>}
                 </Menu>
 
 

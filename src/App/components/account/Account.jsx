@@ -34,7 +34,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import {Map} from "immutable"
 
-
+import {ACTIONS as APP_ACTIONS} from "../../actions.js"
 const renderSelectField = ({
   input,
   label,
@@ -161,7 +161,9 @@ class Account extends React.Component {
       })
 
     })
-    .then()
+    .then(x=>{
+      store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Cuenta se modifico exitosamente.`));
+    })
     .catch(x=>{
       var errors = {...x.errors};
       if(x.errors.hasOwnProperty("lastname")){

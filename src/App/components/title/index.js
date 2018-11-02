@@ -30,6 +30,24 @@ class Title extends React.Component{
 	                }
 	              }/>
 
+	              <Route path="/SC/open-share" render={
+	                ({location})=>{
+	                	
+	                	document.title=`Compartido`
+	                	this.setTitleApp("Compartido")
+	                	return <span/>
+	                }
+	              }/>
+
+
+				  <Route path="/SC/shared-with-me" render={
+	                ({location})=>{
+	                	
+	                	document.title=`Compartido conmigo`
+	                	this.setTitleApp("Compartido conmigo")
+	                	return <span/>
+	                }
+	              }/>
 	              <Route path="/SC/unidad" render={
 	                ({location})=>{
 	                	let loc = location.hash

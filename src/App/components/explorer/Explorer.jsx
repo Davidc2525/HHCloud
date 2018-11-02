@@ -261,7 +261,7 @@ class Explorer extends React.Component{
 				
 				<div style={{height:"100px"}} className={classes.toolbar} />
 				<div>
-					{false&&Object.keys(icons).map(x=>RenderIcon(x,icons[x]))}
+					{false&&Object.keys(icoms).map(x=>RenderIcon(x,icoms[x]))}
 				</div>
 				<ViewExplorer/>
 				

@@ -5,11 +5,16 @@ import UploadManagerInstance from "./elements/upload_manager/index"
 import React from "react"
 import { Provider ,connect} from 'react-redux'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-
+import {ACTIONS} from "./actions.js"
 import {STATES} from "./elements/auth/state.js"
 import { withRouter } from 'react-router-dom'
 
+
+
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 String.prototype.capitalize = function(lower = false) {
     return (lower ? this.toLowerCase() : this).replace(/(?:^|\s)\S/g, x => x.toUpperCase() );
 };
@@ -42,6 +47,11 @@ import {Title} from "./components/title/index.js"
 });
  const Home2 = Loadable({
   loader: () => import('./components/main_cs/index.js'),
+ loading: Loading
+});
+
+const SnackLittleMessage = Loadable({
+  loader: () => import('./components/SnackLittleMessage.jsx'),
  loading: Loading
 });
 
@@ -116,47 +126,75 @@ const AuthAreaThemed = _ => (
 
 
 @withRouter
-@connect((state,props)=>({auth:state.get("auth")}))
+@connect((state,props)=>{
+
+  //const littleMsg = state.get("app").get("littleMsg");
+  return {auth:state.get("auth")}
+
+})
 class App extends React.Component{
 
   render(){
-   const authState =  this.props.auth.get("state");
+       const authState =  this.props.auth.get("state");
+      // const {littleMsg} = this.props;
         return   (
             <div>
-            <Title/>
-            <Switch>
-              <Route path="/SC/unidad" render={
-                ()=>{
-                  if(authState!=STATES[2]){
+              <SnackLittleMessage/>
+
+              <Title/>
+
+              <Switch>
+                <Route path="/SC/open-share" render={
+                  ()=>{
+                   return <Main/>
+                  }
+                }/>
+
+                <Route path="/SC/o" render={
+                  ()=>{
+                   return <Main/>
+                  }
+                }/>
+
+                <Route path="/SC/download" render={
+                  ()=>{
+                   return <Main/>
+                  }
+                }/>
+                
+                <Route path="/SC/unidad" render={
+                  ()=>{
+                    if(authState!=STATES[2]){
+                      return <Main/>
+                    }
+                    if(authState==STATES[2]){
+                      return <Redirect to="/SC/login"/>
+                    }
+                  }
+                }/>
+
+
+                <Route path="/SC/login" render={
+                  ()=>{
+                    if(authState==STATES[1]){
+                      return <Redirect to="/SC/"/>
+                    }else{
+                      return <AuthAreaThemed/>
+                    }
+                  }
+                }/>
+
+                <Route render={
+                  ()=>{
+                    if(authState==STATES[2]){
+                      return <Redirect to="/SC/login"/>
+                    }
+
                     return <Main/>
-                  }
-                  if(authState==STATES[2]){
-                    return <Redirect to="/SC/login"/>
-                  }
-                }
-              }/>
 
-              <Route path="/SC/login" render={
-                ()=>{
-                  if(authState==STATES[1]){
-                    return <Redirect to="/SC/"/>
-                  }else{
-                    return <AuthAreaThemed/>
                   }
-                }
-              }/>
-
-              <Route render={
-                ()=>{
-                  if(authState==STATES[2]){
-                    return <Redirect to="/SC/login"/>
-                  }
-
-                  return <Main/>
-
-                }
-              }/>
-            </Switch>
+                }/>
+              </Switch>
             </div>
       )
   }

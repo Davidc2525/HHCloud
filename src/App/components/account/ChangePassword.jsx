@@ -1,36 +1,19 @@
 
-import {STATES} from "../../elements/auth/state.js"
-import React from "react";
-import {connect} from "react-redux"
-import {
-  push
-} from "react-router-redux";
-import User from "../../elements/API/v1/user/User.js"
-import ApiInstance from "../../elements/API/v1/Api.js"
-import {store} from "../../redux/index.js"
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import EditIcon from '@material-ui/icons/Edit';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import WarningIcon from '@material-ui/icons/Warning';
-import {Field, reduxForm,SubmissionError} from 'redux-form/immutable';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button';
-import {Map} from "immutable"
+import Typography from '@material-ui/core/Typography';
+import React from "react";
+import { connect } from "react-redux";
+import { Field, reduxForm, SubmissionError } from 'redux-form/immutable';
+import ApiInstance from "../../elements/API/v1/Api.js";
+import { STATES } from "../../elements/auth/state.js";
+import {ACTIONS as APP_ACTIONS} from "../../actions.js"
 const renderField = ({showIn,disabled,index,input, label, type, meta: {touched, error, warning}}) => (
   <div>
 
@@ -130,6 +113,8 @@ class ChangePassword extends React.Component {
     })
     .then(x=>{
       this.setState({ edit: false });
+      store.dispatch(APP_ACTIONS.OPEN_LITTLE_MSG.FUN(`Contraseña modificada exitosamente.`));
+
     })
     .catch(x=>{
       throw new SubmissionError({

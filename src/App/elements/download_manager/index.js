@@ -1,5 +1,6 @@
 import {store} from "../../redux/index.js"
 import {Download} from "./Download.js"
+import {DownloadShare} from "./DownloadShare.js"
 import {Map,List} from "immutable";
 
 class DownloadManager {
@@ -25,7 +26,7 @@ class DownloadManager {
 	}
 
 	/**Agregar una descarga*/
-	addDownload(item=null){
+	addDownload(item=null,from="explorer"/*share*/){
 		var path = null;
 		var multiple = false;
 		if(item==null){
@@ -38,15 +39,20 @@ class DownloadManager {
 		}else if(typeof item == "string"){
 			path = item;
 		}
-
-		var download = new Download(item,this);
+	
+		var download = null;
+		if(from=="explorer"){
+			download = new Download(item,this);
+		}else{
+			download = new DownloadShare(item,this);
+		}
 
 		this.downloads[download.id]=download;
 		store.dispatch({
 			type: "ADD_DOWNLOAD",
 			middle:"DOWNLOAD_MANAGER",
 			dlId: download.id,
-			path: path,
+			path: download.path,
 			dl: download
 		})
 	}

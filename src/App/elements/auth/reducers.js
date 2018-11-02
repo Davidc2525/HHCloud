@@ -17,7 +17,7 @@ export default (state = new Map(), action) => {
 	//console.warn(state)
 	switch (action.type) {
 		case CLEAR_STATE:			
-			let iState = { ...initState, state: STATES["2"] };
+			let iState = { ...initState};
 			return fromJS(iState);
 		case AUTH_SET_STATE:
 			return state.set("state", action.payload.state)

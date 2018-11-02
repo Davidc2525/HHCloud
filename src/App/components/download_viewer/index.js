@@ -86,7 +86,7 @@ const view = ({ data, history }) => {
   return (
     <div elevation={0}>
       <ListItem button onClick={() => {
-        if (isMultipe(data)) { return }
+        if (isMultipe(data)||true) { return }
         history.push("/SC/unidad#" + data.getIn(["path"]))
       }}>
 

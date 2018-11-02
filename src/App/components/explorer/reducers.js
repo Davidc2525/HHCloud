@@ -42,7 +42,7 @@ const setPropertyInChildreDiretory = (state,pathParent,pathChild, name, value) =
 
 	return newState;
 }
-
+export {setPropertyInChildreDiretory};
 export default (state = new Map(), action) => {
 
 	switch (action.type) {
@@ -538,6 +538,17 @@ export default (state = new Map(), action) => {
 			var newState = state;
 				newState = newState.setIn(["currentType"],action.payload.type)
 		return newState;
+
+
+		case "SET_SHARED":
+			var newState = state;
+			var shared = action.payload.shared;
+			var path = action.payload.path;
+			var parentPath = getParent(path)
+			var targetName = getName(path)
+			newState = setPropertyInChildreDiretory(newState, parentPath, targetName, "shared", shared);
+
+			return newState;
 
 
 		/**Upload*/

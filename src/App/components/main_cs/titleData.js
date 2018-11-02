@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core/styles';
+import FolderSharedIcon from "@material-ui/icons/FolderShared"
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CloudDownload from '@material-ui/icons/CloudDownload';
 import CloudUpload from "@material-ui/icons/CloudUpload";
@@ -19,6 +20,8 @@ import { push } from "react-router-redux";
 import { UploadManagerInstance } from "../../elements/upload_manager/index.js";
 import { store } from "../../redux/index.js";
 import PropTypes from 'prop-types';
+import MiniControl from "../index/MiniControl.jsx"
+import {STATES} from "../../elements/auth/state.js"
 
 const style = theme => ({
   button: {
@@ -83,11 +86,12 @@ loaded = Object.keys(dls).map(x=>dls[x]).map(x=>({size:x.payload.size,loaded:x.p
 (loaded/size)*100
 */
 @connect((state,props)=>{
+  var auth = state.get("auth");
   var dl = state.get("downloads").get("downloads")
   var up = state.get("uploads").get("uploads")
   let countUps = up.count();
   var count = dl.count()
-  return {countUps,up,count,dl};
+  return {countUps,up,count,dl,auth};
 })
 class SideVarContent extends React.Component{
 
@@ -125,71 +129,91 @@ class SideVarContent extends React.Component{
 
 
   render(){
-    const {location,history,count,classes,countUps} = this.props;
+
+    const {location,history,count,classes,countUps,auth} = this.props;
+    const state = auth.get("state");
+
     return (
 
       <div>
-        {/*ir a unidad*/}
-        <ListItem>
+        
+        {state==STATES[1]&&
+          <div>
+          {/*ir a unidad*/}
+            <ListItem>
 
-          <ButtonLink className={classes.button}  {...this.props}/>
+              <ButtonLink className={classes.button}  {...this.props}/>
 
-        </ListItem>
+            </ListItem>
 
-        {/*inicio*/}
-        <MenuLink exact to="/SC/" Aicon={DashboardIcon} label="Control"/>
-        {/*<ListItem button onClick={()=>{
-          store.dispatch(push("/SC/"))
-          }}>
-          <ListItemIcon>
-            <DashboardIcon />
-          </ListItemIcon>
-          <ListItemText primary="Control" />
-        </ListItem>*/}
+            {/*inicio*/}
+            <MenuLink exact to="/SC/" Aicon={DashboardIcon} label="Control"/>
+            {/*<ListItem button onClick={()=>{
+              store.dispatch(push("/SC/"))
+              }}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Control" />
+            </ListItem>*/}
 
-        {/*Perfil*/}
-        <MenuLink exact to="/SC/account" Aicon={AccountCircleIcon} label="Cuenta"/>
-        {  /*<ListItem button onClick={()=>{
-          store.dispatch(push("/SC/account"))
-          }}>
-          <ListItemIcon>
-            <AccountCircleIcon />
-          </ListItemIcon>
-          <ListItemText primary="cuenta" />
-        </ListItem>*/}
+            {/*Perfil*/}
+            <MenuLink exact to="/SC/account" Aicon={AccountCircleIcon} label="Cuenta"/>
+            {  /*<ListItem button onClick={()=>{
+              store.dispatch(push("/SC/account"))
+              }}>
+              <ListItemIcon>
+                <AccountCircleIcon />
+              </ListItemIcon>
+              <ListItemText primary="cuenta" />
+            </ListItem>*/}
 
-        <Divider />
+            <Divider />
+            <MenuLink exact to="/SC/shared-with-me" Aicon={FolderSharedIcon} label="Compatido conmigo"/>
+            <Divider />
+          </div>}
+        
+        
         {/*descargas*/}
-        <ListItem button onClick={()=>{
-          store.dispatch(push("/SC/download"))
-        }}>
-          <ListItemIcon>
-            <CloudDownload />
-          </ListItemIcon>
+          {(count>0||state==STATES[1])&&
+          <div>
+            <ListItem button onClick={()=>{
+              store.dispatch(push("/SC/download"))
+            }}>
+              <ListItemIcon>
+                <CloudDownload />
+              </ListItemIcon>
 
-          {count>0?
-            <ListItemText primary="Descarga" secondary={`${count}, (${filesize(this.getTotalSpeedDownloadDownload())}/s)`} />
-          :
-          <ListItemText primary="Descarga"  />
+              {count>0?
+                <ListItemText primary="Descarga" secondary={`${count}, (${filesize(this.getTotalSpeedDownloadDownload())}/s)`} />
+              :
+              <ListItemText primary="Descarga"  />
+              }
+            </ListItem>
+            {count>0&& <LinearProgress value={this.getTotalProgressDownload()} variant="determinate"/>}
+
+           </div>
           }
-        </ListItem>
-        {count>0&& <LinearProgress value={this.getTotalProgressDownload()} variant="determinate"/>}
 
         {/*Upload*/}
-        <ListItem button onClick={()=>{
-          store.dispatch(push("/SC/upload"))
-        }}>
-          <ListItemIcon>
-            <CloudUpload />
-          </ListItemIcon>
+        {state==STATES[1]&&<div>
+          <ListItem button onClick={()=>{
+            store.dispatch(push("/SC/upload"))
+          }}>
+            <ListItemIcon>
+              <CloudUpload />
+            </ListItemIcon>
 
-          {countUps>0?
-            <ListItemText primary="Subida" secondary={`${countUps}, (${UploadManagerInstance.instance.getElementsUploadsCount()}, ${UploadManagerInstance.instance.getElementsUploadedCount()})`} />
-          :
-          <ListItemText primary="Subida"  />
-          }
-        </ListItem>
-        {countUps>0&& <LinearProgress value={this.getTotalProgressUpload()} variant="determinate"/>}
+            {countUps>0?
+              <ListItemText primary="Subida" secondary={`${countUps}, (${UploadManagerInstance.instance.getElementsUploadsCount()}, ${UploadManagerInstance.instance.getElementsUploadedCount()})`} />
+            :
+            <ListItemText primary="Subida"  />
+            }
+          </ListItem>
+          {countUps>0&& <LinearProgress value={this.getTotalProgressUpload()} variant="determinate"/>}
+        <Divider/>
+        <MiniControl/>
+        </div>}
 
       </div>
       )

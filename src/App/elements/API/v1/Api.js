@@ -7,6 +7,7 @@ import DownloadOperation from "./operations/DownloadOperation.js"
 //import {Auth} from "../../auth/index.js";
 import {setUserData} from "../../auth/actions.js";
 import {move,copy} from "./operations/MoveOrCopyOperation.js"
+import apiShareInstance from "./share/index.js"
 
 import { ChangePasswordByRecoverOperation } from "./user/ChangePasswordByRecoverOperation";
 import { SendRecoveryEmailOperation } from "./user/SendRecoveryEmailOperation";
@@ -15,9 +16,19 @@ import { GetAccountStatusOperation } from "./user/GetAccountStatusOperation";
 import { CreateUserOperation } from "./user/CreateUserOperation";
 import { ChangePasswordOperation } from "./user/ChangePasswordOperation";
 import { GetUserOperation } from "./user/GetUserOperation";
+import { SearchUserOperation } from "./user/SearchUserOperation";
 import { UpdateUserOperation } from "./user/UpdateUserOperation";
 import { SignInOperation } from "./user/SignInOperation";
 import { SignOutOperation } from "./user/SignOutPeration";
+
+import OwnerOperations from "./share/OwnerOperations.js";
+import UserOperations from "./share/UserOperations.js";
+import FsList from "./share/FsList.js"
+import FsStatus from "./share/FsStatus.js"
+import FsDownload from "./share/FsDownload.js"
+import ShareCopy from "./share/Copy.js"
+
+
 import {
 	store
 } from "../../../redux/index.js";
@@ -64,12 +75,33 @@ class Api {
 		this.registerOperation("login", SignInOperation)
 		this.registerOperation("logout", SignOutOperation)
 		this.registerOperation("getuser", GetUserOperation)
+		this.registerOperation("searchuser", SearchUserOperation)
 		this.registerOperation("createuser", CreateUserOperation)
 		this.registerOperation("updateuser", UpdateUserOperation)
 		this.registerOperation("sendrecoveryemail", SendRecoveryEmailOperation)
 		this.registerOperation("sendverifyemail", SendVerifyEmailOperation)
 		this.registerOperation("changepassword", ChangePasswordOperation)
 		this.registerOperation("changepasswordbyrecover", ChangePasswordByRecoverOperation)
+		
+		this.registerOperation("owner::share",OwnerOperations.share());
+		this.registerOperation("owner::delete", OwnerOperations.delete());
+		this.registerOperation("owner::get", OwnerOperations.get());
+		this.registerOperation("owner::set_users_path", OwnerOperations.setUsersPath());
+		this.registerOperation("owner::set_mode", OwnerOperations.setMode());
+
+		this.registerOperation("user::list", UserOperations.list());
+		this.registerOperation("user::delete", UserOperations.delete());
+		this.registerOperation("user::copy", ShareCopy,{after: (reponse,args) => {
+			setTimeout(_=>{
+				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
+			},1000)
+
+		}});
+
+		this.registerOperation("fs::ls", FsList);
+		this.registerOperation("fs::status", FsStatus);
+		this.registerOperation("fs::download", FsDownload);
+
 	}
 
 	getUserId() {
@@ -130,6 +162,10 @@ class Api {
 
 
 		        var xhr = new XMLHttpRequest();
+
+		        if(typeof arguments[arguments.length-1] == "function"){
+					arguments[arguments.length-1](xhr);
+				}
 
 				method = method.toUpperCase();
 				if(method=="POST"){
@@ -240,6 +276,23 @@ const encodePathsInArg  = (arg:Object):Object => {
 		if (args.hasOwnProperty("path")) {
 			args["path"] = encodeURIComponent(decodeURIComponent(args["path"]))
 		}
+
+		if (args.hasOwnProperty("spath")) {
+			args["spath"] = encodeURIComponent(decodeURIComponent(args["spath"]))
+		}
+
+		if (args.hasOwnProperty("subpath")) {
+			args["subpath"] = encodeURIComponent(decodeURIComponent(args["subpath"]))
+		}
+
+		if (args.hasOwnProperty("dstpath")) {
+			args["dstpath"] = encodeURIComponent(decodeURIComponent(args["dstpath"]))
+		}
+
+		if (args.hasOwnProperty("srcpath")) {
+			args["srcpath"] = encodeURIComponent(decodeURIComponent(args["srcpath"]))
+		}
+		
 		if (args.hasOwnProperty("srcPath")) {
 			args["srcPath"] = encodeURIComponent(decodeURIComponent(args["srcPath"]))
 		}
@@ -261,7 +314,7 @@ const ApiInstance = {
 	instance: new Api()
 }
 
-//window.api = ApiInstance.instance
+window.api = ApiInstance.instance
 export default ApiInstance;
 export {encodePathsInArg}
 

@@ -1,36 +1,24 @@
 //Login.jsx
-import {auth} from "../../elements/auth/index.js";
-import React from "react";
-import {connect} from "react-redux"
-import {
-  push
-} from "react-router-redux";
-import {store} from "../../redux/index.js"
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Typography from '@material-ui/core/Typography';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import TextField from '@material-ui/core/TextField';
-import classNames from 'classnames';
-import green from '@material-ui/core/colors/green';
 import Button from '@material-ui/core/Button';
-import Switch from '@material-ui/core/Switch';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
+import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import SwipeableViews from 'react-swipeable-views';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import {Field, reduxForm,SubmissionError} from 'redux-form/immutable'
-import {LoginSubmit,submitRegister} from "./submit.js"
-import MaskedInput from 'react-text-mask';
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
 import Slide from '@material-ui/core/Slide';
-import {RecoverPassword} from "./RecoverPassword.jsx"
+import { withStyles } from '@material-ui/core/styles';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import React from "react";
+import { connect } from "react-redux";
+import { push } from "react-router-redux";
+import MaskedInput from 'react-text-mask';
+import { Field, reduxForm, SubmissionError } from 'redux-form/immutable';
+import { auth } from "../../elements/auth/index.js";
 
-import { bindKeyboard } from 'react-swipeable-views-utils';
-import { Map } from "immutable";
 
 const validate = values => {
   // IMPORTANT: values is an Immutable.Map here!
@@ -240,7 +228,7 @@ class Login extends React.Component{
 			console.log("session iniciada", authObject)
 			setTimeout(_=>{auth.Auth.setStateLogin()},3000)
 			this.setState({successLogin:true})
-			//setTimeout(_=>{this.setState({successLogin:false})},3000)
+			setTimeout(_=>{this.setState({successLogin:false})},3000)
 		}).catch(x => {
 			if (x.username != null) {
 				throw new SubmissionError({
@@ -362,4 +350,5 @@ class Login extends React.Component{
 }
 
 
-export {Login}
+export { Login };
+

@@ -156,7 +156,7 @@ export default [{
 
 		new HTMLWebpackPlugin({
 			filname: "../dist/SC/index.html",
-			title: 'Code Splitting',
+			title: 'HHCloud',
 			template: "src/client/HHCloud/index.html"
 		}),
 		new webpack.optimize.SplitChunksPlugin({

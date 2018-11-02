@@ -16,9 +16,10 @@ import React from 'react';
 /**/
 //import Exprorer2 from "../explorer/Explorer.jsx"
 //import Account2 from "../account/index.jsx"
+import SWM from "../share/SharedWithMe.jsx"
 import Loadable from 'react-loadable';
 import { withRouter } from 'react-router';
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch ,Redirect} from "react-router-dom";
 import logo from "../../../media/img/logop.png";
 import Nav from "../nav_cs/index.js";
 import SideVarContent from './titleData.js';
@@ -36,6 +37,18 @@ const Exprorer = Loadable({
   loading: Loading
 });
 
+const OpenShare = Loadable({
+  loader: () =>
+    import('../open_share/OpenShare.jsx'),
+  loading: Loading
+});
+
+/*const SharedWithMe = Loadable({
+  loader: () =>
+    import('../share/SharedWithMe.jsx'),
+  loading: Loading
+});
+*/
 const Account = Loadable({
   loader: () =>
     import('../account/index.jsx'),
@@ -188,9 +201,8 @@ class ResponsiveDrawer extends React.Component {
         </div>
         <Divider />
         <List style={{paddingBottom:0}} component="nav"><SideVarContent /></List>
-        <Divider />
-        <MiniControl/>
-
+        
+       
         {/**<div id="footer" className={classes.footer} >
           <div className={classes.footer}>
           <Grid className={classes.rootGrid} container justify="center" >
@@ -275,6 +287,14 @@ class ResponsiveDrawer extends React.Component {
           <Switch>
 
             <Route path="/SC/unidad" component={Exprorer} />
+            <Route path="/SC/shared-with-me" component={SWM} />
+            <Route path="/SC/open-share" component={OpenShare} />
+            <Route path="/SC/o" render={_=>{
+              var u = new URL(location)
+                  u.pathname="/SC/open-share"
+                  return ( <Redirect to={u.pathname+u.search+u.hash}/>)
+             
+            }} />
 
             {/*esta rruta es para ese componente
               en components/nuevo_cs

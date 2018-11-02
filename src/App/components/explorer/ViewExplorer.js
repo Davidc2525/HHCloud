@@ -25,6 +25,13 @@ import MoveOrCopyDialog from "./MoveOrCopyDialog.jsx";
 import RenameDialog from "./RenameDialog.jsx";
 import { parsePath, tryNormalize } from "./Util.js";
 import SentimentDissatisfied from '@material-ui/icons/SentimentDissatisfied';
+import {CreateOrEdit} from "../dialogs_share/CreateOrEdit.jsx"
+import {
+	ACTIONS
+} from "../dialogs_share/actions.js";
+
+import {mapActions} from "../dialogs_share/utils.js"
+
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={ props.retry }>Retry</button></div>;
@@ -128,7 +135,7 @@ const styles = theme => ({
 		explorer: state.get("explorer")
 	}
 
-})
+},mapActions(ACTIONS.CREATE_EDIT))
 class ViewExplorer extends React.Component {
  
 	constructor(props) {
@@ -161,7 +168,9 @@ class ViewExplorer extends React.Component {
 
 				{/**Dialogo para crear nueva carpeta <MkdirDialog />*/}
 				<MkdirDialog />
-				
+
+
+				<CreateOrEdit/>
 
 				{/*<div className={classes.headerHelper}>
 					<Route path="/SC/unidad" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee1}/>
@@ -224,7 +233,7 @@ class ViewExplorer extends React.Component {
 								{!this.props.path.get("file")&&
 									<div id="folder">
 											{/*<DirectoryList data={this.props.path} history={this.props.history} classes={classes}  /> */}   
-											<DirectoryListVirtualize data={this.props.path} datalist={this.props.path} history={this.props.history} classes={classes}  />     
+											<DirectoryListVirtualize  data={this.props.path} classes={classes}  />     
 									</div>
 								}
 
@@ -234,9 +243,9 @@ class ViewExplorer extends React.Component {
 											{<FileViewer item={this.props.path} />}
 											{/*store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	*/}
 											
-											<div>{fileExtension(this.props.path.get("path"))}</div>
-											<div>{mime.contentType(this.props.path.getIn(["payload","name"]))/**de data a payload*/}</div>
-											<strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["payload","size"]))}
+											{false&&<Typography>{fileExtension(this.props.path.get("path"))}</Typography>}
+											{false&&<Typography>{mime.contentType(this.props.path.getIn(["payload","name"]))/**de data a payload*/}</Typography>}
+											<Typography><strong>{this.props.path.get("path")}</strong> {filesize(this.props.path.getIn(["payload","size"]))}</Typography>
 											{/**/}
 										</div>
 									</div>
