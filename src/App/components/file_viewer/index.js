@@ -38,7 +38,7 @@ function Loading(props) {
   } else {
     return <div>Espere</div>;
   }
-} 
+}
 const FW = Loadable({
 	loader: () =>
 		import ('react-file-viewer').then(x => Promise.resolve(x.default)),
@@ -53,7 +53,7 @@ const styles = {
 		alignItems: "center"
 	}
 }
- 
+
 class FileViewer extends Component{
 	constructor(props){
 		super(props)
@@ -63,7 +63,7 @@ class FileViewer extends Component{
 			plaint:RenderPlaint
 		}
 		this.state={url:null,contentValue:null,typeMedia:"text"}
-		store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})	
+		store.dispatch({type:"CURRENT_TYPE_EXPLORER",payload:{type:"file"}})
 
 	}
 
@@ -82,7 +82,7 @@ class FileViewer extends Component{
 			const owner = this.encodeData(this.props.item.get("owner"));
 			const spath = this.encodeData(this.props.item.get("spath"));
 			const subpath = this.encodeData(this.props.item.get("subpath"));
-		
+
 			url = `${ApiInstance.instance.urlService}opener?type=s&owner=${owner}&spath=${spath}`;
 
 			if(!subpath==null||!subpath==""){
@@ -106,6 +106,7 @@ class FileViewer extends Component{
 		if (isTextFile(name)) {
 			var openerPath = this.createUrl();
 			fetch(openerPath, {
+			    mode: 'cors',
 				credentials: "include"
 			}).then(r => r.text()).then(contentText => {
 
@@ -120,9 +121,10 @@ class FileViewer extends Component{
 			try {
 				var openerPath = this.createUrl();
 				fetch(openerPath, {
+				    mode: 'cors',
 					credentials: "include"
 				}).then(r => r.text()).then(contentText => {
-					
+
 					this.getContent(fe,contentText)
 						.then(x => this.setState({
 							typeMedia: "text",
@@ -149,7 +151,7 @@ class FileViewer extends Component{
 						typeMedia:"image",
 						contentValue: x
 					}))
-				
+
 			} catch (e) {
 
 			}
@@ -181,7 +183,7 @@ class FileViewer extends Component{
 		if(isAudioFile(name)){
 			this.setState(_=>({typeMedia:"audio",contentValue:this.createUrl()}))
 				return
-				
+
 		}
 
 		if (isPdfFile(name)) {
@@ -191,7 +193,7 @@ class FileViewer extends Component{
 							typeMedia: "pdf",
 							contentValue: this.createUrl()
 						}))
-				
+
 				return
 
 				new RenderVideo()
@@ -211,7 +213,7 @@ class FileViewer extends Component{
 		if (isDoc(name)) {
 
 			try {
-				fetch(this.createUrl(),{credentials:"include"})
+				fetch(this.createUrl(),{mode: 'cors',credentials:"include"})
 					.then(x => x.blob()).then(x => {
 
 						this.setState(_ => ({
@@ -248,11 +250,11 @@ class FileViewer extends Component{
 		var contentValue = null;
 		if(exts.hasOwnProperty(ex)){
 			var data = exts[ex];
-			
+
 			if(typeof data == "string" && this.viewTextFiles(ex)){
 				return  Promise.resolve((content))
 			}else{
-				
+
 				var render = new this.renderes[data[0]]()
 					render.setLan(data[1])
 					return render.renderAsPromise((content))
@@ -263,7 +265,7 @@ class FileViewer extends Component{
 		}
 
 		//return contentValue;
-	}	
+	}
 
 	viewTextFiles(ex){
 		var can = false;
@@ -272,17 +274,17 @@ class FileViewer extends Component{
 			can = true;
 		}
 
-		/*if(ex == "js") can = true; 
-		if(ex == "php") can = true; 
-		if(ex == "javascript") can = true; 
-		if(ex == "html") can = true; 
-		if(ex == "java") can = true; 
-		if(ex == "c") can = true; 
-		if(ex == "cpp") can = true; 
-		if(ex == "css") can = true; 
-		if(ex == "py") can = true; 
-		if(ex == "lo") can = true;*/ 
-		return can 
+		/*if(ex == "js") can = true;
+		if(ex == "php") can = true;
+		if(ex == "javascript") can = true;
+		if(ex == "html") can = true;
+		if(ex == "java") can = true;
+		if(ex == "c") can = true;
+		if(ex == "cpp") can = true;
+		if(ex == "css") can = true;
+		if(ex == "py") can = true;
+		if(ex == "lo") can = true;*/
+		return can
 	}
 
 	viewImageFiles(ex){
@@ -292,8 +294,8 @@ class FileViewer extends Component{
 			can = true;
 		}
 
-	
-		return can 
+
+		return can
 	}
 
 	viewVideoFiles(ex){
@@ -303,12 +305,12 @@ class FileViewer extends Component{
 			can = true;
 		}
 
-	
-		return can 
+
+		return can
 	}
 
-	viewPdfFile(ex){			
-		return ex=="pdf" 
+	viewPdfFile(ex){
+		return ex=="pdf"
 	}
 
 	getBlobUrl(item){
@@ -324,9 +326,9 @@ class FileViewer extends Component{
 	}
 
 	getUrl(){
-		
+
 		  this.setState(ps=>({url:ps.contentValue}))
-		
+
 	}
 
 	download(item){
@@ -340,18 +342,18 @@ class FileViewer extends Component{
 		const fe = fileextension(path)
 
 		const mimeContent = item.getIn(["mime"])
-		
+
 
 		return (<div>
-				
+
 				{
 					this.state.url!=null&&
 					<Button target="_blank" href={this.state.url} >
 				        Abirir
 				    </Button>
-					
+
 				}
-				
+
 				{
 					this.state.typeMedia=="text"&&this.state.contentValue!=null&&
 					<div>
@@ -392,7 +394,7 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="pdf"&&this.state.contentValue!=null&&
 					<div id="pdf">
-						 <div>	
+						 <div>
 						  	<object style={{width:"100%",height:"calc(100% - 50px)"}} data={this.state.contentValue} type="application/pdf">
 							  <embed src={this.state.contentValue} type="application/pdf" />
 							</object>
@@ -403,7 +405,7 @@ class FileViewer extends Component{
 				{
 					this.state.typeMedia=="doc"&&this.state.contentValue!=null&&
 					<div id="doc">
-						 <div>	
+						 <div>
 						 	<FW style={{width:"100%",height:"calc(100% - 50px)"}}
 						 		fileType={this.state.docType}
         						filePath={this.state.contentValue}/>

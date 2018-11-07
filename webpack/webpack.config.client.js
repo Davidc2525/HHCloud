@@ -1,3 +1,5 @@
+
+var {constanst:{PORT,HOST}} = require("./constanst.js");
 const CompressionPlugin = require("compression-webpack-plugin")
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
@@ -53,8 +55,8 @@ export default [{
 		path: path.resolve(__dirname, '../dist/SC')
 	},
 	devServer: {
-		host: "localhost",
-		port: 80,
+		host: HOST,
+		port: PORT,
 		compress:true,
 		clientLogLevel: 'info',
 		//lazy: true,
@@ -216,22 +218,7 @@ export default [{
 
 		path: path.resolve(__dirname, '../dist')
 	},
-	devServer: {
-		host: "localhost",
-		port: 9090,
-		allowedHosts: ["ubuntu", "*", "10.42.0.1"],
-		overlay: true,
-		contentBase: path.resolve(__dirname, '../dist'),
-		publicPath: "/",
-		hot: true,
-		headers: {
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-			"Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-		},
-		//index:"src/components/api-sms/index.html",
-		historyApiFallback: true
-	},
+
 
 	module: {
 

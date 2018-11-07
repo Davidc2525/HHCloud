@@ -82,7 +82,7 @@ class Api {
 		this.registerOperation("sendverifyemail", SendVerifyEmailOperation)
 		this.registerOperation("changepassword", ChangePasswordOperation)
 		this.registerOperation("changepasswordbyrecover", ChangePasswordByRecoverOperation)
-		
+
 		this.registerOperation("owner::share",OwnerOperations.share());
 		this.registerOperation("owner::delete", OwnerOperations.delete());
 		this.registerOperation("owner::get", OwnerOperations.get());
@@ -292,7 +292,7 @@ const encodePathsInArg  = (arg:Object):Object => {
 		if (args.hasOwnProperty("srcpath")) {
 			args["srcpath"] = encodeURIComponent(decodeURIComponent(args["srcpath"]))
 		}
-		
+
 		if (args.hasOwnProperty("srcPath")) {
 			args["srcPath"] = encodeURIComponent(decodeURIComponent(args["srcPath"]))
 		}
