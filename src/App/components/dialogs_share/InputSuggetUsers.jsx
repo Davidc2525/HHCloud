@@ -13,6 +13,12 @@ import lodash from "lodash";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ApiInstance from "../../elements/API/v1/Api.js";
 
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+
+import Avatar from '@material-ui/core/Avatar';
+
 
 //const suggestionsUsers = fromJS([]);
 
@@ -41,18 +47,29 @@ function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, sele
 function renderSuggestion2({ suggestionUser, index, itemProps, highlightedIndex, selectedItem }) {
   const isHighlighted = highlightedIndex === index;
   const isSelected = (selectedItem || '').indexOf(suggestionUser.label) > -1;
-
+  const id = suggestionUser.get("id");
   return (
     <MenuItem
       {...itemProps}
       key={suggestionUser.get("id")}
       selected={isHighlighted}
-      component="div"
+      component={ListItem}
       style={{
         fontWeight: isSelected ? 500 : 400,
       }}
     >
-      {suggestionUser.get("lastName")} {suggestionUser.get("firstName")} ({suggestionUser.get("email")})
+        <ListItemAvatar>
+          <Avatar
+            alt={`Avatar ${id}`}
+            src={`${ApiInstance.instance.urlService}avatar?id=${id}&size=50x50`}
+          />
+        </ListItemAvatar>
+        <ListItemText
+            primaryTypographyProps={{variant:"title"}}
+            primary={`${suggestionUser.get("lastName")} ${suggestionUser.get("firstName")} (${suggestionUser.get("email")})`}
+            //secondary={`${owner.lastName} ${owner.firstName} (${owner.email})`}
+        />
+      
     </MenuItem>
   );
 }
@@ -251,6 +268,12 @@ class DownshiftMultiple extends React.Component {
               InputProps: getInputProps({
                 startAdornment: selectedUsers.map(item => (
                   <Chip
+                    avatar={
+                      <Avatar
+                        alt={`Avatar ${item.id}`}
+                        src={`${ApiInstance.instance.urlService}avatar?id=${item.id}&size=50x50`}
+                      />
+                    }
                     key={item.id}
                     tabIndex={-1}
                     label={`${item.lastName} ${item.firstName} (${item.email})`}

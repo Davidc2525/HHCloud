@@ -6,6 +6,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ApiInstance from "../../elements/API/v1/Api.js"
+import Avatar from '@material-ui/core/Avatar';
 import Snackbar from '@material-ui/core/Snackbar';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
@@ -18,7 +21,6 @@ import { ContextMenuTrigger } from "react-contextmenu";
 import { connect } from "react-redux";
 import { push } from "react-router-redux";
 import { ACTIONS as APP_ACTIONS } from "../../actions.js";
-import ApiInstance from "../../elements/API/v1/Api.js";
 import { DownloadManagerInstance } from "../../elements/download_manager/index.js";
 import { store } from "../../redux/index.js";
 import { locationToObject, tryNormalize } from "../explorer/Util.js";
@@ -27,6 +29,13 @@ import { collect, ConnectedContextMenu, contextId } from "./ContextMenu.jsx";
 import {
   ACTIONS as DIALOGS_ACTION
 } from "../dialogs_share/actions.js";
+import {
+    getParent,
+    isRoot,
+    parsePath,
+    getAppLocation,
+    locationToData
+} from "../explorer/Util.js";
 
 import {mapActions} from "../dialogs_share/utils.js"
 import CopyDialog from "../dialogs_share/CopyToUnity.jsx";
@@ -46,8 +55,10 @@ const styles = theme => ({
 
 @connect((state, props) => {
     const littleMsg = state.getIn(["shared_with_me","littleMsg"]).toJS();
+    var router = state.getIn(["router"]);
+    var locationData = locationToData(router.location);
     
-    return { sharewm: state.get("shared_with_me") ,littleMsg}
+    return {locationData, sharewm: state.get("shared_with_me") ,littleMsg}
 },mapActions(DIALOGS_ACTION.COPY))
 @withStyles(styles,{withTheme:true})
 class SharedWithMe extends React.Component {
@@ -65,8 +76,21 @@ class SharedWithMe extends React.Component {
     }
 
     _renderUps(item : immutable.Map): JSX.Element {
-        var pathName = this._toName(item.get("path"))
-        var owner = item.get("owner").toJS()
+        const pathName = this._toName(item.get("path"))
+        const owner = item.get("owner").toJS()
+        const {locationData} = this.props;
+        const currentOpenShareOwnerId = locationData.owner;
+        const currentOpenShareSpath = locationData.spath
+        var avatar = null;
+        var hasAvatar = false;
+        if(JSON.parse(owner.avatars.has)){
+            hasAvatar = true;
+            avatar = owner.avatars["50x50"];
+        }else{
+            avatar = owner.avatars["50x50"];
+            
+        }
+        //console.error(owner)
         return (
            <ContextMenuTrigger
                 //key={key}
@@ -78,9 +102,16 @@ class SharedWithMe extends React.Component {
                 collect={collect}
 
                 id={contextId}>
-                <ListItem button onClick={() => {                    
+                <ListItem selected={currentOpenShareOwnerId == owner.id && currentOpenShareSpath == pathName} button onClick={() => {                    
                    this.handeClickItem(item);
                 }}>
+
+                   <ListItemAvatar>
+                      <Avatar
+                        alt={`Avatar ${owner.id}`}
+                        src={`${avatar}`}
+                      />
+                    </ListItemAvatar>
 
                     <ListItemText
                         primaryTypographyProps={{variant:"title"}}
@@ -188,7 +219,7 @@ class SharedWithMe extends React.Component {
         const shared = this.props.sharewm.get("shared");
         const count = shared.size;
         const isEmbedd = this.props.isEmbedd || false;
-        const {littleMsg} = this.props;
+        const {littleMsg,locationData} = this.props;
         return (
 
             <div>

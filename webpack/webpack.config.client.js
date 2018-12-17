@@ -1,5 +1,6 @@
 
 var {constanst:{PORT,HOST}} = require("./constanst.js");
+var config = require('config');console.log(config)
 const CompressionPlugin = require("compression-webpack-plugin")
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
@@ -149,7 +150,8 @@ export default [{
 		]
 	}),
 		new webpack.DefinePlugin({
-			SIDE: JSON.stringify("client"),
+			//SIDE: JSON.stringify("client"),
+			"appConfig": JSON.stringify(config),
 			'process.env': {
 				NODE_ENV: JSON.stringify(process.env.NODE_ENV)
 			}

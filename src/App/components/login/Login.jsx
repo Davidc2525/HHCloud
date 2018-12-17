@@ -226,7 +226,7 @@ class Login extends React.Component{
 		return auth.Auth.signIn(values.get("email"),values.get("password"),values.get("remember"))
 		.then(authObject => {
 			console.log("session iniciada", authObject)
-			setTimeout(_=>{auth.Auth.setStateLogin()},3000)
+			setTimeout(_=>{auth.Auth.setStateLogin()},1000)
 			this.setState({successLogin:true})
 			setTimeout(_=>{this.setState({successLogin:false})},3000)
 		}).catch(x => {

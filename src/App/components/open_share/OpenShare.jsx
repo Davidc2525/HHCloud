@@ -276,7 +276,7 @@ class OpenShare extends React.Component{
 			<div id="OpenShare">
 				<div style={{position}} id="headerHelper" className={classes.headerHelper}>
 					<div className={classes.seccions}>
-						<Route path="/SC/open-share" style={{position:"fixed"}}  component={(width=="sm"||width=="xs")?PahtSee2:PahtSee2}/>
+						<Route path="/SC/open-share" style={{position:"fixed"}}  component={_=><PahtSee2 {..._} inShare/>}/>
 					</div>
 					<div className={classes.seccions}>
 						<ToolBar/>

@@ -139,9 +139,14 @@ class ResponsiveDrawer extends React.Component {
     const isLogin = auth.get("state")==STATES[1];
     const dataUser = auth.getIn(["dataUser","user"],null);
     var displayName = "";
+    var avatar = null;
+    var hasAvatar = false;
     if(dataUser!=null){
       displayName = dataUser.get("lastName")+" "+dataUser.get("firstName")
+      avatar = dataUser.getIn(["avatars","50x50"]);
+      hasAvatar = JSON.parse( dataUser.getIn(["avatars","has"]));
     }
+
     displayName = displayName.capitalize(true);
 
     const position  = (currentType=="folder")?"fixed":"absolute"
@@ -160,6 +165,8 @@ class ResponsiveDrawer extends React.Component {
              >
                <MenuIcon />
              </IconButton>
+
+             
 
              <div className={classes.flex}>
                <Grid container spacing={8}>
@@ -190,14 +197,16 @@ class ResponsiveDrawer extends React.Component {
              </div>
 
              <div>
-               <IconButton
-                 aria-owns={open ? 'menu-appbar' : null}
-                 aria-haspopup="true"
-                 onClick={this.handleMenu}
-                 color="inherit"
-               >
-                 <AccountCircle />
-               </IconButton>
+               {hasAvatar&&<Avatar  onClick={this.handleMenu} alt="Remy Sharp" src={avatar}  />}
+               {!hasAvatar &&
+                 <IconButton
+                   aria-owns={open ? 'menu-appbar' : null}
+                   aria-haspopup="true"
+                   onClick={this.handleMenu}
+                   color="inherit"
+                 >
+                   <AccountCircle />
+                 </IconButton>}
                <Menu
                  id="menu-appbar"
                  anchorEl={anchorEl}

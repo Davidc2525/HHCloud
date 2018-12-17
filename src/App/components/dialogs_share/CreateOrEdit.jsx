@@ -10,7 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
-
+import ApiInstance from "../../elements/API/v1/Api.js";
 import ErrorIcon from '@material-ui/icons/ErrorOutline';
 import TimeIcon from '@material-ui/icons/AccessTime';
 import FolderSharedIcon from '@material-ui/icons/FolderShared';
@@ -36,7 +36,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -52,6 +52,8 @@ import frenchStrings from 'react-timeago/lib/language-strings/es'
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter'
 import {List} from "immutable";
 import TimeAgo from "react-timeago"
+
+import Avatar from '@material-ui/core/Avatar';
 const formatter = buildFormatter(frenchStrings)
 const styles = theme => ({
 	appBar: {
@@ -87,6 +89,21 @@ const styles = theme => ({
 	contentIcon:{
 		display: "flex",
     	justifyContent: "center",
+	},
+	row: {
+		marginTop:20,
+		display: 'flex',
+		justifyContent: 'left',
+	},
+	avatar: {
+		margin: 5,
+	},
+	progress: {
+		...theme.mixins.toolbar,
+		width: "100%",
+		//height:" 56px",
+		position: "absolute",
+		overflow: "hidden"
 	}
 });
 
@@ -180,7 +197,10 @@ class CreateOrEdit extends React.Component {
 					aria-labelledby="alert-dialog-slide-title"
 					aria-describedby="alert-dialog-slide-description"
 		        >
-		        	<AppBar className={classes.appBar}>
+		        	<AppBar color="secondary" className={classes.appBar}>
+						{	(status=="loading"||status=="saving"||status=="deleting")&&
+							<LinearProgress className={classes.progress}  />
+						}
 			            <Toolbar>
 			              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
 			                <CloseIcon />
@@ -199,7 +219,7 @@ class CreateOrEdit extends React.Component {
 				              </Button>
 			          		}
 
-			          		{(status=="loading"||status=="saving"||status=="deleting")&&
+			          		{false&&
 			          			<CircularProgress style={{ color: "#2196F3"}}/>
 			          		}
 			            </Toolbar>
@@ -470,6 +490,22 @@ class ContentDelete extends React.Component{
 											<Typography >
 												Esta rruta esta compartida con {users.size} usuarios.
 											</Typography>
+											<div className={classes.row}>
+												{
+													users.map(u=>{
+
+														const id = u.get("id")
+														return (
+															<Avatar
+																className={classes.avatar}
+													        	alt={`Avatar ${id}`}
+													        	src={`${ApiInstance.instance.urlService}avatar?id=${id}&size=50x50`}
+													        />
+														)
+
+													})
+												}
+											</div>
 
 										</p>}
 		            	  			</Grid>

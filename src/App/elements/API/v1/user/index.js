@@ -223,6 +223,52 @@ class ApiUser {
 			});
 	}
 
+
+	/*Avatar*/
+	setAvatar(/*Blob || File*/ data,original = null) {
+		
+		const editFormData = (fd)=>{
+			fd.append("edited",true);
+			if(original != null){
+				fd.append("o",original);
+			}
+			fd.append("f",data);
+		}
+
+		return ApiInstance.instance.fetch({
+			apiArg: {}
+		}, "avatar","POST",editFormData)
+			.then(x => {
+				if (x.status == "ok") {
+					return Promise.resolve((x.payload))
+				} else {
+					return Promise.reject(x)
+				}
+			});
+	}
+	deleteAvatar() {
+		/*const id = user.getId();
+		const email = user.getEmail();
+		const username = user.getUserName();
+		const firstname = user.getFirstName();
+		const lastname = user.getLastName();
+		const gender = user.getGender();*/
+
+		
+
+		return ApiInstance.instance.fetch({
+			apiArg: {}
+		}, "avatar","DELETE")
+			.then(x => {
+				if (x.status == "ok") {
+					return Promise.resolve(x.payload)
+				} else {
+					return Promise.reject(x)
+				}
+			});
+	}
+
+
 }
 
 export const apiUserInstance = {

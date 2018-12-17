@@ -51,6 +51,7 @@ const exts = {
 	"properties": ["prism", "properties"],
 	"sh": ["prism", "shell"],
 	"xml": ["prism", "xml"],
+	"fxml": ["prism", "xml"],
 	"py": ["prism", "python"],
 	"htaccess": ["plaint", "txt"],
 	"makefile": ["prism", "makefile"],
