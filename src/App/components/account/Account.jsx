@@ -33,6 +33,7 @@ import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import {Map} from "immutable"
+import AccountAvatar from "./AccountAvatar.jsx"
 
 import {ACTIONS as APP_ACTIONS} from "../../actions.js"
 const renderSelectField = ({
@@ -150,8 +151,9 @@ class Account extends React.Component {
       ApiInstance.instance.callOperation("updateuser",{
         user:new User(values.toJSON()),
         thenCB:user => {
+          
           this.setState(p=>({edit:false}))
-          this.props.dispatch({type:"AUTH_SETUSERDATA_USER",payload:{user:values.toJSON()}})
+          this.props.dispatch({type:"AUTH_SETUSERDATA_USER",payload:{user:user.toObject()}})
           resolve(user)
 
         },
@@ -196,165 +198,176 @@ class Account extends React.Component {
         />
         {
           isLogin&&
-          <div>
-            <Grid container spacing={24}>
-              <Grid item style={{display:"flex"}} justify="center" alignItems="center" xs={3}>
-                <Typography variant="title">Tus datos</Typography>
-              </Grid>
-              <Grid item xs={3}>
-                <div>
-                  <FormControlLabel
-                    //labelPlacement="start"
-                    control={
-                      <Switch checked={this.state.edit} onChange={_=>{this.setState(p=>({edit:!p.edit}))}}/>
-                    }
-                    label={
-                      <span><Typography>Editar</Typography></span>
-                    }
-                  />
-                </div>
-              </Grid>
+          <div >
+            <Grid container spacing={0}>
+              <Grid item xs={12} md={7}>
 
-              <form className={classes.root} onSubmit={handleSubmit(this._onSubmit.bind(this))}>
-                <Grid  spacing={24} container>
-                  <Grid item xs={12}>
-                    <Grid container>
-                      <Grid item xs={3}>
-                        <Typography>E-mail</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        <Tooltip title={isVerified?"Cuenta verificada":"Cuenta no verificada, presiona aqui para enviar correo de verificacion."}>
-                          <Chip
-                            onClick={_=>{if(!isVerified)this._OpenDialogEmailVerifay()}}
-                            avatar={
-                              isVerified?
-                                (
-                                  <Avatar>
-                                    <VerifiedUserIcon />
-                                  </Avatar>
-                                )
-                              :
-                              (
-                                <Avatar>
-                                  <WarningIcon />
-                                </Avatar>
-                              )
-                            }
-                            label={user.get("email").capitalize(true)}
-                          />
-                        </Tooltip>
-                      </Grid>
-                    </Grid>
+                <Grid container spacing={24}>
+                  <Grid item style={{display:"flex"}} justify="center" alignItems="center" xs={3}>
+                    <Typography variant="title">Tus datos</Typography>
                   </Grid>
-
-                  <Grid item xs={12}>
-                    <Grid container>
-                      <Grid item xs={3}>
-                        <Typography>Nombre</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        {!edit&&<Typography variant="title">{user.get("firstName").capitalize(true)}</Typography>}
-                        {edit&&
-                          <Field
-                            name="firstName"
-                            component={renderField}
-                            type="text"
-                            placeholder="Nombre"
-                          />}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Grid container>
-                      <Grid item xs={3}>
-                        <Typography>Apellido</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        {!edit&&<Typography variant="title">{user.get("lastName").capitalize(true)}</Typography>}
-                        {edit&&
-                          <Field
-                            name="lastName"
-                            component={renderField}
-                            type="text"
-                            placeholder="Apellido"
-                          />}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <Grid container>
-                      <Grid item xs={3}>
-                        <Typography>Nombre de usuario</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        {!edit&&<Typography variant="title">{user.get("username")}</Typography>}
-                        {edit&&
-                          <Field
-                            name="username"
-                            component={renderField}
-                            type="text"
-                            placeholder="Nombre de usuario"
-                          />}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-
-
-                  <Grid item xs={12}>
-                    <Grid container>
-                      <Grid item xs={3}>
-                        <Typography>Sexo</Typography>
-                      </Grid>
-                      <Grid item xs={9}>
-                        {!edit&&<Typography variant="title"><Gender name={user.get("gender")}/></Typography>}
-                        {
-                          edit&&
-                          <Field name="gender"  component={renderSelectField}>
-                            {genders.map(gender => (
-                              <MenuItem value={gender.name} key={gender.name}>
-                                {gender.value}
-                              </MenuItem>
-                            ))}
-                          </Field>
+                  <Grid item xs={3}>
+                    <div>
+                      <FormControlLabel
+                        //labelPlacement="start"
+                        control={
+                          <Switch checked={this.state.edit} onChange={_=>{this.setState(p=>({edit:!p.edit}))}}/>
                         }
-                      </Grid>
-                    </Grid>
+                        label={
+                          <span><Typography>Editar</Typography></span>
+                        }
+                      />
+                    </div>
                   </Grid>
 
-                  {edit&&<Grid item xs={12}>
-                    <Grid container >
-                      <Grid item xs={3}>
-
+                  <form className={classes.root} onSubmit={handleSubmit(this._onSubmit.bind(this))}>
+                    <Grid  spacing={24} container>
+                      <Grid item xs={12}>
+                        <Grid container>
+                          <Grid item xs={3}>
+                            <Typography>E-mail</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            <Tooltip title={isVerified?"Cuenta verificada":"Cuenta no verificada, presiona aqui para enviar correo de verificacion."}>
+                              <Chip
+                                onClick={_=>{if(!isVerified)this._OpenDialogEmailVerifay()}}
+                                avatar={
+                                  isVerified?
+                                    (
+                                      <Avatar>
+                                        <VerifiedUserIcon />
+                                      </Avatar>
+                                    )
+                                  :
+                                  (
+                                    <Avatar>
+                                      <WarningIcon />
+                                    </Avatar>
+                                  )
+                                }
+                                label={user.get("email").capitalize(true)}
+                              />
+                            </Tooltip>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={9}>
-                        <Tooltip
-                          open={(!submitting&&anyTouched&&invalid&&error)}
-                          title={error}
-                        >
-                          <div className={classes.wrapper}>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              disabled={!edit||(pristine||submitting)}
-                              type="submit"
+
+                      <Grid item xs={12}>
+                        <Grid container>
+                          <Grid item xs={3}>
+                            <Typography>Nombre</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            {!edit&&<Typography variant="title">{user.get("firstName").capitalize(true)}</Typography>}
+                            {edit&&
+                              <Field
+                                name="firstName"
+                                component={renderField}
+                                type="text"
+                                placeholder="Nombre"
+                              />}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Grid container>
+                          <Grid item xs={3}>
+                            <Typography>Apellido</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            {!edit&&<Typography variant="title">{user.get("lastName").capitalize(true)}</Typography>}
+                            {edit&&
+                              <Field
+                                name="lastName"
+                                component={renderField}
+                                type="text"
+                                placeholder="Apellido"
+                              />}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <Grid container>
+                          <Grid item xs={3}>
+                            <Typography>Nombre de usuario</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            {!edit&&<Typography variant="title">{user.get("username")}</Typography>}
+                            {edit&&
+                              <Field
+                                name="username"
+                                component={renderField}
+                                type="text"
+                                placeholder="Nombre de usuario"
+                              />}
+                          </Grid>
+                        </Grid>
+                      </Grid>
+
+
+                      <Grid item xs={12}>
+                        <Grid container>
+                          <Grid item xs={3}>
+                            <Typography>Sexo</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            {!edit&&<Typography variant="title"><Gender name={user.get("gender")}/></Typography>}
+                            {
+                              edit&&
+                              <Field name="gender"  component={renderSelectField}>
+                                {genders.map(gender => (
+                                  <MenuItem value={gender.name} key={gender.name}>
+                                    {gender.value}
+                                  </MenuItem>
+                                ))}
+                              </Field>
+                            }
+                          </Grid>
+                        </Grid>
+                      </Grid>
+
+                      {edit&&<Grid item xs={12}>
+                        <Grid container >
+                          <Grid item xs={3}>
+
+                          </Grid>
+                          <Grid item xs={9}>
+                            <Tooltip
+                              open={(!submitting&&anyTouched&&invalid&&error)}
+                              title={error}
                             >
-                              Guardar Cambios
-                            </Button>
-                            {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
-                          </div>
-                        </Tooltip>
+                              <div className={classes.wrapper}>
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  disabled={!edit||(pristine||submitting)}
+                                  type="submit"
+                                >
+                                  Guardar Cambios
+                                </Button>
+                                {submitting && <CircularProgress size={24} className={classes.buttonProgress} />}
+                              </div>
+                            </Tooltip>
 
-                      </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>}
+
+
                     </Grid>
-                  </Grid>}
 
-
+                  </form>
                 </Grid>
+              </Grid>
 
-              </form>
+              <Grid  item xs={12} md={5}>
+                <AccountAvatar/>
+              </Grid>
             </Grid>
+            
+
           </div>
         }
         {

@@ -8,6 +8,11 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import {connect} from "react-redux"
 import {parsePath,tryNormalize} from "../explorer/Util.js"
+import Avatar from '@material-ui/core/Avatar';
+import {
+	
+	locationToData
+} from "../explorer/Util.js";
 import {
 	push
 } from "react-router-redux";
@@ -78,10 +83,24 @@ const styles = theme => ({
 });
 
 
-@connect(state=>{
-	var toolBar = state.getIn(["explorer","toolBar"]);
-	var selection = state.getIn(["explorer","selection"]);
-	return {filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
+@connect((state,props)=>{
+	const locationData = locationToData(props.location);
+	const {inShare} = props;
+	const toolBar = state.getIn(["explorer","toolBar"]);
+	const selection = state.getIn(["explorer","selection"]);
+	var shared_with_me = null;
+	var userShowInShare = null;
+	if(inShare){
+			shared_with_me = state.getIn(["shared_with_me","shared"],null);
+			if(shared_with_me != null){
+					
+				var found = shared_with_me.find(x=>x.getIn(["owner","id"])==locationData.owner);
+				if(found!=null){
+						userShowInShare = found.get("owner")
+				}
+			}
+	} 
+	return {userShowInShare,filter:toolBar.get("filter"),isSelecteMode:selection.get("isSelecteMode")}
 })
 class PathSee extends React.Component {
 
@@ -102,6 +121,7 @@ class PathSee extends React.Component {
 	update(value = 0, withPust = true) {
 
 		var newLocation = locationToObject();
+
 		if (value == 0) {
 			newLocation.hash = "#/"
 
@@ -154,11 +174,22 @@ class PathSee extends React.Component {
 		const {location,history,classes} = this.props;
 		const {hash} = location;
 	
-	
-	
 	 
 		const { value } = this.state;
-		const {isSelecteMode} = this.props
+		const {userShowInShare,isSelecteMode,inShare} = this.props;
+
+		var showShareAvatar = inShare && userShowInShare!=null;
+		var avatarShare = null;
+		if(showShareAvatar){
+			var hasAvatar = userShowInShare.getIn(["avatars","has"]);
+			if(JSON.parse(hasAvatar)){
+				avatarShare = userShowInShare.getIn(["avatars","50x50"]);
+			}else{
+				showShareAvatar = false;
+			}
+			
+		}
+		
 		return (
 			<div id="PathSee-2" className={classes.root}>
 				<AppBar style={{boxShadow:"none"}}  position="static" color="default">
@@ -171,7 +202,13 @@ class PathSee extends React.Component {
 						scrollButtons="off"
 					>
 					
-					<Tab disabled={isSelecteMode} className={classes.tabHome} icon={<CloudCircleIcon/>} />
+					{showShareAvatar&&
+						<Tab disabled={isSelecteMode} className={classes.tabHome} icon={<Avatar src={avatarShare}/>} />
+					}
+
+					{!showShareAvatar&&
+						<Tab disabled={isSelecteMode} className={classes.tabHome} icon={<CloudCircleIcon/>} />
+					}
 					{this.state.paths.map((x,i)=>
 						<Tab 
 						key={i.toString()}

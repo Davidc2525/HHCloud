@@ -10,6 +10,7 @@ import {ACTIONS} from "../actions.js"
 
 const styles = theme => ({
   close: {
+  	padding: theme.spacing.unit / 2,
     width: theme.spacing.unit * 4,
     height: theme.spacing.unit * 4,
   },

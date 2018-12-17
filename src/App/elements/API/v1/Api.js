@@ -28,11 +28,13 @@ import FsStatus from "./share/FsStatus.js"
 import FsDownload from "./share/FsDownload.js"
 import ShareCopy from "./share/Copy.js"
 
+import {SetAvatarOperation,DeleteAvatarOperation} from "./user/Avatar.js"
 
 import {
 	store
 } from "../../../redux/index.js";
-import {constanst} from  "../../../../../webpack/constanst.js"
+//import {constanst} from  "../../../../../webpack/constanst.js"
+const config = appConfig;
 const API_DEFAULT = "fs";
 const API_DEFAULT_METHOD = "POST";
 class Api {
@@ -42,8 +44,8 @@ class Api {
 
 		//store.subscribe(x=>this.getUserId())
 
-		this.hostService = constanst.SERVICE_URL;//"http://orchi";
-		this.portService = constanst.SERVICE_PORT; //8080;
+		this.hostService = config.SERVICE_URL;//"http://orchi";
+		this.portService = config.SERVICE_PORT; //8080;
 		this.versionService = "v1"
 		this.pathService = "/api/"
 
@@ -102,6 +104,20 @@ class Api {
 		this.registerOperation("fs::status", FsStatus);
 		this.registerOperation("fs::download", FsDownload);
 
+
+		this.registerOperation("avatar::set", SetAvatarOperation,{after: (reponse,args) => {
+			setTimeout(_=>{
+				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
+			},500)
+
+		}});
+		this.registerOperation("avatar::delete", DeleteAvatarOperation,{after: (reponse,args) => {
+			setTimeout(_=>{
+				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
+			},500)
+
+		}});
+
 	}
 
 	getUserId() {
@@ -149,7 +165,7 @@ class Api {
 		this.operations[name]["after"] = after
 	}
 
-     fetch({apiArg},api = API_DEFAULT, method = API_DEFAULT_METHOD){
+     fetch({apiArg},api = API_DEFAULT, method = API_DEFAULT_METHOD, editFormDataBeforeSend = ()=>{} ){
 
         return new Promise((resolve,reject)=>{
                 var arg:Object = { ...apiArg,uid:this.userid}
@@ -160,15 +176,19 @@ class Api {
 		        fd.append("args", JSON.stringify(arg,null,2))
 		        fd.append("op", arg.op)
 
-
+		        try{
+		        	editFormDataBeforeSend(fd);
+		        }catch(e){
+		        	console.error(e)
+		        }
 		        var xhr = new XMLHttpRequest();
 
 		        if(typeof arguments[arguments.length-1] == "function"){
-					arguments[arguments.length-1](xhr);
+					//arguments[arguments.length-1](xhr);
 				}
 
 				method = method.toUpperCase();
-				if(method=="POST"){
+				if(method=="POST"||method=="DELETE"){
 					xhr.open(method, this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
 				}else if(method=="GET"){
 					xhr.open(method, this.urlService+api+`?op=${arg.op}&args=${(JSON.stringify(arg))}`, true);

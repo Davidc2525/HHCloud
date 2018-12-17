@@ -28,6 +28,7 @@ export default (state = new Map(), action) => {
 		case AUTH_SETUSERDATA_STORAGE:
 					return state.setIn(["dataUser","contentSummary"], fromJS(action.payload.contentSummary))
 		case "AUTH_SETUSERDATA_USER":
+				
 				return state.setIn(["dataUser","user"], fromJS(action.payload.user))
 
 		default:

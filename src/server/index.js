@@ -18,10 +18,12 @@ console.log(app)
 app.listen(7777,function(){
     console.log("Started listening on port", 7777);
 })*/
+var config = require('config');
+console.log(config)
 var express = require("express");
 var path = require("path");
 var compression = require('compression')
-var {constanst:{PORT,HOST}} = require("../../webpack/constanst.js");
+//var {constanst:{PORT,HOST}} = require("../../webpack/constanst.js");
 
 
 var app = express();
@@ -34,6 +36,6 @@ app.get('/*', (req, res) => {
 app.get('/SC/*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../../dist/SC', 'index.html'));
 });
-app.listen(PORT,HOST,function(){
-    console.log("HHCloud client start in port: "+PORT+", host: "+HOST);
+app.listen(config.PORT,config.HOST,function(){
+    console.log("HHCloud client start in port: "+config.PORT+", host: "+config.HOST);
 })
