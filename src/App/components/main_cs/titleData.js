@@ -13,6 +13,7 @@ import CloudUpload from "@material-ui/icons/CloudUpload";
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import filesize from "filesize";
 import React from 'react';
+import Loadable from 'react-loadable';
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Route } from "react-router-dom";
@@ -20,7 +21,8 @@ import { push } from "react-router-redux";
 import { UploadManagerInstance } from "../../elements/upload_manager/index.js";
 import { store } from "../../redux/index.js";
 import PropTypes from 'prop-types';
-import MiniControl from "../index/MiniControl.jsx"
+import Typography from '@material-ui/core/Typography';
+//import MiniControl from "../index/MiniControl.jsx"
 import {STATES} from "../../elements/auth/state.js"
 
 const style = theme => ({
@@ -54,6 +56,20 @@ const ButtonLink = withRouter(({ history ,...rest}) => (
   </Button>
 
 ));
+
+function Loading(props) {
+  if (props.error) {
+    return <div>Error! <button onClick={props.retry}>Retry</button></div>;
+  } else {
+    return <div><Typography variant="body1" gutterBottom>Cargando...</Typography></div>;
+  }
+}
+
+const MiniControl = Loadable({
+  loader: () =>
+    import("../index/MiniControl.jsx"),
+  loading: Loading
+});
 
 const MenuLink = ({ Aicon,label, to, exact=false }) => (
   <Route

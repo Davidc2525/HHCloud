@@ -20,17 +20,24 @@ import SWM from "../share/SharedWithMe.jsx"
 import Loadable from 'react-loadable';
 import { withRouter } from 'react-router';
 import { Route, Switch ,Redirect} from "react-router-dom";
-import logo from "../../../media/img/logop.png";
+//import logo from "../../../media/img/logop.png";
 import Nav from "../nav_cs/index.js";
-import SideVarContent from './titleData.js';
-import MiniControl from "../index/MiniControl.jsx"
+//import SideVarContent from './titleData.js';
+//import MiniControl from "../index/MiniControl.jsx"
 function Loading(props) {
   if (props.error) {
     return <div>Error! <button onClick={props.retry}>Retry</button></div>;
   } else {
-    return <div><img src={logo} /></div>;
+    return <div><Typography variant="body1" gutterBottom>Cargando...</Typography></div>;
   }
 }
+
+const SideVarContent = Loadable({
+  loader: () =>
+    import('./titleData.js'),
+  loading: Loading
+});
+
 const Exprorer = Loadable({
   loader: () =>
     import('../explorer/Explorer.jsx'),

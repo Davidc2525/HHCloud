@@ -106,16 +106,18 @@ const renderFieldChekbox = ({input,disabled, label, type, meta: {touched, error,
 	<div>
 
 	  <Grid style={{width:"100%",
-      alignItems: "center",
-      width: "100%",
-    justifyContent: "left"}}
-			container spacing={8}>
+          alignItems: "center",
+          width: "100%",
+          justifyContent: "left"}}
+	      container spacing={8}
+	  >
 
       <Grid item >
 				<Typography variant="body1" gutterBottom>{label}</Typography>
       </Grid>
 
 			<Grid item >
+			   
 				<Switch
 					{...input}
 					disabled={disabled}
@@ -126,7 +128,7 @@ const renderFieldChekbox = ({input,disabled, label, type, meta: {touched, error,
 					//placeholder={label}
 					fullWidth
 					margin="normal"
-    />
+                />
 			</Grid>
 
     </Grid>
@@ -219,7 +221,7 @@ class Login extends React.Component{
 	}
 	handleChangeIndex = index => {
 		//this.setState({index });
-		console.warn(push("/SC/login#"+index))
+		//console.warn(push("/SC/login#"+index))
 		this.props.dispatch(push("/SC/login#"+index))
 	};
 	handleSubmitForm(values){
@@ -314,6 +316,7 @@ class Login extends React.Component{
                         <Field
                           disabled={submitting}
                           name="remember"
+                          type="checkbox"
                           component={renderFieldChekbox}
 								      	label="Recordar" />
 
