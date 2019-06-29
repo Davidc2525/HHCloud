@@ -204,7 +204,7 @@ class EditAvatar extends React.Component {
 			ApiInstance.instance.callOperation("avatar::set", {
 				data: b,
 				//original,
-				catchCB: x => alert("No se pudo cambiar el avatar, Intentelo de nuevo.\n"+x.msg),
+				catchCB: x => {this.setState({status:"ok"});alert("No se pudo cambiar el avatar, Intentelo de nuevo.\n"+x.msg)},
 				thenCB: _ => {this.handleClose();this.setState({status:"ok"});setTimeout(_=>{/*location.reload()*/},2000);}
 			})
 		})

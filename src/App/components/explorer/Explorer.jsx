@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid"
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import withWidth from '@material-ui/core/withWidth';
 import Zoom from '@material-ui/core/Zoom';
+import Face from "@material-ui/icons/Face"
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import CloudDownload from '@material-ui/icons/CloudDownload';
@@ -48,7 +49,7 @@ import {UploadManagerInstance} from "../../elements/upload_manager/index.js";
 import { UploaderSelect} from "./UploaderSelect.jsx";
 import { store } from "../../redux/index.js";
 import PahtSee2 from "../path_see/index2.jsx";
-import { fetchingPath, activeUpload, selectedModeToolbar, deletingPaths, filterToolBar} from "./actions.js";
+import { setAvatarByPath,fetchingPath, activeUpload, selectedModeToolbar, deletingPaths, filterToolBar} from "./actions.js";
 /**/
 import OrderSelect from "./OrderSelect.jsx";
 import { getParent, isRoot, parsePath, tryNormalize } from "./Util.js";
@@ -430,6 +431,13 @@ class ToolBar extends React.Component {
 		}
 
 
+       if (data.action === 'set-image-as-avatar') {
+			
+			store.dispatch(setAvatarByPath(parsePath(this.props.router.location.hash)))
+			
+			return;
+		}
+
 		if(data.action == "invertselection"){
 			//store.dispatch(selectedModeToolbar(true));
 
@@ -603,6 +611,7 @@ class ToolBar extends React.Component {
 								 {
 									 [
 									 this.createAtionButton("downloadFile", CloudDownload, "Descargar"),
+									 //this.createAtionButton("set-image-as-avatar", Face, "Coloca como avatar"),
 									 ]
 								 }
 							 </div>

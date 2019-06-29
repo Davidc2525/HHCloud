@@ -22,7 +22,7 @@ import { UploadManagerInstance } from "../../elements/upload_manager/index.js";
 import { store } from "../../redux/index.js";
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-//import MiniControl from "../index/MiniControl.jsx"
+
 import {STATES} from "../../elements/auth/state.js"
 
 const style = theme => ({

@@ -31,6 +31,7 @@ class ApiUser {
 			});
 	}
 
+
 	signIn(email: string = "", password: string = "", remember: boolean = false): Promise<AuthObject> {
 		return ApiInstance.instance.fetch({
 			apiArg: {
@@ -259,6 +260,24 @@ class ApiUser {
 		return ApiInstance.instance.fetch({
 			apiArg: {}
 		}, "avatar","DELETE")
+			.then(x => {
+				if (x.status == "ok") {
+					return Promise.resolve(x.payload)
+				} else {
+					return Promise.reject(x)
+				}
+			});
+	}
+	/**
+	* colocar una rruta de tu unidad "una imagen; ruta mime image/*" como avatar en tu cuenta
+	*/
+	setAvatarByPath(path=null){
+		return ApiInstance.instance.fetch({
+			apiArg: {
+				path,
+				op: "setavatarbypath"
+			}
+		}, API,"GET")
 			.then(x => {
 				if (x.status == "ok") {
 					return Promise.resolve(x.payload)

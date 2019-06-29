@@ -28,7 +28,7 @@ import FsStatus from "./share/FsStatus.js"
 import FsDownload from "./share/FsDownload.js"
 import ShareCopy from "./share/Copy.js"
 
-import {SetAvatarOperation,DeleteAvatarOperation} from "./user/Avatar.js"
+import {SetAvatarOperation,DeleteAvatarOperation,SetAvatarByPath} from "./user/Avatar.js"
 
 import {
 	store
@@ -116,6 +116,11 @@ class Api {
 				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
 			},500)
 
+		}});this.registerOperation("avatar::set_by_path", SetAvatarByPath,{after: (reponse,args) => {
+			setTimeout(_=>{
+				this.callOperation("accountstatus",{thenCB:as=>store.dispatch(setUserData(as))})
+			},500)
+
 		}});
 
 	}
@@ -188,7 +193,7 @@ class Api {
 				}
 
 				method = method.toUpperCase();
-				if(method=="POST"||method=="DELETE"){
+				if(method=="POST"||method=="DELETE"||method=="PUT"){
 					xhr.open(method, this.urlService+api/*+`?args=${btoa(JSON.stringify(arg))}`*/, true);
 				}else if(method=="GET"){
 					xhr.open(method, this.urlService+api+`?op=${arg.op}&args=${(JSON.stringify(arg))}`, true);
@@ -240,7 +245,7 @@ class Api {
 					}
 				};
 
-		        if(method=="POST"){
+		        if(method=="POST"||method=="PUT"){
 					xhr.send(fd);
 				}else{
 					xhr.send();

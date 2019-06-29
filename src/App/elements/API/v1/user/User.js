@@ -2,7 +2,7 @@
 
 
 class User {
-	constructor({id,email,emailVerified=false,username,firstName,lastName,gender="m",createAt,password,avatars = {}}){
+	constructor({id,email,emailVerified=false,username,firstName,lastName,gender="m",createAt,password,avatars = {},role = {}}){
 		this.id = id;
 		this.email = email;
 		this.emailVerified = emailVerified;
@@ -13,6 +13,7 @@ class User {
 		this.createAt = createAt;
 		this.password = password;
 		this.avatars = avatars;
+		this.role = role;
 	}
 
 	getId(){return this.id;}
@@ -24,6 +25,7 @@ class User {
 	getGender(){return this.gender}
 	getPassWord(){return this.password}
 	getAvatar(){return this.avatars}
+	getRole(){return this.role}
 
 	setId(newValue){this.id = newValue; return this}
 	setEmail(newValue){this.email = newValue; return this}
@@ -34,6 +36,7 @@ class User {
 	setGender(newValue){this.gender = newValue; return this}
 	setPassWord(newValue){this.password = newValue; return this}
 	setAvatar(newValue){this.avatars = newValue; return this}
+	setRole(newValue){this.role = role; return this}
 
 	toObject() {
 		return JSON.parse(JSON.stringify(this))

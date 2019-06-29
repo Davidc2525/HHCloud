@@ -27,4 +27,20 @@ class DeleteAvatarOperation {
 	}
 }
 
-export {SetAvatarOperation,DeleteAvatarOperation}
+class SetAvatarByPath {
+	constructor({ path, thenCB = response => { }, catchCB = response => { } } = {}) {
+		apiUserInstance
+			.instance
+			.setAvatarByPath(path)
+			.then(response => {
+				thenCB(response);
+			})
+			.catch(response => {
+				catchCB(response);
+			});
+	}
+}
+
+
+
+export {SetAvatarOperation,DeleteAvatarOperation,SetAvatarByPath}

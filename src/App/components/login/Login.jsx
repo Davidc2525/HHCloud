@@ -113,7 +113,7 @@ const renderFieldChekbox = ({input,disabled, label, type, meta: {touched, error,
 	  >
 
       <Grid item >
-				<Typography variant="body1" gutterBottom>{label}</Typography>
+			<Typography variant="body1" gutterBottom>{label}</Typography>
       </Grid>
 
 			<Grid item >
@@ -315,8 +315,8 @@ class Login extends React.Component{
                       <Grid item>
                         <Field
                           disabled={submitting}
-                          name="remember"
                           type="checkbox"
+                          name="remember"
                           component={renderFieldChekbox}
 								      	label="Recordar" />
 

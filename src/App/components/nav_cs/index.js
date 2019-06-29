@@ -144,7 +144,7 @@ class ResponsiveDrawer extends React.Component {
     if(dataUser!=null){
       displayName = dataUser.get("lastName")+" "+dataUser.get("firstName")
       avatar = dataUser.getIn(["avatars","50x50"]);
-      hasAvatar = JSON.parse( dataUser.getIn(["avatars","has"]));
+      hasAvatar = JSON.parse( dataUser.getIn(["avatars","has"],"false"));
     }
 
     displayName = displayName.capitalize(true);

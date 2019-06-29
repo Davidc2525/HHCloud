@@ -10,7 +10,8 @@ import {
 	fetchingPath,
 	fetchtedPath,
 	DELETEING_PATH,
-	DELETED_PATH
+	DELETED_PATH,
+	SET_AVATAR_BY_PATH
 } from "./actions.js"
 
 const get = (p, op) => {
@@ -143,6 +144,19 @@ export default store => next => action => {
 			}, 0)
 			next(action)
 			return;
+		}
+		if(action.type == SET_AVATAR_BY_PATH){
+			ApiInstance.instance.callOperation("avatar::set_by_path",{
+					path:action.payload.path,
+					thenCB:(payload)=>{
+						
+						next(action)
+					},
+					catchCB:(x)=>{
+						console.error(x);
+					},
+				})
+
 		}
 
 		if (action.type == "DELETING_PATH") {			
