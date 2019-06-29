@@ -8,9 +8,18 @@ const DELETEING_PATH = "DELETING_PATH";
 const DELETED_PATH = "DELETED_PATH";
 const CLEAR_STATE = "CLEAR_STATE";
 const ACTIVE_UPLOAD = "ACTIVE_UPLOAD"
+const SET_AVATAR_BY_PATH = "SET_AVATAR_BY_PATH"
 
 const clearState = ({
 	type: CLEAR_STATE 
+})
+
+const setAvatarByPath = path => ({
+	type:SET_AVATAR_BY_PATH,
+	middle: MIDDLEWARE,
+	payload:{
+		path
+	}
 })
 
 const openDialogMkDir = _ => ({ 
@@ -113,6 +122,7 @@ export {
 	deletingPath,
 	fetchingPath,
 	clearState,
+	setAvatarByPath,
 	CLEAR_STATE,
 	ACTIVE_UPLOAD,
 	DELETEING_PATH,
@@ -120,5 +130,6 @@ export {
 	MIDDLEWARE,
 	FETCHING_PATH,
 	DOWNLOAD_STATE,
-	FETCHTED_PATH
+	FETCHTED_PATH,
+	SET_AVATAR_BY_PATH
 }

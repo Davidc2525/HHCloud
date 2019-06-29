@@ -252,6 +252,20 @@ class Account extends React.Component {
                         </Grid>
                       </Grid>
 
+                     {false&&
+                        <Grid item xs={12}>
+                        <Grid container>
+                          <Grid item xs={3}>
+                            <Typography>rol</Typography>
+                          </Grid>
+                          <Grid item xs={9}>
+                            <Typography variant="title">{user.get("role").get("role")}</Typography>
+                            
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                     }
+                      
                       <Grid item xs={12}>
                         <Grid container>
                           <Grid item xs={3}>

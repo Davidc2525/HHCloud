@@ -6,7 +6,7 @@ import {
 	CLEAR_STATE,
 	ACTIVE_UPLOAD,
 	FETCHTED_PATH,
-	DOWNLOAD_STATE
+	DOWNLOAD_STATE,
 } from "./actions.js"
 import initState from "./state.js"
 import {getParent,getName} from "./Util.js"
@@ -84,7 +84,6 @@ export default (state = new Map(), action) => {
 			}))
 
 			return newState
-
 
 
 

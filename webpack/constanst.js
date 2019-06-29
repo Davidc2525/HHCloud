@@ -1,3 +1,4 @@
+//este archivo se debe ignorar, sera borrado en posteriores versiones!
 const constanst = {
 	SIDE: ("client"),
 	PORT:80,

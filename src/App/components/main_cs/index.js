@@ -11,11 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import _ from "lodash";
 import PropTypes from 'prop-types';
 import React from 'react';
-//import Index from "../index/index.js"
-//import DownloadViewer from "../download_viewer/index.js"
-/**/
-//import Exprorer2 from "../explorer/Explorer.jsx"
-//import Account2 from "../account/index.jsx"
+
 import SWM from "../share/SharedWithMe.jsx"
 import Loadable from 'react-loadable';
 import { withRouter } from 'react-router';

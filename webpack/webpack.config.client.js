@@ -1,5 +1,5 @@
 
-var {constanst:{PORT,HOST}} = require("./constanst.js");
+//var {constanst:{PORT,HOST}} = require("./constanst.js");
 var config = require('config');console.log(config)
 const CompressionPlugin = require("compression-webpack-plugin")
 const path = require('path');
@@ -33,7 +33,7 @@ var loginlessExtract = new ExtractTextPlugin({
 })
 
 //webpack.optimize.splitChunks.chunks = "all"
-console.log(new webpack.optimize.SplitChunksPlugin())
+//console.log(new webpack.optimize.SplitChunksPlugin())
 
 //npm i --save html-webpack-plugin extract-text-webpack-plugin babel-minify-webpack-plugin
 export default [{
@@ -41,7 +41,7 @@ export default [{
 	entry: {
 		client: "./src/client/HHCloud/index.js",
 		c:["react","react-dom","lodash"],
-		conf:["./webpack/constanst.js"]
+		//conf:["./webpack/constanst.js"]
 	},
 	output: {
 		globalObject: "this",
@@ -56,8 +56,8 @@ export default [{
 		path: path.resolve(__dirname, '../dist/SC')
 	},
 	devServer: {
-		host: HOST,
-		port: PORT,
+		host: config.HOST,
+		port: config.PORT,
 		compress:true,
 		clientLogLevel: 'info',
 		//lazy: true,

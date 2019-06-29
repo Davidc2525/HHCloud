@@ -42,8 +42,9 @@ import WindowScroller from 'react-virtualized/dist/commonjs/WindowScroller';
 import { DownloadManagerInstance } from "../../elements/download_manager/index.js";
 import { store } from "../../redux/index.js";
 import { isAudioFile, isCodeFile, isImageFile, isPdfFile, isTextFile, isVideoFile } from "../file_viewer/maps.js";
-import { deletingPath } from "./actions.js";
+import { deletingPath,setAvatarByPath} from "./actions.js";
 
+import Face from "@material-ui/icons/Face"
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -121,11 +122,14 @@ function collect(props) {
 	return props;
 }
 
+
 const DynamicMenu = (props) => {
 	const { id, trigger, classes } = props;
 	const isFile = trigger ? trigger.item.get("file") : false
 	const isShare = trigger ? trigger.item.get("shared") : false;
-
+	
+	const mime = trigger ? trigger.item.get("mime") : "none";
+	const isImageMime = mime ? mime.match(/image\/*/ig) != null : false;
 	const handleItemClick = trigger ? trigger.onItemClick : null;
 
 	return (
@@ -146,6 +150,17 @@ const DynamicMenu = (props) => {
 								</ListItem>
 							</MenuItemCM>
 
+							{isImageMime&&
+								<MenuItemCM onClick={handleItemClick} data={{ action: 'set-image-as-avatar' }}>
+									<ListItem button >
+										<Avatar>
+											<Face />
+										</Avatar>
+										<ListItemText primaryTypographyProps={{varian:"title"}} primary={"Colocar como avatar"} />
+									</ListItem>
+								</MenuItemCM>
+							}
+
 							<MenuItemCM onClick={handleItemClick} data={{ action: 'rename' }}>
 								<ListItem button >
 									<Avatar>
@@ -156,7 +171,7 @@ const DynamicMenu = (props) => {
 							</MenuItemCM>
 
 							{!isShare&&
-									<MenuItemCM onClick={handleItemClick} data={{ action: "share" }}>
+								<MenuItemCM onClick={handleItemClick} data={{ action: "share" }}>
 									<ListItem button >
 										<Avatar>
 											<People />
@@ -315,6 +330,13 @@ class DirectoryListVirtualize extends React.Component {
 		if (data.action === 'download') {
 			DownloadManagerInstance.instance.addDownload(data.item)
 			//console.error(data)
+			return;
+		}
+
+		if (data.action === 'set-image-as-avatar') {
+			
+			store.dispatch(setAvatarByPath(data.item.get("path")))
+			
 			return;
 		}
 
