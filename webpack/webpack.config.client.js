@@ -43,17 +43,17 @@ export default [{
 		c:["react","react-dom","lodash"],
 		//conf:["./webpack/constanst.js"]
 	},
-	output: {
+	output:  {
 		globalObject: "this",
 		hotUpdateChunkFilename: "[id].[hash].hot-update.js",
 		//publicPath:"/dist",
-		publicPath: '',
+		publicPath: '/home/gabriel/david/electron-quick-start/dist/SC/',
 		filename: 'assets/js/[name].js',
 		jsonpFunction: "_o",
 		pathinfo: true,
 		chunkFilename: 'assets/js/[name]_[chunkhash].js',
 
-		path: path.resolve(__dirname, '../dist/SC')
+		path: path.resolve(__dirname, '/home/gabriel/david/electron-quick-start/dist/SC')
 	},
 	devServer: {
 		host: config.HOST,
